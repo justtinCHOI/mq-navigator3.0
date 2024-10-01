@@ -1,11 +1,10 @@
 import EachDM from '@components/EachDM';
 import useSocket from '@hooks/useSocket';
 import { CollapseButton } from '@components/DMList/styles';
-import { IDM, IUser, IUserWithOnline } from '@typings/db';
+import { IUser, IUserWithOnline } from '@typings/db';
 import fetcher from '@utils/fetcher';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { NavLink } from 'react-router-dom';
 import useSWR from 'swr';
 
 const DMList = () => {

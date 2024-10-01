@@ -1,14 +1,23 @@
+// import React from 'react';
+// import { render } from 'react-dom';
+// import { BrowserRouter } from 'react-router-dom';
+// import App from '@layouts/App';
+//
+// render(
+//   <BrowserRouter>
+//     <App />
+//   </BrowserRouter>,
+//   document.querySelector('#app'),
+// );
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from '@layouts/App';
 
-render(
+const container = document.getElementById('app');
+const root = createRoot(container!);
+root.render(
   <BrowserRouter>
-    <>
-      {/*{process.env.NODE_ENV === 'production' ? null : <SWRDevtools cache={cache} mutate={mutate} />}*/}
-      <App />
-    </>
+    <App />
   </BrowserRouter>,
-  document.querySelector('#app'),
 );

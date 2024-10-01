@@ -24,7 +24,7 @@ const InviteChannelModal: FC<Props> = ({ show, onCloseModal, setShowInviteChanne
   );
 
   const onInviteMember = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!newMember || !newMember.trim()) {
         return;

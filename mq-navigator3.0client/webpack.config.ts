@@ -13,23 +13,21 @@ interface Configuration extends WebpackConfiguration {
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config: Configuration = {
-  name: 'sleact',
+  name: 'mq-navigator3.0client',
   mode: isDevelopment ? 'development' : 'production',
   devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
-      '@hooks': path.resolve(__dirname, 'hooks'),
-      '@components': path.resolve(__dirname, 'components'),
-      '@layouts': path.resolve(__dirname, 'layouts'),
-      '@pages': path.resolve(__dirname, 'pages'),
-      '@utils': path.resolve(__dirname, 'utils'),
-      '@typings': path.resolve(__dirname, 'typings'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@layouts': path.resolve(__dirname, 'src/layouts'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@typings': path.resolve(__dirname, 'src/typings'),
     },
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
-  entry: {
-    app: './client',
-  },
+  entry: './src/client',
   module: {
     rules: [
       {
@@ -71,7 +69,7 @@ const config: Configuration = {
     new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'public', 'dist'), // public 폴더 내에 dist 폴더 생성
     filename: '[name].js',
     publicPath: '/dist/',
   },
@@ -79,17 +77,10 @@ const config: Configuration = {
     historyApiFallback: true, // react router
     port: 3090,
     devMiddleware: { publicPath: '/dist/' },
-    static: { directory: path.resolve(__dirname) },
-    // proxy: {
-    //   '/api/': {
-    //     target: 'http://localhost:3095',
-    //     changeOrigin: true,
-    //   },
-    // },
-
+    static: { directory: path.resolve(__dirname, 'public') }, // 'public/'에서 정적 파일 제공
     proxy: [
       {
-        context: ['/api'], // 이 부분 수정
+        context: ['/api'],
         target: 'http://localhost:3095',
         changeOrigin: true,
       },

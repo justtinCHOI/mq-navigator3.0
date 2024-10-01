@@ -24,7 +24,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
   );
 
   const onInviteMember = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!newMember || !newMember.trim()) {
         return;

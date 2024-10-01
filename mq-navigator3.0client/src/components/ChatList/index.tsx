@@ -2,7 +2,7 @@ import Chat from '@components/Chat';
 import { ChatZone, Section, StickyHeader } from '@components/ChatList/styles';
 import { IChat, IDM } from '@typings/db';
 import React, { FC, RefObject, useCallback } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars-2';
+import { positionValues, Scrollbars } from 'react-custom-scrollbars-2';
 
 interface Props {
   scrollbarRef: RefObject<Scrollbars>;
@@ -13,7 +13,7 @@ interface Props {
 }
 const ChatList: FC<Props> = ({ scrollbarRef, isReachingEnd, isEmpty, chatSections, setSize }) => {
   const onScroll = useCallback(
-    (values) => {
+    (values: positionValues) => {
       if (values.scrollTop === 0 && !isReachingEnd && !isEmpty) {
         setSize((size) => size + 1).then(() => {
           scrollbarRef.current?.scrollTop(scrollbarRef.current?.getScrollHeight() - values.scrollHeight);

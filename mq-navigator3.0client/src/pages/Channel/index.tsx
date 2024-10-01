@@ -57,7 +57,7 @@ const Channel = () => {
   }, []);
 
   const onSubmitForm = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (chat?.trim() && chatData && channelData && userData) {
         const savedChat = chat;
@@ -140,7 +140,7 @@ const Channel = () => {
   }, []);
 
   const onDrop = useCallback(
-    (e) => {
+    (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       console.log(e);
       const formData = new FormData();
@@ -151,8 +151,11 @@ const Channel = () => {
           console.log(e.dataTransfer.items[i]);
           if (e.dataTransfer.items[i].kind === 'file') {
             const file = e.dataTransfer.items[i].getAsFile();
-            console.log(e, '.... file[' + i + '].name = ' + file.name);
-            formData.append('image', file);
+            if (file) {
+              // file이 null이 아닌 경우에만 처리
+              console.log(e, '.... file[' + i + '].name = ' + file.name);
+              formData.append('image', file);
+            }
           }
         }
       } else {
@@ -170,7 +173,7 @@ const Channel = () => {
     [workspace, channel],
   );
 
-  const onDragOver = useCallback((e) => {
+  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     console.log(e);
     setDragOver(true);

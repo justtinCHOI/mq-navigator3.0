@@ -47,7 +47,7 @@ const DirectMessage = () => {
   const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < PAGE_SIZE);
 
   const onSubmitForm = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (chat?.trim() && chatData) {
         const savedChat = chat;
@@ -123,7 +123,7 @@ const DirectMessage = () => {
   }, [workspace, id]);
 
   const onDrop = useCallback(
-    (e) => {
+    (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       console.log(e);
       const formData = new FormData();
@@ -133,8 +133,11 @@ const DirectMessage = () => {
           // If dropped items aren't files, reject them
           if (e.dataTransfer.items[i].kind === 'file') {
             const file = e.dataTransfer.items[i].getAsFile();
-            console.log('... file[' + i + '].name = ' + file.name);
-            formData.append('image', file);
+            if (file) {
+              // file이 null이 아닌 경우에만 처리
+              console.log('... file[' + i + '].name = ' + file.name);
+              formData.append('image', file);
+            }
           }
         }
       } else {
@@ -153,7 +156,7 @@ const DirectMessage = () => {
     [workspace, id, mutateChat],
   );
 
-  const onDragOver = useCallback((e) => {
+  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     console.log(e);
     setDragOver(true);

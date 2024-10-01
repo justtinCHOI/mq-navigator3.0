@@ -25,7 +25,7 @@ const CreateChannelModal: FC<Props> = ({ show, onCloseModal, setShowCreateChanne
   );
 
   const onCreateChannel = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!newChannel || !newChannel.trim()) {
         return;

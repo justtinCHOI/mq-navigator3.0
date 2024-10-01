@@ -17,7 +17,7 @@ const SignUp = () => {
   const [passwordCheck, , setPasswordCheck] = useInput('');
 
   const onChangePassword = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value);
       setMismatchError(passwordCheck !== e.target.value);
     },
@@ -25,7 +25,7 @@ const SignUp = () => {
   );
 
   const onChangePasswordCheck = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setPasswordCheck(e.target.value);
       setMismatchError(password !== e.target.value);
     },
@@ -33,7 +33,7 @@ const SignUp = () => {
   );
 
   const onSubmit = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!nickname || !nickname.trim()) {
         return;

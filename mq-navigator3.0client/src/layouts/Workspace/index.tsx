@@ -65,7 +65,7 @@ const Workspace = () => {
   }, []);
 
   const onCreateWorkspace = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!newWorkspace || !newWorkspace.trim()) {
         return;
