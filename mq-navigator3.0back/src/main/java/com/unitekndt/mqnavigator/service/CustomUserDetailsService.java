@@ -1,6 +1,6 @@
 package com.unitekndt.mqnavigator.service;
 
-import com.unitekndt.mqnavigator.entities.User;
+import com.unitekndt.mqnavigator.entity.User;
 import com.unitekndt.mqnavigator.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,7 +1,7 @@
 package com.unitekndt.mqnavigator.repository;
 
-import com.unitekndt.mqnavigator.entities.DM;
-import com.unitekndt.mqnavigator.entities.User;
+import com.unitekndt.mqnavigator.entity.DM;
+import com.unitekndt.mqnavigator.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

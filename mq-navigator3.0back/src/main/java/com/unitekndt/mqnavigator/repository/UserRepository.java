@@ -1,6 +1,6 @@
 package com.unitekndt.mqnavigator.repository;
 
-import com.unitekndt.mqnavigator.entities.User;
+import com.unitekndt.mqnavigator.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

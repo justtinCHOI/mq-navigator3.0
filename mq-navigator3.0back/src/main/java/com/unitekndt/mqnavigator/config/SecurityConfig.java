@@ -1,6 +1,5 @@
-package com.mqnavigator.security;
+package com.unitekndt.mqnavigator.config;
 
-import com.mqnavigator.service.CustomUserDetailsService;
 import com.unitekndt.mqnavigator.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

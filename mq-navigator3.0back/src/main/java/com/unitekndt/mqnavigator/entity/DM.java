@@ -1,4 +1,4 @@
-package com.unitekndt.mqnavigator.entities;
+package com.unitekndt.mqnavigator.entity;
 
 import jakarta.persistence.*;
 
@@ -12,6 +12,9 @@ public class DM {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String content;
+
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
@@ -21,10 +24,11 @@ public class DM {
     private User receiver;
 
     @Column(nullable = false)
-    private String content;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
 
     // Getters and setters
 }
