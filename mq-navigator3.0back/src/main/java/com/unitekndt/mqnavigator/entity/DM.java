@@ -1,10 +1,14 @@
 package com.unitekndt.mqnavigator.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "dms")
 public class DM {
 
@@ -24,11 +28,9 @@ public class DM {
     private User receiver;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime  createdAt;
 
     @ManyToOne
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
-
-    // Getters and setters
 }

@@ -18,6 +18,10 @@ public class ChannelController {
         this.channelService = channelService;
     }
 
+
+
+
+
     // 모든 채널 조회
     @GetMapping
     public ResponseEntity<List<Channel>> getAllChannels() {

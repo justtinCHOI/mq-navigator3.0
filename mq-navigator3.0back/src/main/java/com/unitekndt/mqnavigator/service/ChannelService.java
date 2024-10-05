@@ -1,5 +1,6 @@
 package com.unitekndt.mqnavigator.service;
 
+import com.unitekndt.mqnavigator.dto.IChannel;
 import com.unitekndt.mqnavigator.entity.Channel;
 import com.unitekndt.mqnavigator.entity.Workspace;
 import com.unitekndt.mqnavigator.repository.ChannelRepository;
@@ -15,6 +16,26 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
+    // 채널 생성
+    public Channel createChannel(Channel channel) {
+        return channelRepository.save(channel);
+    }
+
+    public IChannel entityToDto(Channel channel) {
+        return new IChannel(
+                channel.getId(),
+                channel.getName(),
+                channel.getIsPrivate(),
+                channel.getWorkspace().getId()
+        );
+    }
+
+
+
+
+
+
+
     public List<Channel> getChannelsByWorkspace(Workspace workspace) {
         return channelRepository.findByWorkspace(workspace);
     }
@@ -29,10 +50,6 @@ public class ChannelService {
 
     public Optional<Channel> getChannelById(Long channelId) {
         return channelRepository.findById(channelId);
-    }
-
-    public Channel createChannel(Channel channel) {
-        return channelRepository.save(channel);
     }
 
     public void deleteChannel(Long channelId) {

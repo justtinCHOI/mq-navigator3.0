@@ -39,6 +39,4 @@ public class Workspace {
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DM> dms;
-
-    // Getters and Setters
 }

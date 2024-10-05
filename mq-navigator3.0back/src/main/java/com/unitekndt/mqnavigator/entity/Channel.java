@@ -1,10 +1,14 @@
 package com.unitekndt.mqnavigator.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "channels")
 public class Channel {
 
@@ -16,7 +20,7 @@ public class Channel {
     private String name;
 
     @Column(nullable = true)
-    private Boolean isPrivate = false;
+    private Boolean isPrivate = (Boolean) false;
 
     @ManyToOne
     @JoinColumn(name = "workspace_id", nullable = false)
@@ -32,6 +36,4 @@ public class Channel {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> members;
-
-    // Getters and Setters
 }
