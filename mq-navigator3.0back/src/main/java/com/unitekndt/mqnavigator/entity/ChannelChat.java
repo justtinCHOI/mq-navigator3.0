@@ -27,7 +27,6 @@ public class ChannelChat {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

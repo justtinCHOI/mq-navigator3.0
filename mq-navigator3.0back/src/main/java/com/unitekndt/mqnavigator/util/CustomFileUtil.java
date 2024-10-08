@@ -21,109 +21,93 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 @Component
 @Log4j2
 @RequiredArgsConstructor
 public class CustomFileUtil {
 
-    @Value("${com.stockfish.upload.path}") //초기화 따로 뺄때
+    @Value("${com.unitekndt.upload.path}") // 설정 파일에서 파일 업로드 경로를 받아옴
     private String uploadPath;
 
-    //처음 생성시 경로가 없다면 만들어 놓고 시작
+    // 파일 저장 폴더가 없으면 생성
     @PostConstruct
     public void init() {
         File tempFolder = new File(uploadPath);
-        if(!tempFolder.exists()){
-            tempFolder.mkdir();
+        if (!tempFolder.exists()) {
+            tempFolder.mkdirs();
         }
-        uploadPath = tempFolder.getAbsolutePath(); // C드라이브 밑
-        log.info("................................");
-        log.info(uploadPath);
+        uploadPath = tempFolder.getAbsolutePath();
     }
 
-    //상품정보가 들어올 때 저장 후 파일 이름들을 반환
-    public List<String> saveFiles(List<MultipartFile> files)  {
-
-        //파일이 없거나 비어있으면 null 반환
-        if(files == null || files.isEmpty()){
+    // 파일을 저장하고, 저장된 파일 이름 목록을 반환
+    public List<String> saveFiles(List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
             return null;
         }
-        // 반환할 파일 이름들
-        List<String> fileNames = new ArrayList<>();
 
-        //업로드 된 파일들의 이름들
-        List<String > uploadNames = new ArrayList<>();
+        List<String> savedFileNames = new ArrayList<>();
 
         for (MultipartFile file : files) {
-            //이름 - 중복 이름을 위해 uuid 처리
-            String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            //경로, 파일 이름 -> 저장 경로
-            Path savePath = Paths.get(uploadPath, savedName);
+            try {
+                // 중복 방지를 위해 UUID를 사용한 파일 이름 생성
+                String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path savePath = Paths.get(uploadPath, savedName);
 
-            //파일, 저장경로 -> 저장
-            try{
-                //파일 저장
+                // 파일 저장
                 Files.copy(file.getInputStream(), savePath);
 
-                //이미지 인 경우에만 썸네일을 만들어 준다.
+                // 이미지 파일일 경우 썸네일 생성
                 String contentType = file.getContentType();
-                if(contentType != null && contentType.startsWith("image")){
-                    //썸네일 제목 앞에 S_ 붙이기
+                if (contentType != null && contentType.startsWith("image")) {
                     Path thumbnailPath = Paths.get(uploadPath, "s_" + savedName);
-                    // 원본이미지 , 사이즈, 썸네일 경로 -> 썸네일 저장
                     Thumbnails.of(savePath.toFile()).size(200, 200).toFile(thumbnailPath.toFile());
                 }
 
-                uploadNames.add(savedName);
-            }catch(IOException e){
-                throw new RuntimeException(e);
-            }
+                savedFileNames.add(savedName);
 
+            } catch (IOException e) {
+                throw new RuntimeException("파일 저장 중 오류 발생: " + e.getMessage());
+            }
         }
 
-        return uploadNames;
+        return savedFileNames;
     }
 
-    //파일 이름으로 파일을 반환 - api가 보통 파일 반환까지는 않는다.
+    // 파일 이름으로 파일을 다운로드 (파일 조회)
     public ResponseEntity<Resource> getFile(String fileName) {
+        Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
-        Resource resource = new FileSystemResource(uploadPath + File.separator + fileName); //separator == 슬래쉬
-        if(!resource.isReadable()){
-            resource = new FileSystemResource(uploadPath + File.separator + "default.jpg");//없으면 기본값 반환.
+        if (!resource.exists()) {
+            log.warn("파일이 존재하지 않습니다: " + fileName);
+            resource = new FileSystemResource(uploadPath + File.separator + "default.jpg"); // 파일이 없을 때 기본 이미지 반환
         }
+
         HttpHeaders headers = new HttpHeaders();
-        //확장자를 header 에 넣기
-        try{
-            headers.add("Content-type", Files.probeContentType(resource.getFile().toPath()));
-        }catch(IOException e){
-            throw new RuntimeException(e);
+        try {
+            headers.add("Content-Type", Files.probeContentType(resource.getFile().toPath())); // MIME 타입 설정
+        } catch (IOException e) {
+            throw new RuntimeException("파일 MIME 타입을 가져오는 중 오류 발생: " + e.getMessage());
         }
+
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
+    // 여러 파일 삭제
     public void deleteFiles(List<String> fileNames) {
-        //파일이 없거나 비었으면 return
-        if(fileNames == null || fileNames.isEmpty()){
+        if (fileNames == null || fileNames.isEmpty()) {
             return;
         }
 
         fileNames.forEach(fileName -> {
-
-            //있으면 썸네일 파일, 원본파일 삭제
-
-            //썸네일 제목
-            String thumbnailFileName = "s_" + fileName;
-            //썸네일 경로, 원본 경로
-            Path thumbnailPath = Paths.get(uploadPath, thumbnailFileName);
             Path filePath = Paths.get(uploadPath, fileName);
+            Path thumbnailPath = Paths.get(uploadPath, "s_" + fileName); // 썸네일 파일 이름
 
-            try{
-                //있으면 삭제
-                Files.deleteIfExists(thumbnailPath); // 있으면 삭제
-                Files.deleteIfExists(filePath); // 있으면 삭제
-            }catch(IOException e){
-                throw new RuntimeException(e);
+            try {
+                Files.deleteIfExists(filePath); // 원본 파일 삭제
+                Files.deleteIfExists(thumbnailPath); // 썸네일 파일 삭제
+                log.info("파일이 삭제되었습니다: " + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("파일 삭제 중 오류 발생: " + e.getMessage());
             }
         });
     }

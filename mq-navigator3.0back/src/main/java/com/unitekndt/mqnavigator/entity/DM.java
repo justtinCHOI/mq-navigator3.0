@@ -33,4 +33,10 @@ public class DM {
     @ManyToOne
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
+
+    // @PrePersist를 추가하여 생성 시간을 자동으로 설정
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

@@ -1,25 +1,21 @@
 package com.unitekndt.mqnavigator.controller;
 
-import com.unitekndt.mqnavigator.dto.IChannel;
-import com.unitekndt.mqnavigator.dto.IWorkspace;
-import com.unitekndt.mqnavigator.dto.WorkspaceCreationRequest;
-import com.unitekndt.mqnavigator.entity.Channel;
-import com.unitekndt.mqnavigator.entity.User; // 사용자 엔티티
+import com.unitekndt.mqnavigator.dto.*;
+import com.unitekndt.mqnavigator.entity.ChannelChat;
+import com.unitekndt.mqnavigator.entity.User;
 import com.unitekndt.mqnavigator.entity.Workspace;
+import com.unitekndt.mqnavigator.service.ChannelChatService;
 import com.unitekndt.mqnavigator.service.ChannelService;
 import com.unitekndt.mqnavigator.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/workspaces")
@@ -29,11 +25,16 @@ public class WorkspaceController {
     private WorkspaceService workspaceService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private ChannelChatService channelChatService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;  // Spring WebSocket을 사용한 메시지 전송
 
     // 현재 로그인한 사용자가 속한 워크스페이스 목록을 조회
     @GetMapping
-    public ResponseEntity<List<Workspace>> getWorkspacesForUser(@AuthenticationPrincipal User currentUser) {
-        List<Workspace> workspaces = workspaceService.getWorkspacesByUser(currentUser.getId());
+    public ResponseEntity<List<IWorkspace>> getWorkspacesForUser(@AuthenticationPrincipal User currentUser) {
+        // 서비스 계층에서 DTO로 변환된 데이터를 바로 받아옴
+        List<IWorkspace> workspaces = workspaceService.getWorkspacesByUserDto(currentUser.getId());
         return ResponseEntity.ok(workspaces);
     }
 
@@ -44,43 +45,9 @@ public class WorkspaceController {
             @RequestBody WorkspaceCreationRequest request,
             @AuthenticationPrincipal User currentUser) {
 
-        // 기존 워크스페이스 URL이 사용 중인지 확인
-        Optional<Workspace> existingWorkspace = workspaceService.findByUrl(request.getUrl());
-        if (existingWorkspace.isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 이미 사용 중인 URL인 경우
-        }
-
-        // 워크스페이스 생성
-        Workspace newWorkspace = new Workspace();
-        newWorkspace.setName(request.getWorkspace());
-        newWorkspace.setUrl(request.getUrl());
-        newWorkspace.setOwner(currentUser);
-
-        Set<User> members = new HashSet<>();
-        members.add(currentUser);
-        newWorkspace.setMembers(members);
-
-        // 워크스페이스 저장
-        Workspace createdWorkspace = workspaceService.createWorkspace(newWorkspace);
-
-        // 기본 채널 생성
-        Channel defaultChannel = new Channel();
-        defaultChannel.setName("일반");
-        defaultChannel.setWorkspace(createdWorkspace);
-        defaultChannel.setMembers(members); // 채널에도 사용자를 멤버로 추가
-
-        // 채널 저장
-        channelService.createChannel(defaultChannel);
-
-        // IWorkspaceDto로 변환하여 반환
-        IWorkspace workspaceDto = new IWorkspace(
-                createdWorkspace.getId(),
-                createdWorkspace.getName(),
-                createdWorkspace.getUrl(),
-                currentUser.getId()
-        );
-
-        return ResponseEntity.ok(workspaceDto);
+        // 서비스 계층에서 워크스페이스를 생성하고, DTO로 변환하여 반환
+        IWorkspace createdWorkspace = workspaceService.createWorkspaceDto(request, currentUser);
+        return ResponseEntity.ok(createdWorkspace);
     }
 
     // 현재 로그인한 사용자가 속한 워크스페이스의 채널 목록 조회
@@ -89,11 +56,78 @@ public class WorkspaceController {
             @PathVariable String workspaceUrl,
             @AuthenticationPrincipal User currentUser) {
 
-        // 서비스에서 워크스페이스 URL과 사용자 ID로 채널 리스트를 가져옴
-        List<IChannel> userChannels = workspaceService.getUserChannels(workspaceUrl, currentUser.getId());
-
+        // 서비스 계층에서 DTO로 변환된 채널 리스트를 받아옴
+        List<IChannel> userChannels = workspaceService.getUserChannelsDto(workspaceUrl, currentUser.getId());
         return ResponseEntity.ok(userChannels);
     }
+
+    // 워크스페이스 내부에 채널을 생성하는 메서드
+    @PostMapping("/{workspaceUrl}/channels")
+    @Transactional
+    public ResponseEntity<IChannel> createChannel(
+            @PathVariable String workspaceUrl,
+            @RequestBody ChannelCreationRequest request,  // 요청에서 채널 이름을 받음
+            @AuthenticationPrincipal User currentUser) {  // 현재 로그인된 사용자 정보 주입
+
+        // 서비스 계층에서 워크스페이스 URL과 사용자 ID로 채널을 생성
+        IChannel createdChannel = channelService.createChannelInWorkspace(workspaceUrl, request.getName(), currentUser);
+
+        return ResponseEntity.ok(createdChannel);
+    }
+
+    // 워크스페이스 내에서 특정 채널 정보를 가져오는 메서드
+    @GetMapping("/{workspaceUrl}/channels/{channelName}")
+    public ResponseEntity<IChannel> getChannelInfo(
+            @PathVariable String workspaceUrl,         // URL에서 워크스페이스 정보 추출
+            @PathVariable String channelName           // URL에서 채널 정보 추출
+    ) {
+        // 서비스 계층에서 해당 채널 정보 가져오기
+        IChannel channelDto = channelService.getChannelInWorkspace(workspaceUrl, channelName);
+
+        return ResponseEntity.ok(channelDto);
+    }
+
+    // 특정 워크스페이스의 특정 채널에 속한 채팅 목록을 가져오는 메서드
+    @GetMapping("/{workspaceUrl}/channels/{channelName}/chats")
+    public ResponseEntity<List<IChat>> getChannelChats(
+            @PathVariable String workspaceUrl,      // 워크스페이스 URL
+            @PathVariable String channelName,       // 채널 이름
+            @RequestParam int perPage,              // 한 페이지당 메시지 개수
+            @RequestParam int page                  // 페이지 번호
+    ) {
+        // 서비스 계층에서 채팅 데이터를 가져와 DTO로 변환
+        List<IChat> chats = channelService.getChatsInChannel(workspaceUrl, channelName, perPage, page);
+
+        return ResponseEntity.ok(chats);  // DTO 변환된 채팅 목록을 반환
+    }
+
+    // 특정 워크스페이스와 채널에서 안 읽은 채팅 메시지 수를 가져오는 메서드
+    @GetMapping("/{workspaceUrl}/channels/{channelName}/unreads")
+    public ResponseEntity<Long> getUnreadCount(
+            @PathVariable String workspaceUrl,       // 워크스페이스 URL
+            @PathVariable String channelName,        // 채널 이름
+            @RequestParam("after") Long after        // after 파라미터 (Timestamp)
+    ) {
+        // 서비스 계층에서 안 읽은 채팅 메시지 개수 조회
+        Long unreadCount = channelService.getUnreadCount(workspaceUrl, channelName, after);
+
+        return ResponseEntity.ok(unreadCount);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

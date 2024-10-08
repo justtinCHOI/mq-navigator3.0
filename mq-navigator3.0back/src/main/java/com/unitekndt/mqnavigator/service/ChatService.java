@@ -17,6 +17,31 @@ public class ChatService {
     @Autowired
     private ChannelChatRepository channelChatRepository;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public IChat entityToDto(ChannelChat chat) {
         IChannel channelDto = new IChannel(
                 chat.getChannel().getId(),
