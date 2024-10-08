@@ -1,13 +1,13 @@
 package com.unitekndt.mqnavigator.controller;
 
 import com.unitekndt.mqnavigator.dto.*;
-import com.unitekndt.mqnavigator.entity.ChannelChat;
 import com.unitekndt.mqnavigator.entity.User;
 import com.unitekndt.mqnavigator.entity.Workspace;
 import com.unitekndt.mqnavigator.service.ChannelChatService;
 import com.unitekndt.mqnavigator.service.ChannelService;
 import com.unitekndt.mqnavigator.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -61,105 +62,50 @@ public class WorkspaceController {
         return ResponseEntity.ok(userChannels);
     }
 
-    // 워크스페이스 내부에 채널을 생성하는 메서드
-    @PostMapping("/{workspaceUrl}/channels")
-    @Transactional
-    public ResponseEntity<IChannel> createChannel(
-            @PathVariable String workspaceUrl,
-            @RequestBody ChannelCreationRequest request,  // 요청에서 채널 이름을 받음
-            @AuthenticationPrincipal User currentUser) {  // 현재 로그인된 사용자 정보 주입
-
-        // 서비스 계층에서 워크스페이스 URL과 사용자 ID로 채널을 생성
-        IChannel createdChannel = channelService.createChannelInWorkspace(workspaceUrl, request.getName(), currentUser);
-
-        return ResponseEntity.ok(createdChannel);
-    }
-
-    // 워크스페이스 내에서 특정 채널 정보를 가져오는 메서드
-    @GetMapping("/{workspaceUrl}/channels/{channelName}")
-    public ResponseEntity<IChannel> getChannelInfo(
-            @PathVariable String workspaceUrl,         // URL에서 워크스페이스 정보 추출
-            @PathVariable String channelName           // URL에서 채널 정보 추출
+    // 워크스페이스 멤버 목록 조회
+    @GetMapping("/{workspaceUrl}/members")
+    public ResponseEntity<List<IUser>> getWorkspaceMembers(
+            @PathVariable String workspaceUrl // 워크스페이스 URL을 받아옴
     ) {
-        // 서비스 계층에서 해당 채널 정보 가져오기
-        IChannel channelDto = channelService.getChannelInWorkspace(workspaceUrl, channelName);
+        // 서비스 계층에서 멤버 목록 조회
+        List<IUser> members = workspaceService.getWorkspaceMembers(workspaceUrl);
 
-        return ResponseEntity.ok(channelDto);
+        // 멤버 목록을 반환
+        return ResponseEntity.ok(members);
     }
 
-    // 특정 워크스페이스의 특정 채널에 속한 채팅 목록을 가져오는 메서드
-    @GetMapping("/{workspaceUrl}/channels/{channelName}/chats")
-    public ResponseEntity<List<IChat>> getChannelChats(
-            @PathVariable String workspaceUrl,      // 워크스페이스 URL
-            @PathVariable String channelName,       // 채널 이름
-            @RequestParam int perPage,              // 한 페이지당 메시지 개수
-            @RequestParam int page                  // 페이지 번호
+    // 워크스페이스 멤버 초대
+    @PostMapping("/{workspaceUrl}/members")
+    public ResponseEntity<String> inviteMemberToWorkspace(
+            @PathVariable String workspaceUrl,         // 워크스페이스 URL
+            @RequestBody Map<String, String> requestBody // 요청 본문에서 이메일 가져오기
     ) {
-        // 서비스 계층에서 채팅 데이터를 가져와 DTO로 변환
-        List<IChat> chats = channelService.getChatsInChannel(workspaceUrl, channelName, perPage, page);
+        String email = requestBody.get("email"); // 이메일 추출
 
-        return ResponseEntity.ok(chats);  // DTO 변환된 채팅 목록을 반환
+        // 워크스페이스에 멤버 초대하는 서비스 호출
+        boolean isMemberAdded = workspaceService.inviteMemberToWorkspace(workspaceUrl, email);
+
+        if (isMemberAdded) {
+            return ResponseEntity.ok("ok");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("워크스페이스 또는 사용자가 존재하지 않습니다.");
+        }
     }
 
-    // 특정 워크스페이스와 채널에서 안 읽은 채팅 메시지 수를 가져오는 메서드
-    @GetMapping("/{workspaceUrl}/channels/{channelName}/unreads")
-    public ResponseEntity<Long> getUnreadCount(
-            @PathVariable String workspaceUrl,       // 워크스페이스 URL
-            @PathVariable String channelName,        // 채널 이름
-            @RequestParam("after") Long after        // after 파라미터 (Timestamp)
+    // 워크스페이스 멤버 제거
+    @DeleteMapping("/{workspaceUrl}/members/{memberId}")
+    public ResponseEntity<String> removeMemberFromWorkspace(
+            @PathVariable String workspaceUrl,  // 워크스페이스 URL을 받아옴
+            @PathVariable Long memberId         // 제거할 멤버 ID를 받아옴
     ) {
-        // 서비스 계층에서 안 읽은 채팅 메시지 개수 조회
-        Long unreadCount = channelService.getUnreadCount(workspaceUrl, channelName, after);
+        boolean isMemberRemoved = workspaceService.removeMemberFromWorkspace(workspaceUrl, memberId);
 
-        return ResponseEntity.ok(unreadCount);
+        if (isMemberRemoved) {
+            return ResponseEntity.ok("ok");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("워크스페이스 또는 멤버가 존재하지 않습니다.");
+        }
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Workspace> getWorkspaceById(@PathVariable Long id) {
-        Workspace workspace = workspaceService.getWorkspaceById(id);
-        return workspace != null ? ResponseEntity.ok(workspace) : ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/url/{url}")
-    public ResponseEntity<Workspace> getWorkspaceByUrl(@PathVariable String url) {
-        Optional<Workspace> workspace = workspaceService.getWorkspaceByUrl(url);
-        return workspace.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<Workspace> createWorkspace(@RequestBody Workspace workspace) {
-        Workspace createdWorkspace = workspaceService.createWorkspace(workspace);
-        return ResponseEntity.ok(createdWorkspace);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Workspace> updateWorkspace(@PathVariable Long id, @RequestBody Workspace updatedWorkspace) {
-        Workspace workspace = workspaceService.updateWorkspace(id, updatedWorkspace);
-        return workspace != null ? ResponseEntity.ok(workspace) : ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWorkspace(@PathVariable Long id) {
-        workspaceService.deleteWorkspace(id);
-        return ResponseEntity.noContent().build();
-    }
 }

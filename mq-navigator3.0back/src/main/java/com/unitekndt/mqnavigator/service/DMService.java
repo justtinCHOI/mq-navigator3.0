@@ -115,26 +115,19 @@ public class DMService {
     }
 
 
-
-
-
-
-
-
-
-    public List<DM> getAllDMs() {
-        return dmRepository.findAll();
-    }
-
-    public Optional<DM> getDMById(Long id) {
-        return dmRepository.findById(id);
-    }
-
-    public DM createDM(DM dm) {
-        return dmRepository.save(dm);
-    }
-
-    public void deleteDM(Long id) {
-        dmRepository.deleteById(id);
-    }
+//    public List<DM> getAllDMs() {
+//        return dmRepository.findAll();
+//    }
+//
+//    public Optional<DM> getDMById(Long id) {
+//        return dmRepository.findById(id);
+//    }
+//
+//    public DM createDM(DM dm) {
+//        return dmRepository.save(dm);
+//    }
+//
+//    public void deleteDM(Long id) {
+//        dmRepository.deleteById(id);
+//    }
 }

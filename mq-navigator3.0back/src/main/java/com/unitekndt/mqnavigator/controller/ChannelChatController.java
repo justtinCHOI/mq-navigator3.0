@@ -88,15 +88,15 @@ public class ChannelChatController {
 
 
 
-    @PostMapping
-    public ResponseEntity<ChannelChat> createChat(@RequestBody ChannelChat chat) {
-        ChannelChat savedChat = channelChatService.saveChannelChat(chat);
-        return ResponseEntity.ok(savedChat);
-    }
-
-    @GetMapping("/channel/{channelId}")
-    public ResponseEntity<List<ChannelChat>> getChatsByChannel(@PathVariable Long channelId) {
-        Optional<Channel> channel = channelService.getChannelById(channelId);
-        return channel.map(value -> ResponseEntity.ok(channelChatService.getChannelChatsByChannel(value))).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+//    @PostMapping
+//    public ResponseEntity<ChannelChat> createChat(@RequestBody ChannelChat chat) {
+//        ChannelChat savedChat = channelChatService.saveChannelChat(chat);
+//        return ResponseEntity.ok(savedChat);
+//    }
+//
+//    @GetMapping("/channel/{channelId}")
+//    public ResponseEntity<List<ChannelChat>> getChatsByChannel(@PathVariable Long channelId) {
+//        Optional<Channel> channel = channelService.getChannelById(channelId);
+//        return channel.map(value -> ResponseEntity.ok(channelChatService.getChannelChatsByChannel(value))).orElseGet(() -> ResponseEntity.notFound().build());
+//    }
 }

@@ -2,12 +2,14 @@ package com.unitekndt.mqnavigator.service;
 
 import com.unitekndt.mqnavigator.dto.IChannel;
 import com.unitekndt.mqnavigator.dto.IChat;
+import com.unitekndt.mqnavigator.dto.IUser;
 import com.unitekndt.mqnavigator.entity.Channel;
 import com.unitekndt.mqnavigator.entity.ChannelChat;
 import com.unitekndt.mqnavigator.entity.User;
 import com.unitekndt.mqnavigator.entity.Workspace;
 import com.unitekndt.mqnavigator.repository.ChannelChatRepository;
 import com.unitekndt.mqnavigator.repository.ChannelRepository;
+import com.unitekndt.mqnavigator.repository.UserRepository;
 import com.unitekndt.mqnavigator.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,15 +27,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChannelService {
-
-    @Autowired
-    private ChannelRepository channelRepository;
     @Autowired
     private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
     @Autowired
     private ChannelChatService channelChatService;
     @Autowired
     private ChannelChatRepository channelChatRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     public IChannel entityToDto(Channel channel) {
         return new IChannel(
@@ -91,7 +96,6 @@ public class ChannelService {
         return entityToDto(channel);
     }
 
-
     // 특정 워크스페이스의 특정 채널에 속한 채팅 메시지 가져오기
     public List<IChat> getChatsInChannel(String workspaceUrl, String channelName, int perPage, int page) {
         // 워크스페이스 URL을 기준으로 워크스페이스를 조회
@@ -114,7 +118,6 @@ public class ChannelService {
                 .collect(Collectors.toList());
     }
 
-
     // 특정 워크스페이스와 채널에서 안 읽은 채팅 메시지 개수 가져오기
     public Long getUnreadCount(String workspaceUrl, String channelName, Long afterTimestamp) {
         // 워크스페이스 URL을 기준으로 워크스페이스를 조회
@@ -134,43 +137,90 @@ public class ChannelService {
         return channelChatRepository.countByChannelAndCreatedAtAfter(channel, afterDateTime);
     }
 
+    // 특정 채널 멤버 목록 조회 메서드
+    public List<IUser> getChannelMembers(String workspaceUrl, String channelName) {
+        // 1. 워크스페이스 조회
+        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 워크스페이스입니다."));
 
+        // 2. 채널 조회
+        Channel channel = channelRepository.findByNameAndWorkspace(channelName, workspace)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 채널입니다."));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public List<Channel> getChannelsByWorkspace(Workspace workspace) {
-        return channelRepository.findByWorkspace(workspace);
+        // 3. 채널 멤버 엔티티를 IUser DTO로 변환하여 반환
+        return channel.getMembers().stream()
+                .map(userService::entityToDto)
+                .collect(Collectors.toList());
     }
 
-    public Channel saveChannel(Channel channel) {
-        return channelRepository.save(channel);
+    // 특정 채널로 멤버 초대 메서드
+    public boolean inviteMemberToChannel(String workspaceUrl, String channelName, String email) {
+        // 1. 워크스페이스 조회
+        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 워크스페이스입니다."));
+
+        // 2. 채널 조회
+        Channel channel = channelRepository.findByNameAndWorkspace(channelName, workspace)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 채널입니다."));
+
+        // 3. 사용자 조회
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+
+        // 4. 채널에 사용자 추가
+        if (!channel.getMembers().contains(user)) {
+            channel.getMembers().add(user);
+            channelRepository.save(channel); // 변경 사항 저장
+            return true;
+        }
+        return false;
     }
 
-    public List<Channel> getAllChannels() {
-        return channelRepository.findAll();
+    // 특정 채널에서 멤버 제거 메서드
+    public boolean removeMemberFromChannel(String workspaceUrl, String channelName, Long memberId) {
+        // 1. 워크스페이스 조회
+        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 워크스페이스입니다."));
+
+        // 2. 채널 조회
+        Channel channel = channelRepository.findByNameAndWorkspace(channelName, workspace)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 채널입니다."));
+
+        // 3. 사용자 조회
+        User member = userRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        // 4. 채널에서 멤버 제거
+        if (channel.getMembers().contains(member)) {
+            channel.getMembers().remove(member);
+            channelRepository.save(channel); // 변경 사항 저장
+            return true;
+        }
+
+        return false;
     }
 
-    public Optional<Channel> getChannelById(Long channelId) {
-        return channelRepository.findById(channelId);
-    }
-
-    public void deleteChannel(Long channelId) {
-        channelRepository.deleteById(channelId);
-    }
-
-    public List<Channel> getChannelsByName(String name) {
-        return channelRepository.findByName(name);
-    }
+//    public List<Channel> getChannelsByWorkspace(Workspace workspace) {
+//        return channelRepository.findByWorkspace(workspace);
+//    }
+//
+//    public Channel saveChannel(Channel channel) {
+//        return channelRepository.save(channel);
+//    }
+//
+//    public List<Channel> getAllChannels() {
+//        return channelRepository.findAll();
+//    }
+//
+//    public Optional<Channel> getChannelById(Long channelId) {
+//        return channelRepository.findById(channelId);
+//    }
+//
+//    public void deleteChannel(Long channelId) {
+//        channelRepository.deleteById(channelId);
+//    }
+//
+//    public List<Channel> getChannelsByName(String name) {
+//        return channelRepository.findByName(name);
+//    }
 }

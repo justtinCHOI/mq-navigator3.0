@@ -15,19 +15,19 @@ public class WorkspaceMemberController {
     @Autowired
     private WorkspaceMemberService workspaceMemberService;
 
-    @GetMapping("/workspace/{workspaceId}")
-    public ResponseEntity<List<WorkspaceMember>> getMembersByWorkspace(@PathVariable Long workspaceId) {
-        return ResponseEntity.ok(workspaceMemberService.getAllMembersByWorkspaceId(workspaceId));
-    }
-
-    @PostMapping
-    public ResponseEntity<WorkspaceMember> addMember(@RequestBody WorkspaceMember workspaceMember) {
-        return ResponseEntity.ok(workspaceMemberService.addMember(workspaceMember));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeMember(@PathVariable Long id) {
-        workspaceMemberService.removeMember(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @GetMapping("/workspace/{workspaceId}")
+//    public ResponseEntity<List<WorkspaceMember>> getMembersByWorkspace(@PathVariable Long workspaceId) {
+//        return ResponseEntity.ok(workspaceMemberService.getAllMembersByWorkspaceId(workspaceId));
+//    }
+//
+//    @PostMapping
+//    public ResponseEntity<WorkspaceMember> addMember(@RequestBody WorkspaceMember workspaceMember) {
+//        return ResponseEntity.ok(workspaceMemberService.addMember(workspaceMember));
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> removeMember(@PathVariable Long id) {
+//        workspaceMemberService.removeMember(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

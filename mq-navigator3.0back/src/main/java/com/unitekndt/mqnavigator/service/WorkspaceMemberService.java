@@ -13,15 +13,15 @@ public class WorkspaceMemberService {
     @Autowired
     private WorkspaceMemberRepository workspaceMemberRepository;
 
-    public List<WorkspaceMember> getAllMembersByWorkspaceId(Long workspaceId) {
-        return workspaceMemberRepository.findAll();
-    }
-
-    public WorkspaceMember addMember(WorkspaceMember workspaceMember) {
-        return workspaceMemberRepository.save(workspaceMember);
-    }
-
-    public void removeMember(Long id) {
-        workspaceMemberRepository.deleteById(id);
-    }
+//    public List<WorkspaceMember> getAllMembersByWorkspaceId(Long workspaceId) {
+//        return workspaceMemberRepository.findAll();
+//    }
+//
+//    public WorkspaceMember addMember(WorkspaceMember workspaceMember) {
+//        return workspaceMemberRepository.save(workspaceMember);
+//    }
+//
+//    public void removeMember(Long id) {
+//        workspaceMemberRepository.deleteById(id);
+//    }
 }

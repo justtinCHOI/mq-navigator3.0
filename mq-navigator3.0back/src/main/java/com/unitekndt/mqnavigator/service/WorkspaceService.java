@@ -1,12 +1,14 @@
 package com.unitekndt.mqnavigator.service;
 
 import com.unitekndt.mqnavigator.dto.IChannel;
+import com.unitekndt.mqnavigator.dto.IUser;
 import com.unitekndt.mqnavigator.dto.IWorkspace;
 import com.unitekndt.mqnavigator.dto.WorkspaceCreationRequest;
 import com.unitekndt.mqnavigator.entity.Channel;
 import com.unitekndt.mqnavigator.entity.User;
 import com.unitekndt.mqnavigator.entity.Workspace;
 import com.unitekndt.mqnavigator.repository.ChannelRepository;
+import com.unitekndt.mqnavigator.repository.UserRepository;
 import com.unitekndt.mqnavigator.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +24,24 @@ public class WorkspaceService {
 
     @Autowired
     private WorkspaceRepository workspaceRepository;
-
     @Autowired
     private ChannelService channelService;
-
     @Autowired
     private ChannelRepository channelRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+
+    // Workspace -> IWorkspace로 변환
+    public IWorkspace entityToDto(Workspace workspace) {
+        return new IWorkspace(
+                workspace.getId(),
+                workspace.getName(),
+                workspace.getUrl(),
+                workspace.getOwner().getId()
+        );
+    }
 
     // 사용자 ID로 워크스페이스 목록을 조회하고, DTO로 변환하여 반환
     public List<IWorkspace> getWorkspacesByUserDto(Long userId) {
@@ -80,78 +94,114 @@ public class WorkspaceService {
                 .collect(Collectors.toList());
     }
 
-    // Workspace -> IWorkspace로 변환
-    public IWorkspace entityToDto(Workspace workspace) {
-        return new IWorkspace(
-                workspace.getId(),
-                workspace.getName(),
-                workspace.getUrl(),
-                workspace.getOwner().getId()
-        );
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public List<Workspace> getWorkspacesByUser(Long userId) {
-        return workspaceRepository.findByMembersUserId(userId);
-    }
-
-    // 워크스페이스 URL로 조회
-    public Optional<Workspace> findByUrl(String url) {
-        return workspaceRepository.findByUrl(url);
-    }
-
-    // 워크스페이스 생성
-    public Workspace createWorkspace(Workspace workspace) {
-        return workspaceRepository.save(workspace);
-    }
-
-    public List<IChannel> getUserChannels(String workspaceUrl, Long userId) {
+    // 워크스페이스 멤버 목록 조회 메서드
+    public List<IUser> getWorkspaceMembers(String workspaceUrl) {
+        // 1. 워크스페이스 조회
         Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 워크스페이스입니다."));
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 워크스페이스입니다."));
 
-        List<Channel> userChannels = channelRepository.findAllByWorkspaceAndMembersId(workspace, userId);
-
-        return userChannels.stream()
-                .map(channel -> new IChannel(channel.getId(), channel.getName(), channel.getIsPrivate(), channel.getWorkspace().getId()))
+        // 2. 멤버 엔티티를 IUser DTO로 변환하여 반환
+        return workspace.getMembers().stream()
+                .map(userService::entityToDto)
                 .collect(Collectors.toList());
     }
 
-    public List<Workspace> getAllWorkspaces() {
-        return workspaceRepository.findAll();
+
+
+    // 워크스페이스 멤버 초대 메서드
+    public boolean inviteMemberToWorkspace(String workspaceUrl, String email) {
+        // 1. 워크스페이스 조회
+        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 워크스페이스입니다."));
+
+        // 2. 사용자 조회
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+
+        // 3. 사용자 워크스페이스 멤버 추가
+        workspace.getMembers().add(user);
+        workspaceRepository.save(workspace);
+
+        // 기본 채널에 사용자 추가
+         Channel defaultChannel = workspace.getChannels().stream()
+                 .filter(channel -> channel.getName().equals("일반"))
+                 .findFirst()
+                 .orElseThrow(() -> new RuntimeException("기본 채널이 없습니다."));
+         defaultChannel.getMembers().add(user);
+
+        return true;
+    }
+
+    // 워크스페이스 멤버 제거 메서드
+    public boolean removeMemberFromWorkspace(String workspaceUrl, Long memberId) {
+        // 1. 워크스페이스 조회
+        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 워크스페이스입니다."));
+
+        // 2. 멤버 조회
+        User member = userRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        // 3. 워크스페이스에서 멤버 제거
+        if (workspace.getMembers().contains(member)) {
+            workspace.getMembers().remove(member);
+            workspaceRepository.save(workspace); // 변경 사항 저장
+            return true;
+        }
+
+        return false;
     }
 
 
-
-    public Workspace getWorkspaceById(Long id) {
-        Optional<Workspace> workspace = workspaceRepository.findById(id);
-        return workspace.orElse(null); // Handle nulls appropriately in production
-    }
-
-    public Optional<Workspace> getWorkspaceByUrl(String url) {
-        return workspaceRepository.findByUrl(url);
-    }
-
-    public Workspace updateWorkspace(Long id, Workspace updatedWorkspace) {
-        return workspaceRepository.findById(id).map(workspace -> {
-            workspace.setName(updatedWorkspace.getName());
-            workspace.setUrl(updatedWorkspace.getUrl());
-            return workspaceRepository.save(workspace);
-        }).orElse(null); // Handle nulls in production
-    }
-
-    public void deleteWorkspace(Long id) {
-        workspaceRepository.deleteById(id);
-    }
+//    public List<Workspace> getWorkspacesByUser(Long userId) {
+//        return workspaceRepository.findByMembersUserId(userId);
+//    }
+//
+//    // 워크스페이스 URL로 조회
+//    public Optional<Workspace> findByUrl(String url) {
+//        return workspaceRepository.findByUrl(url);
+//    }
+//
+//    // 워크스페이스 생성
+//    public Workspace createWorkspace(Workspace workspace) {
+//        return workspaceRepository.save(workspace);
+//    }
+//
+//    public List<IChannel> getUserChannels(String workspaceUrl, Long userId) {
+//        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 워크스페이스입니다."));
+//
+//        List<Channel> userChannels = channelRepository.findAllByWorkspaceAndMembersId(workspace, userId);
+//
+//        return userChannels.stream()
+//                .map(channel -> new IChannel(channel.getId(), channel.getName(), channel.getIsPrivate(), channel.getWorkspace().getId()))
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<Workspace> getAllWorkspaces() {
+//        return workspaceRepository.findAll();
+//    }
+//
+//
+//
+//    public Workspace getWorkspaceById(Long id) {
+//        Optional<Workspace> workspace = workspaceRepository.findById(id);
+//        return workspace.orElse(null); // Handle nulls appropriately in production
+//    }
+//
+//    public Optional<Workspace> getWorkspaceByUrl(String url) {
+//        return workspaceRepository.findByUrl(url);
+//    }
+//
+//    public Workspace updateWorkspace(Long id, Workspace updatedWorkspace) {
+//        return workspaceRepository.findById(id).map(workspace -> {
+//            workspace.setName(updatedWorkspace.getName());
+//            workspace.setUrl(updatedWorkspace.getUrl());
+//            return workspaceRepository.save(workspace);
+//        }).orElse(null); // Handle nulls in production
+//    }
+//
+//    public void deleteWorkspace(Long id) {
+//        workspaceRepository.deleteById(id);
+//    }
 }

@@ -136,11 +136,11 @@ public class ChannelChatService {
 
 
 
-    public ChannelChat saveChannelChat(ChannelChat channelChat) {
-        return channelChatRepository.save(channelChat);
-    }
-
-    public List<ChannelChat> getChannelChatsByChannel(Channel channel) {
-        return channelChatRepository.findByChannel(channel);
-    }
+//    public ChannelChat saveChannelChat(ChannelChat channelChat) {
+//        return channelChatRepository.save(channelChat);
+//    }
+//
+//    public List<ChannelChat> getChannelChatsByChannel(Channel channel) {
+//        return channelChatRepository.findByChannel(channel);
+//    }
 }

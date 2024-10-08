@@ -4,11 +4,13 @@ import com.unitekndt.mqnavigator.dto.IDM;
 import com.unitekndt.mqnavigator.entity.DM;
 import com.unitekndt.mqnavigator.entity.User;
 import com.unitekndt.mqnavigator.service.DMService;
+import com.unitekndt.mqnavigator.util.CustomFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,9 @@ public class DMController {
     private DMService dmService;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;  // WebSocket 사용
+
+    @Autowired
+    private CustomFileUtil customFileUtil;  // 파일 업로드 유틸리티
 
     // 특정 워크스페이스에서 현재 사용자와 다른 사용자(ID)가 나눈 DM 목록 조회
     @GetMapping("/{workspaceUrl}/dms/{id}/chats")
@@ -73,44 +78,79 @@ public class DMController {
         return ResponseEntity.ok("ok");
     }
 
+    // 이미지 DM 저장 및 WebSocket 이벤트 emit
+    @PostMapping("/{workspaceUrl}/dms/{id}/images")
+    public ResponseEntity<String> saveImageDM(
+            @PathVariable String workspaceUrl,         // 워크스페이스 URL
+            @PathVariable Long id,                     // DM 상대방 사용자 ID
+            @RequestParam("image") List<MultipartFile> images, // 업로드된 이미지 파일들
+            @AuthenticationPrincipal User currentUser  // 현재 로그인된 사용자 정보
+    ) {
+        // 1. 이미지 파일 저장
+        List<String> savedFilePaths = customFileUtil.saveFiles(images);
 
+        // 2. 각 이미지 파일 경로를 사용하여 DM 생성 및 저장
+        for (String filePath : savedFilePaths) {
+            DM savedDM = dmService.saveDM(workspaceUrl, currentUser.getId(), id, filePath);
 
+            // 저장된 DM을 DTO로 변환
+            IDM dmDto = dmService.entityToDto(savedDM);
 
+            // WebSocket을 통해 상대방에게 이미지 메시지 전송
+            String destination = String.format("/ws/%s/dms/%s", workspaceUrl, id);
+            messagingTemplate.convertAndSend(destination, dmDto);  // 소켓 이벤트 전송
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @GetMapping
-    public ResponseEntity<List<DM>> getAllDMs() {
-        return ResponseEntity.ok(dmService.getAllDMs());
+        return ResponseEntity.ok("ok");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DM> getDMById(@PathVariable Long id) {
-        Optional<DM> dm = dmService.getDMById(id);
-        return dm.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
 
-    @PostMapping
-    public ResponseEntity<DM> createDM(@RequestBody DM dm) {
-        DM createdDM = dmService.createDM(dm);
-        return ResponseEntity.ok(createdDM);
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDM(@PathVariable Long id) {
-        dmService.deleteDM(id);
-        return ResponseEntity.noContent().build();
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    @GetMapping
+//    public ResponseEntity<List<DM>> getAllDMs() {
+//        return ResponseEntity.ok(dmService.getAllDMs());
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<DM> getDMById(@PathVariable Long id) {
+//        Optional<DM> dm = dmService.getDMById(id);
+//        return dm.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//    }
+//
+//    @PostMapping
+//    public ResponseEntity<DM> createDM(@RequestBody DM dm) {
+//        DM createdDM = dmService.createDM(dm);
+//        return ResponseEntity.ok(createdDM);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteDM(@PathVariable Long id) {
+//        dmService.deleteDM(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

@@ -17,19 +17,19 @@ public class MentionService {
         this.mentionRepository = mentionRepository;
     }
 
-    public List<Mention> getAllMentions() {
-        return mentionRepository.findAll();
-    }
-
-    public Mention getMentionById(Long id) {
-        return mentionRepository.findById(id).orElse(null);
-    }
-
-    public Mention createMention(Mention mention) {
-        return mentionRepository.save(mention);
-    }
-
-    public void deleteMention(Long id) {
-        mentionRepository.deleteById(id);
-    }
+//    public List<Mention> getAllMentions() {
+//        return mentionRepository.findAll();
+//    }
+//
+//    public Mention getMentionById(Long id) {
+//        return mentionRepository.findById(id).orElse(null);
+//    }
+//
+//    public Mention createMention(Mention mention) {
+//        return mentionRepository.save(mention);
+//    }
+//
+//    public void deleteMention(Long id) {
+//        mentionRepository.deleteById(id);
+//    }
 }

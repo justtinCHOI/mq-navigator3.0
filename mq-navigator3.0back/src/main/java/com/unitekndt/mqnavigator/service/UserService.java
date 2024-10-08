@@ -46,23 +46,23 @@ public class UserService {
         );
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
+//    public User createUser(User user) {
+//        return userRepository.save(user);
+//    }
+//
+//    public Optional<User> getUserById(Long id) {
+//        return userRepository.findById(id);
+//    }
+//
+//    public Optional<User> getUserByEmail(String email) {
+//        return userRepository.findByEmail(email);
+//    }
+//
+//    public List<User> getAllUsers() {
+//        return userRepository.findAll();
+//    }
+//
+//    public void deleteUser(Long id) {
+//        userRepository.deleteById(id);
+//    }
 }
