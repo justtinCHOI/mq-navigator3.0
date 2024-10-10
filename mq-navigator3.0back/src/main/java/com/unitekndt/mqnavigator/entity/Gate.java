@@ -1,24 +1,27 @@
 package com.unitekndt.mqnavigator.entity;
 
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "workspace_members")
-public class WorkspaceMember {
+@Setter
+@Getter
+@Table(name = "gates")
+public class Gate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Long index;
+
+    @Embedded
+    private Coordinate coordinate;
+
     @ManyToOne
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    // Getters and setters
 
 }
