@@ -1,23 +1,32 @@
 import useInput from '@hooks/useInput';
-import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } from '@pages/SignUp/styles';
-import fetcher from '@utils/fetcher';
-import axios from 'axios';
+import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } from '@pages/member/SignUp/styles';
 import React, { useCallback, useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import useSWR from 'swr';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useCustomLogin from '@hooks/useCustomLogin';
+import { signup } from '@api/memberApi';
+import { useDispatch } from 'react-redux';
+import { login } from '@slices/loginSlice';
 
 const SignUp = () => {
-  const { data: userData } = useSWR('/api/users', fetcher);
-  const [signUpError, setSignUpError] = useState(false);
-  const [signUpSuccess, setSignUpSuccess] = useState(false);
-  const [mismatchError, setMismatchError] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { loginState } = useCustomLogin();
+  const location = useLocation();
+  const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
+  const { moveToPath } = useCustomLogin();
+
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
   const [password, , setPassword] = useInput('');
   const [passwordCheck, , setPasswordCheck] = useInput('');
 
+  const [signUpError, setSignUpError] = useState(false);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
+  const [mismatchError, setMismatchError] = useState(false);
+
   const onChangePassword = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value);
       setMismatchError(passwordCheck !== e.target.value);
     },
@@ -25,7 +34,7 @@ const SignUp = () => {
   );
 
   const onChangePasswordCheck = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setPasswordCheck(e.target.value);
       setMismatchError(password !== e.target.value);
     },
@@ -33,7 +42,7 @@ const SignUp = () => {
   );
 
   const onSubmit = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!nickname || !nickname.trim()) {
         return;
@@ -41,8 +50,12 @@ const SignUp = () => {
       if (!mismatchError) {
         setSignUpError(false);
         setSignUpSuccess(false);
-        axios
-          .post('/api/users', { email, nickname, password })
+        const singupParam = { email: email, nickname: nickname, password: password };
+        signup(singupParam)
+          .then((memberInfo) => {
+            dispatch(login(memberInfo));
+            moveToPath('/workspace/mqnavigator');
+          })
           .then(() => {
             setSignUpSuccess(true);
           })
@@ -52,11 +65,11 @@ const SignUp = () => {
           });
       }
     },
-    [email, nickname, password, mismatchError],
+    [nickname, mismatchError, email, password, dispatch, moveToPath],
   );
 
-  if (userData) {
-    return <Redirect to="/workspace/sleact" />;
+  if (loginState) {
+    navigate(from.pathname, { replace: true });
   }
 
   return (

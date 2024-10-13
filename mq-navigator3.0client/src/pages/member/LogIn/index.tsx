@@ -1,48 +1,41 @@
 import useInput from '@hooks/useInput';
-import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/SignUp/styles';
-import fetcher from '@utils/fetcher';
-import axios from 'axios';
+import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/member/SignUp/styles';
 import React, { useCallback, useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import useSWR from 'swr';
+import useCustomLogin from '@hooks/useCustomLogin';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
-  const { data: userData, error, mutate } = useSWR('/api/users', fetcher);
+  const { loginState, doLogin } = useCustomLogin();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
+
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const onSubmit = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setLogInError(false);
-      axios
-        .post(
-          '/api/users/login',
-          { email, password },
-          {
-            withCredentials: true,
-          },
-        )
-        .then(() => {
-          mutate();
-        })
+
+      const loginParam = { email: email, password: password };
+      doLogin(loginParam)
+        .then(() => {})
         .catch((error) => {
           console.dir(error);
           setLogInError(error.response?.status === 401);
         });
     },
-    [email, password, mutate],
+    [doLogin, email, password],
   );
 
-  console.log(error, userData);
-  if (!error && userData) {
-    console.log('로그인됨', userData);
-    return <Redirect to="/workspace/sleact/channel/일반" />;
+  if (loginState) {
+    navigate(from.pathname, { replace: true });
   }
 
   return (
     <div id="container">
-      <Header>Sleact</Header>
+      <Header>MQ-Navigator</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
