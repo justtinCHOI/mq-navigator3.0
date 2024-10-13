@@ -1,12 +1,10 @@
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
 import { Button, Input, Label } from '@pages/member/SignUp/styles';
-import { IUser } from '@typings/db';
 import React, { FC, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'react-toastify';
-import useCustomMember from '@hooks/useCustomMember';
-import {postAddWorkspaceMember} from "@api/workspaceApi";
+import { postAddWorkspaceMember } from '@api/workspaceApi';
 
 interface Props {
   show: boolean;
@@ -23,7 +21,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
       if (!newMember || !newMember.trim()) {
         return;
       }
-      postAddWorkspaceMember(newMember)
+      postAddWorkspaceMember(workspaceUrl, newMember)
         .then(() => {
           setShowInviteWorkspaceModal(false);
           setNewMember('');
@@ -33,7 +31,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
           toast.error(error.response?.data, { position: 'bottom-center' });
         });
     },
-    [newMember, setShowInviteWorkspaceModal, setNewMember],
+    [newMember, workspaceUrl, setShowInviteWorkspaceModal, setNewMember],
   );
 
   return (

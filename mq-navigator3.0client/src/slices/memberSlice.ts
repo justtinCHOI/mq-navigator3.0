@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { loginPost } from '@api/memberApi';
 import { getCookie, removeCookie, setCookie } from '@utils/cookieUtil';
 import { Member, MemberStatus } from '@typings/db';
-import {postCreateWorkspaceAsync} from "@slices/workspaceSlice"; // 위에서 정의한 Member 타입을 임포트
+import { postCreateWorkspaceAsync } from '@slices/workspaceSlice';
 
 const initState: Member = {
   id: 0,
@@ -23,11 +23,13 @@ export const loginPostAsync = createAsyncThunk('loginPostAsync', (param: any) =>
 });
 
 const loadMemberCookie = (): Member | undefined => {
+  let memberInfo: Member = initState;
   // 쿠키에서 로그인 정보 로딩
-  const memberInfo = getCookie('member');
-  if (memberInfo) {
-    memberInfo.nickname = decodeURIComponent(memberInfo.nickname);
-    return JSON.parse(memberInfo) as Member;
+  const memberCookieValue = getCookie('member');
+  if (memberCookieValue) {
+    const parsedMemberCookieValue = JSON.parse(memberCookieValue);
+    memberInfo.nickname = decodeURIComponent(parsedMemberCookieValue.nickname);
+    return parsedMemberCookieValue as Member;
   }
   return undefined;
 };

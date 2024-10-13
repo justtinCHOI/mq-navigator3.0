@@ -1,6 +1,7 @@
 package com.unitekndt.mqnavigator.security.handler;
 
 import com.google.gson.Gson;
+import com.unitekndt.mqnavigator.dto.MemberDTO;
 import com.unitekndt.mqnavigator.util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,11 +20,8 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        //client 가 로그인 성공 -> authentication 생성 -> accessToken, refreshToken, 맴버정보 반환.
 
-        //authentication -> memberDTO -> claims -> (accessToken, refreshToken) -> (gson) jsonStr -> jsonStr
-
-        MemberDTO memberDTO = (MemberDTO) authentication.getPrincipal();//인증정보로부터 memberDTO 를 추출
+        MemberDTO memberDTO = (MemberDTO) authentication.getPrincipal();
 
         Map<String, Object> claims = memberDTO.getClaims();
 

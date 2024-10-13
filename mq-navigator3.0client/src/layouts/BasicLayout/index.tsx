@@ -31,7 +31,7 @@ import {
 } from './styles';
 import useCustomMember from '@hooks/useCustomMember';
 import { postCreateWorkspace } from '@api/workspaceApi';
-import { IWorkspace } from '@typings/db';
+import { Workspace } from '@typings/db';
 
 const BasicLayout = () => {
   const params = useParams<{ workspaceUrl?: string }>();
@@ -130,7 +130,7 @@ const BasicLayout = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-          {memberState?.Workspaces.map((ws: IWorkspace) => {
+          {memberState?.Workspaces.map((ws: Workspace) => {
             return (
               <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
@@ -145,12 +145,12 @@ const BasicLayout = () => {
         </Channels>
         <Chats>
           <WorkspaceName onClick={toggleWorkspaceModal}>
-            {memberState?.Workspaces.find((v: IWorkspace) => v.url === workspaceUrl)?.name}
+            {memberState?.Workspaces.find((v: Workspace) => v.url === workspaceUrl)?.name}
           </WorkspaceName>
           <MenuScroll>
             <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
               <WorkspaceModal>
-                <h2>{memberState?.Workspaces.find((v: IWorkspace) => v.url === workspaceUrl)?.name}</h2>
+                <h2>{memberState?.Workspaces.find((v: Workspace) => v.url === workspaceUrl)?.name}</h2>
                 <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
                 <button onClick={handleClickLogout}>로그아웃</button>
               </WorkspaceModal>

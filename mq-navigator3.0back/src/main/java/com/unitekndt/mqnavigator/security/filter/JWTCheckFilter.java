@@ -1,6 +1,7 @@
 package com.unitekndt.mqnavigator.security.filter;
 
 import com.google.gson.Gson;
+import com.unitekndt.mqnavigator.dto.MemberDTO;
 import com.unitekndt.mqnavigator.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -55,19 +56,14 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             //SpringSecurityHolderContext 에다가 Member 정보를 넣어줘야한다.
             //authorization 성공시 -> MemberDTO 정보를 얻어낼 수 있다.
 
-            long memberId = ((Number) claims.get("memberId")).longValue();
+            Long id = ((Long) claims.get("id"));
             String email = (String) claims.get("email");
             String name = (String) claims.get("name");
             String nickname = (String) claims.get("nickname");
             String password = (String) claims.get("password");
-            List<Cash> cashList = (List<Cash>) claims.get("cashList");
-            Boolean social = (Boolean) claims.get("social");
             List<String> roleNames = (List<String>) claims.get("roleNames");
-            String status = (String) claims.get("status");
 
-            MemberDTO memberDTO = new MemberDTO(
-                    memberId, email, name, nickname, password, cashList, social, roleNames, status
-            );
+            MemberDTO memberDTO = new MemberDTO(id, email, name, nickname, password, roleNames);
 
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(memberDTO, password, memberDTO.getAuthorities());

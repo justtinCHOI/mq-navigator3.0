@@ -19,8 +19,6 @@ public class APILoginFailHandler implements AuthenticationFailureHandler{
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         //에러상세 Map -> (gson) jsonStr -> jsonStr
 
-        log.info("Login fail....." + exception);
-
         Gson gson = new Gson();
 
         String jsonStr = gson.toJson(Map.of("error", "ERROR_LOGIN"));

@@ -1,9 +1,30 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getWorkspace, postAddWorkspaceMember, postCreateWorkspace } from '@api/workspaceApi';
-import { Workspace } from '@typings/db'; // Workspace 타입 임포트
+import { MemberStatus, Workspace } from '@typings/db'; // Workspace 타입 임포트
 
 // 초기 상태: 단일 Workspace 객체
-const initState: Workspace = {
+const initState: {
+  owner: {
+    createdAt: string;
+    password: string;
+    modifiedAt: string;
+    name: string;
+    nickname: string;
+    memberRoleList: any[];
+    memberStatus: MemberStatus;
+    id: number;
+    workspaces: any[];
+    email: string;
+    ownedWorkspaces: any[];
+  };
+  routes: any[];
+  gates: any[];
+  times: any[];
+  members: any[];
+  name: string;
+  id: number;
+  url: string;
+} = {
   id: 0,
   name: '',
   url: '',
@@ -15,9 +36,8 @@ const initState: Workspace = {
     password: '',
     ownedWorkspaces: [],
     workspaces: [],
-    routes: [],
     memberRoleList: [],
-    memberStatus: 'ACTIVE',
+    memberStatus: MemberStatus.ACTIVE,
     createdAt: '',
     modifiedAt: '',
   },
@@ -69,24 +89,24 @@ const workspaceSlice = createSlice({
       .addCase(postAddWorkspaceMemberAsync.fulfilled, (state, action: PayloadAction<Workspace>) => {
         console.log('postAddWorkspaceMemberAsync.fulfilled');
         return action.payload; // 업데이트된 워크스페이스 상태로 덮어쓰기
-      })
-      // 워크스페이스 가져오기 실패 시 에러 처리
-      .addCase(getWorkspaceItemsAsync.rejected, (state, action) => {
-        console.error('getWorkspaceItemsAsync.rejected', action.error);
-        state.error = action.error?.message || null; // 기본값 설정
-      })
-      // 워크스페이스 생성 실패 시 에러 처리
-      .addCase(postCreateWorkspaceAsync.rejected, (state, action) => {
-        console.error('postCreateWorkspaceAsync.rejected', action.error);
-        state.error = action.error?.message || null; // 기본값 설정
-      })
-      // 로딩 상태 처리
-      .addCase(getWorkspaceItemsAsync.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(postCreateWorkspaceAsync.pending, (state) => {
-        state.loading = true;
       });
+    // // 워크스페이스 가져오기 실패 시 에러 처리
+    // .addCase(getWorkspaceItemsAsync.rejected, (state, action) => {
+    //   console.error('getWorkspaceItemsAsync.rejected', action.error);
+    //   state.error = action.error?.message || null; // 기본값 설정
+    // })
+    // // 워크스페이스 생성 실패 시 에러 처리
+    // .addCase(postCreateWorkspaceAsync.rejected, (state, action) => {
+    //   console.error('postCreateWorkspaceAsync.rejected', action.error);
+    //   state.error = action.error?.message || null; // 기본값 설정
+    // })
+    // // 로딩 상태 처리
+    // .addCase(getWorkspaceItemsAsync.pending, (state) => {
+    //   state.loading = true;
+    // })
+    // .addCase(postCreateWorkspaceAsync.pending, (state) => {
+    //   state.loading = true;
+    // });
   },
 });
 
