@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router';
-import { loginPostAsync, logout } from '@slices/loginSlice';
+import { loginPostAsync, logout } from '@slices/memberSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-const useCustomLogin = () => {
+const useCustomMember = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const loginState = useSelector((state) => state.loginSlice);
+  const memberState = useSelector((state) => state.memberSlice);
 
-  const isLogin = !!loginState.email; //----------로그인 여부
+  const isLogin = !!memberState.email; //----------로그인 여부
 
   const doLogin = async (loginParam) => {
     const action = await dispatch(loginPostAsync(loginParam));
@@ -33,7 +33,7 @@ const useCustomLogin = () => {
     return <Navigate replace to="/member/login" />;
   };
 
-  return { loginState, isLogin, doLogin, doLogout, moveToPath, moveToLogin, moveToLoginReturn };
+  return { memberState, isLogin, doLogin, doLogout, moveToPath, moveToLogin, moveToLoginReturn };
 };
 
-export default useCustomLogin;
+export default useCustomMember;

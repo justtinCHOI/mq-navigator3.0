@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import useCustomLogin from '@hooks/useCustomLogin';
+import useCustomMember from '@hooks/useCustomMember';
 import { FC, PropsWithChildren } from 'react';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const PrivateRoute: FC<PropsWithChildren<Props>> = ({ children }) => {
-  const { isLogin } = useCustomLogin();
+  const { isLogin } = useCustomMember();
   const location = useLocation();
 
   if (!isLogin) {

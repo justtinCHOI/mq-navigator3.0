@@ -1,11 +1,11 @@
 import useInput from '@hooks/useInput';
 import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/member/SignUp/styles';
 import React, { useCallback, useState } from 'react';
-import useCustomLogin from '@hooks/useCustomLogin';
+import useCustomMember from '@hooks/useCustomMember';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
-  const { loginState, doLogin } = useCustomLogin();
+  const { memberState, doLogin } = useCustomMember();
   const navigate = useNavigate();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
@@ -17,7 +17,6 @@ const LogIn = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setLogInError(false);
-
       const loginParam = { email: email, password: password };
       doLogin(loginParam)
         .then(() => {})
@@ -29,7 +28,7 @@ const LogIn = () => {
     [doLogin, email, password],
   );
 
-  if (loginState) {
+  if (memberState) {
     navigate(from.pathname, { replace: true });
   }
 
@@ -54,7 +53,7 @@ const LogIn = () => {
       </Form>
       <LinkContainer>
         아직 회원이 아니신가요?&nbsp;
-        <a href="/signup">회원가입 하러가기</a>
+        <a href="/member/signup">회원가입 하러가기</a>
       </LinkContainer>
     </div>
   );

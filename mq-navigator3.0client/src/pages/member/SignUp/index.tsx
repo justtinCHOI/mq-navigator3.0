@@ -2,19 +2,19 @@ import useInput from '@hooks/useInput';
 import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } from '@pages/member/SignUp/styles';
 import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useCustomLogin from '@hooks/useCustomLogin';
+import useCustomMember from '@hooks/useCustomMember';
 import { signup } from '@api/memberApi';
 import { useDispatch } from 'react-redux';
-import { login } from '@slices/loginSlice';
+import { login } from '@slices/memberSlice';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loginState } = useCustomLogin();
+  const { memberState } = useCustomMember();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
-  const { moveToPath } = useCustomLogin();
+  const { moveToPath } = useCustomMember();
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -68,13 +68,13 @@ const SignUp = () => {
     [nickname, mismatchError, email, password, dispatch, moveToPath],
   );
 
-  if (loginState) {
+  if (memberState) {
     navigate(from.pathname, { replace: true });
   }
 
   return (
     <div id="container">
-      <Header>Sleact</Header>
+      <Header>MQ-Navigator</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
@@ -114,7 +114,7 @@ const SignUp = () => {
       </Form>
       <LinkContainer>
         이미 회원이신가요?&nbsp;
-        <a href="/login">로그인 하러가기</a>
+        <a href="/member/login">로그인 하러가기</a>
       </LinkContainer>
     </div>
   );

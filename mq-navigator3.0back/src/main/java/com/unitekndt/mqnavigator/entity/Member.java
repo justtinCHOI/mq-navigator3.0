@@ -40,9 +40,6 @@ public class Member extends Auditable {
     @Builder.Default
     private List<Workspace> workspaces = new ArrayList<>();
 
-    @OneToMany(mappedBy = "members")
-    private List<Route> routes = new ArrayList<>();
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<MemberRole> memberRoleList = new ArrayList<>();

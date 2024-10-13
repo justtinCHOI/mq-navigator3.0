@@ -6,16 +6,12 @@ import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
 
 import { Button, Input, Label } from '@pages/member/SignUp/styles';
-import { IUser } from '@typings/db';
-import fetcher from '@utils/fetcher';
-import axios from 'axios';
 import gravatar from 'gravatar';
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link, Navigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useSWR from 'swr';
 
 import {
   AddButton,
@@ -33,20 +29,24 @@ import {
   Workspaces,
   WorkspaceWrapper,
 } from './styles';
-import useCustomLogin from '@hooks/useCustomLogin';
+import useCustomMember from '@hooks/useCustomMember';
+import { postCreateWorkspace } from '@api/workspaceApi';
+import { IWorkspace } from '@typings/db';
 
 const BasicLayout = () => {
-  const params = useParams<{ workspace?: string }>();
-  const { workspace } = params;
-  const { data: userData, mutate: revalidateUser } = useSWR<IUser | false>('/api/users', fetcher);
+  const params = useParams<{ workspaceUrl?: string }>();
+  const { workspaceUrl } = params;
+  const { memberState } = useCustomMember();
+
+  const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
+  const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+
   const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
   const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
-  const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
-  const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
-  const { doLogout, moveToPath } = useCustomLogin();
+  const { doLogout, moveToPath } = useCustomMember();
 
   const handleClickLogout = () => {
     doLogout();
@@ -63,13 +63,12 @@ const BasicLayout = () => {
       if (!newUrl || !newUrl.trim()) {
         return;
       }
-      axios
-        .post('/api/workspaces', {
-          workspace: newWorkspace,
-          url: newUrl,
-        })
+      const workspaceCreateParam = {
+        workspace: newWorkspace,
+        url: newUrl,
+      };
+      postCreateWorkspace(workspaceCreateParam)
         .then(() => {
-          revalidateUser();
           setShowCreateWorkspaceModal(false);
           setNewWorkspace('');
           setNewUrl('');
@@ -79,7 +78,7 @@ const BasicLayout = () => {
           toast.error(error.response?.data, { position: 'bottom-center' });
         });
     },
-    [newWorkspace, newUrl],
+    [newWorkspace, newUrl, setNewWorkspace, setNewUrl],
   );
 
   const onClickCreateWorkspace = useCallback(() => {
@@ -103,23 +102,23 @@ const BasicLayout = () => {
     setShowWorkspaceModal((prev) => !prev);
   }, []);
 
-  if (userData === false) {
+  if (memberState === false) {
     return <Navigate to="/member/login" />;
   }
   return (
     <div>
       <Header>
-        {userData && (
+        {memberState && (
           <RightMenu>
             <span onClick={onClickUserProfile}>
-              <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
+              <ProfileImg src={gravatar.url(memberState.email, { s: '28px', d: 'retro' })} alt={memberState.nickname} />
             </span>
             {showUserMenu && (
               <Menu style={{ right: 0, top: 38 }} show={showUserMenu} onCloseModal={onClickUserProfile}>
                 <ProfileModal>
-                  <img src={gravatar.url(userData.email, { s: '36px', d: 'retro' })} alt={userData.nickname} />
+                  <img src={gravatar.url(memberState.email, { s: '36px', d: 'retro' })} alt={memberState.nickname} />
                   <div>
-                    <span id="profile-name">{userData.nickname}</span>
+                    <span id="profile-name">{memberState.nickname}</span>
                     <span id="profile-active">Active</span>
                   </div>
                 </ProfileModal>
@@ -131,7 +130,7 @@ const BasicLayout = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-          {userData?.Workspaces.map((ws) => {
+          {memberState?.Workspaces.map((ws: IWorkspace) => {
             return (
               <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
@@ -146,12 +145,12 @@ const BasicLayout = () => {
         </Channels>
         <Chats>
           <WorkspaceName onClick={toggleWorkspaceModal}>
-            {userData?.Workspaces.find((v) => v.url === workspace)?.name}
+            {memberState?.Workspaces.find((v: IWorkspace) => v.url === workspaceUrl)?.name}
           </WorkspaceName>
           <MenuScroll>
             <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
               <WorkspaceModal>
-                <h2>{userData?.Workspaces.find((v) => v.url === workspace)?.name}</h2>
+                <h2>{memberState?.Workspaces.find((v: IWorkspace) => v.url === workspaceUrl)?.name}</h2>
                 <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
                 <button onClick={handleClickLogout}>로그아웃</button>
               </WorkspaceModal>

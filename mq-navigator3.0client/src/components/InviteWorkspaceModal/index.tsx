@@ -2,12 +2,11 @@ import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
 import { Button, Input, Label } from '@pages/member/SignUp/styles';
 import { IUser } from '@typings/db';
-import fetcher from '@utils/fetcher';
-import axios from 'axios';
 import React, { FC, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'react-toastify';
-import useSWR from 'swr';
+import useCustomMember from '@hooks/useCustomMember';
+import {postAddWorkspaceMember} from "@api/workspaceApi";
 
 interface Props {
   show: boolean;
@@ -15,13 +14,8 @@ interface Props {
   setShowInviteWorkspaceModal: (flag: boolean) => void;
 }
 const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWorkspaceModal }) => {
-  const { workspace } = useParams<{ workspace: string; channel: string }>();
+  const { workspaceUrl } = useParams<{ workspaceUrl: string; channel: string }>();
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
-  const { data: userData } = useSWR<IUser>('/api/users', fetcher);
-  const { mutate: revalidateMember } = useSWR<IUser[]>(
-    userData ? `/api/workspaces/${workspace}/members` : null,
-    fetcher,
-  );
 
   const onInviteMember = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,12 +23,8 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
       if (!newMember || !newMember.trim()) {
         return;
       }
-      axios
-        .post(`/api/workspaces/${workspace}/members`, {
-          email: newMember,
-        })
+      postAddWorkspaceMember(newMember)
         .then(() => {
-          revalidateMember();
           setShowInviteWorkspaceModal(false);
           setNewMember('');
         })
@@ -43,7 +33,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
           toast.error(error.response?.data, { position: 'bottom-center' });
         });
     },
-    [newMember, workspace, revalidateMember, setShowInviteWorkspaceModal, setNewMember],
+    [newMember, setShowInviteWorkspaceModal, setNewMember],
   );
 
   return (
