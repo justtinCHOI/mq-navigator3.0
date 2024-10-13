@@ -55,7 +55,7 @@ export const getWorkspaceItemsAsync = createAsyncThunk('getWorkspaceItemsAsync',
 // 워크스페이스 생성 비동기 액션
 export const postCreateWorkspaceAsync = createAsyncThunk(
   'postCreateWorkspaceAsync',
-  async (workspaceCreateParam: any) => {
+  async (workspaceCreateParam: { name: string; url: string }) => {
     return postCreateWorkspace(workspaceCreateParam);
   },
 );

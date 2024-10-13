@@ -1,11 +1,11 @@
 import { Suspense, lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, RouteObject } from 'react-router-dom';
 
 const Loading = <div>Loading....</div>;
 const WorkspaceAnalyze = lazy(() => import('@pages/workspace/analyze'));
 const WorkspaceSetting = lazy(() => import('@pages/workspace/setting'));
 
-const WorkspaceRouter = () => {
+const WorkspaceRouter = (): RouteObject[] => {
   return [
     {
       path: '',

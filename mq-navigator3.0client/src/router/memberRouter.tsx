@@ -1,10 +1,11 @@
 import { Suspense, lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
 
 const Loading = <div>Loading....</div>;
 const LoginPage = lazy(() => import('@pages/member/LogIn'));
 const LogoutPage = lazy(() => import('@pages/member/SignUp'));
 
-const memberRouter = () => {
+const memberRouter = (): RouteObject[] => {
   return [
     {
       path: 'login',

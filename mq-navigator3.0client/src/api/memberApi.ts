@@ -1,14 +1,13 @@
 import axios from 'axios';
-import { API_SERVER_HOST } from '@api/todoApi';
+export const API_SERVER_HOST = 'http://localhost:8080';
 
 const host = `${API_SERVER_HOST}/api/member`;
 
-export const loginPost = async (loginParam) => {
+export const loginPost = async (loginParam: { nickname: string; password: string }) => {
   const header = { headers: { 'Content-Type': 'x-www-form-urlencoded' } };
 
   const form = new FormData();
-  form.append('username', loginParam.email);
-  form.append('username', loginParam.nickname);
+  form.append('nickname', loginParam.nickname);
   form.append('password', loginParam.password);
 
   const res = await axios.post(`${host}/login`, form, header);
@@ -16,14 +15,9 @@ export const loginPost = async (loginParam) => {
   return res.data;
 };
 
-export const modifyMember = async (member) => {
-  // const res = await jwtAxios.put(`${host}/modify`, member)
-  const res = await axios.put(`${host}/modify`, member);
 
-  return res.data;
-};
 
-export const signup = async (singupParam) => {
+export const signup = async (singupParam: { email: string, nickname: string; password: string }) => {
   const res = await axios.post(`${API_SERVER_HOST}/api/member/singup`, singupParam);
 
   return res.data;

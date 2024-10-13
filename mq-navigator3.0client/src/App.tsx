@@ -2,7 +2,7 @@ import React from 'react';
 import './CRABasicFiles/App.css';
 
 import { RouterProvider } from 'react-router';
-import root from './router/root';
+import root from '@router/root';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 

@@ -64,7 +64,7 @@ const BasicLayout = () => {
         return;
       }
       const workspaceCreateParam = {
-        workspace: newWorkspace,
+        name: newWorkspace,
         url: newUrl,
       };
       postCreateWorkspace(workspaceCreateParam)
