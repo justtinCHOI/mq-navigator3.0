@@ -27,7 +27,7 @@ const config: Configuration = {
     },
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
-  entry: './src/client',
+  entry: './src/index.tsx',
   module: {
     rules: [
       {

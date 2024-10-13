@@ -22,7 +22,10 @@
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
-      "@typings/*": ["typings/*"]
+      "@typings/*": ["typings/*"],
+      "@slices/*": ["slices/*"],
+      "@router/*": ["router/*"],
+      "@api/*": ["api/*"]
     }
   },
   "include": ["src"]

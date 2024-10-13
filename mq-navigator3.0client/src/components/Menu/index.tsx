@@ -8,7 +8,7 @@ interface Props {
   closeButton?: boolean;
 }
 
-const Menu: FC<PropsWithChildren<Props>> = ({ closeButton = true, style, show, children, onCloseModal }) => {
+const Menu: FC<PropsWithChildren<Props>> = ({ closeButton, style, show, children, onCloseModal }) => {
   const stopPropagation = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   }, []);
@@ -25,8 +25,8 @@ const Menu: FC<PropsWithChildren<Props>> = ({ closeButton = true, style, show, c
     </CreateMenu>
   );
 };
-// Menu.defaultProps = {
-//   closeButton: true,
-// };
+Menu.defaultProps = {
+  closeButton: true,
+};
 
 export default Menu;
