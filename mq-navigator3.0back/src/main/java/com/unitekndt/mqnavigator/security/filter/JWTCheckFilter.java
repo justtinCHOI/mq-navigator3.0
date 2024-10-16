@@ -2,8 +2,8 @@ package com.unitekndt.mqnavigator.security.filter;
 
 import com.google.gson.Gson;
 import com.unitekndt.mqnavigator.dto.MemberDTO;
-import com.unitekndt.mqnavigator.util.JWTUtil;
 import jakarta.servlet.FilterChain;
+import com.unitekndt.mqnavigator.util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +30,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        return path.startsWith("/stock/item/entire/");
+        return path.startsWith("/stockfish/mqnavigator/analyze/");
     }
 
     @Override

@@ -77,12 +77,14 @@ export const Workspaces = styled.div`
 `;
 
 export const Channels = styled.nav`
-  width: 260px;
+  //width: 260px;
+  flex: 3;
   display: inline-flex;
   flex-direction: column;
   background: #3f0e40;
   color: rgb(188, 171, 188);
   vertical-align: top;
+  //height: 100vh; // +
 
   & a {
     padding-left: 36px;
@@ -177,7 +179,7 @@ export const WorkspaceModal = styled.div`
 `;
 
 export const Chats = styled.div`
-  flex: 1;
+  flex: 2;
 `;
 
 export const AddButton = styled.button`

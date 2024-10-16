@@ -1,6 +1,6 @@
 import useInput from '@hooks/useInput';
 import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/member/SignUp/styles';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import useCustomMember from '@hooks/useCustomMember';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,8 @@ const LogIn = () => {
   const { memberState, doLogin } = useCustomMember();
   const navigate = useNavigate();
   const location = useLocation();
-  const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
+  // const { from } = location.state || { from: { pathname: '/workspace/mqnavigator/analyze' } };
+  const from = location.state?.from || { pathname: '/workspace/mqnavigator/analyze' };
 
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
@@ -28,9 +29,30 @@ const LogIn = () => {
     [doLogin, email, password],
   );
 
-  if (memberState) {
-    navigate(from.pathname, { replace: true });
-  }
+  // if (memberState.email) {
+  //   // console.log('memberState', memberState);
+  //   navigate(from.pathname, { replace: true });
+  // }
+  // useEffect(() => {
+  //   if (memberState.email) {
+  //     console.log(memberState.email);
+  //     navigate(from.pathname, { replace: true });
+  //   }
+  // }, [from.pathname, memberState.email, navigate]);
+
+  // if (memberState.email) {
+  //   console.log('Navigating to:', from.pathname);
+  //   // navigate(from.pathname, { replace: true });
+  //   navigate('/workspace/mqnavigator/analyze', { replace: true });
+  // }
+
+  useEffect(() => {
+    console.log('Current memberState:', memberState);
+    if (memberState.email) {
+      console.log('Navigating to:', from.pathname);
+      navigate(from.pathname, { replace: true });
+    }
+  }, [from.pathname, memberState, navigate]);
 
   return (
     <div id="container">

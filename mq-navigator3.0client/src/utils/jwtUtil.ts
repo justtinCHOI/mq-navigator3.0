@@ -2,11 +2,6 @@ import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { getCookie, setCookie } from './cookieUtil';
 import { API_SERVER_HOST } from '@api/memberApi';
 
-export interface MemberInfo {
-  accessToken: string;
-  refreshToken: string;
-}
-
 const jwtAxios = axios.create();
 
 const refreshJWT = async (accessToken: string, refreshToken: string): Promise<any> => {

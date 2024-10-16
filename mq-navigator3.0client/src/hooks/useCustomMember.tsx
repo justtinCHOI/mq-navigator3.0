@@ -2,25 +2,32 @@ import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router';
 import { loginPostAsync, logout } from '@slices/memberSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { updateWorkspace } from '@slices/workspaceSlice';
+import { Member } from '@typings/db';
 
 const useCustomMember = () => {
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const memberState = useSelector((state) => state.memberSlice);
-
+  const dispatch: AppDispatch = useDispatch();
+  const memberState = useSelector((state: RootState) => state.memberSlice);
   const isLogin = !!memberState.email; //----------로그인 여부
 
-  const doLogin = async (loginParam) => {
+  const doLogin = async (loginParam: { email: string; password: string }) => {
     const action = await dispatch(loginPostAsync(loginParam));
-    return action.payload;
+    const payload = action.payload as Member; // payload를 Member 타입으로 지정
+    // 워크스페이스 업데이트 액션 호출
+    if (payload && payload.workspaces && payload.workspaces.length > 0) {
+      const workspaceToUpdate = payload.workspaces[0];
+      dispatch(updateWorkspace(workspaceToUpdate));
+    }
+    return payload;
   };
-
   const doLogout = () => {
     dispatch(logout());
   };
 
-  const moveToPath = (path) => {
+  const moveToPath = (path: string) => {
     navigate({ pathname: path }, { replace: true });
   };
 

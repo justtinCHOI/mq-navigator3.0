@@ -1,6 +1,5 @@
 import Map from '@components/Map';
 import PlayList from '@components/PlayList';
-import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
@@ -8,10 +7,10 @@ import useInput from '@hooks/useInput';
 import { Button, Input, Label } from '@pages/member/SignUp/styles';
 import gravatar from 'gravatar';
 import React, { useCallback, useState } from 'react';
-import { useParams } from 'react-router';
 import { Link, Navigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Outlet } from 'react-router-dom';
 
 import {
   AddButton,
@@ -19,40 +18,26 @@ import {
   Chats,
   Header,
   LogOutButton,
-  MenuScroll,
   ProfileImg,
   ProfileModal,
   RightMenu,
   WorkspaceButton,
-  WorkspaceModal,
-  WorkspaceName,
   Workspaces,
   WorkspaceWrapper,
 } from './styles';
 import useCustomMember from '@hooks/useCustomMember';
-import { postCreateWorkspace } from '@api/workspaceApi';
 import { Workspace } from '@typings/db';
+import { postCreateWorkspace } from '@api/workspaceApi';
 
 const BasicLayout = () => {
-  const params = useParams<{ workspaceUrl?: string }>();
-  const { workspaceUrl } = params;
   const { memberState } = useCustomMember();
+  const { doLogout, moveToPath } = useCustomMember();
 
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
-  const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
-  const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
-
-  const { doLogout, moveToPath } = useCustomMember();
-
-  const handleClickLogout = () => {
-    doLogout();
-    alert('로그아웃되었습니다.');
-    moveToPath('/');
-  };
+  const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
 
   const onCreateWorkspace = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -81,28 +66,25 @@ const BasicLayout = () => {
     [newWorkspace, newUrl, setNewWorkspace, setNewUrl],
   );
 
+  const handleClickLogout = () => {
+    doLogout();
+    alert('로그아웃되었습니다.');
+    moveToPath('/');
+  };
+
   const onClickCreateWorkspace = useCallback(() => {
     setShowCreateWorkspaceModal(true);
-  }, []);
-
-  const onClickInviteWorkspace = useCallback(() => {
-    setShowInviteWorkspaceModal(true);
-  }, []);
-
-  const onCloseModal = useCallback(() => {
-    setShowCreateWorkspaceModal(false);
-    setShowInviteWorkspaceModal(false);
   }, []);
 
   const onClickUserProfile = useCallback(() => {
     setShowUserMenu((prev) => !prev);
   }, []);
 
-  const toggleWorkspaceModal = useCallback(() => {
-    setShowWorkspaceModal((prev) => !prev);
+  const onCloseModal = useCallback(() => {
+    setShowCreateWorkspaceModal(false);
   }, []);
 
-  if (memberState === false) {
+  if (!memberState) {
     return <Navigate to="/member/login" />;
   }
   return (
@@ -130,7 +112,7 @@ const BasicLayout = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-          {memberState?.Workspaces.map((ws: Workspace) => {
+          {memberState?.workspaces.map((ws: Workspace) => {
             return (
               <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
@@ -144,18 +126,7 @@ const BasicLayout = () => {
           <PlayList />
         </Channels>
         <Chats>
-          <WorkspaceName onClick={toggleWorkspaceModal}>
-            {memberState?.Workspaces.find((v: Workspace) => v.url === workspaceUrl)?.name}
-          </WorkspaceName>
-          <MenuScroll>
-            <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
-              <WorkspaceModal>
-                <h2>{memberState?.Workspaces.find((v: Workspace) => v.url === workspaceUrl)?.name}</h2>
-                <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
-                <button onClick={handleClickLogout}>로그아웃</button>
-              </WorkspaceModal>
-            </Menu>
-          </MenuScroll>
+          <Outlet />
         </Chats>
       </WorkspaceWrapper>
       <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
@@ -171,11 +142,6 @@ const BasicLayout = () => {
           <Button type="submit">생성하기</Button>
         </form>
       </Modal>
-      <InviteWorkspaceModal
-        show={showInviteWorkspaceModal}
-        onCloseModal={onCloseModal}
-        setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
-      />
       <ToastContainer position="bottom-center" />
     </div>
   );

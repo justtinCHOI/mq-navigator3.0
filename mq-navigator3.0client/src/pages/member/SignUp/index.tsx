@@ -6,6 +6,7 @@ import useCustomMember from '@hooks/useCustomMember';
 import { signup } from '@api/memberApi';
 import { useDispatch } from 'react-redux';
 import { login } from '@slices/memberSlice';
+import useCustomWorkspace from "@hooks/useCustomWorkspace";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const SignUp = () => {
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
   const { moveToPath } = useCustomMember();
+  const { updateWorkspaceWithMember } = useCustomWorkspace();
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -52,8 +54,9 @@ const SignUp = () => {
         setSignUpSuccess(false);
         const singupParam = { email: email, nickname: nickname, password: password };
         signup(singupParam)
-          .then((memberInfo) => {
-            dispatch(login(memberInfo));
+          .then((memberState) => {
+            dispatch(login(memberState));
+            updateWorkspaceWithMember(memberState);
             moveToPath('/workspace/mqnavigator');
           })
           .then(() => {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { API_SERVER_HOST } from './todoApi';
+import { API_SERVER_HOST } from '@api/memberApi';
 
 const rest_api_key = `8f46337bde852c2d39573c6c60acfd65`; //REST키값
 
@@ -18,7 +18,7 @@ export const getKakaoLoginLink = () => {
 };
 
 //2. accessToken 받기
-export const getAccessToken = async (authCode) => {
+export const getAccessToken = async (authCode: string) => {
   const header = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -37,7 +37,7 @@ export const getAccessToken = async (authCode) => {
 };
 
 //3. 사용자 정보 얻기
-export const getMemberWithAccessToken = async (accessToken) => {
+export const getMemberWithAccessToken = async (accessToken: string) => {
   const res = await axios.get(`${API_SERVER_HOST}/api/member/kakao?accessToken=${accessToken}`);
 
   return res.data;

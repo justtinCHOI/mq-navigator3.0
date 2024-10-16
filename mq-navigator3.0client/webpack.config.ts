@@ -18,16 +18,19 @@ const config: Configuration = {
   devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
   resolve: {
     alias: {
+      '@api': path.resolve(__dirname, 'src/api'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@layouts': path.resolve(__dirname, 'src/layouts'),
       '@pages': path.resolve(__dirname, 'src/pages'),
-      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@router': path.resolve(__dirname, 'src/router'),
+      '@slices': path.resolve(__dirname, 'src/slices'),
       '@typings': path.resolve(__dirname, 'src/typings'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
-  entry: './src/index.tsx',
+  entry: './src/index',
   module: {
     rules: [
       {
@@ -69,7 +72,7 @@ const config: Configuration = {
     new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
   ],
   output: {
-    path: path.join(__dirname, 'public', 'dist'), // public 폴더 내에 dist 폴더 생성
+    path: path.join(__dirname, 'public/dist'), // public 폴더 내에 dist 폴더 생성
     filename: '[name].js',
     publicPath: '/dist/',
   },

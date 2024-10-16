@@ -13,7 +13,7 @@ export const setCookie = (name: string, value: string, days: number): void => {
 };
 
 // getCookie 함수의 타입 정의
-export const getCookie = (name: string): string | undefined => {
+export const getCookie = (name: string): any => {
   return cookies.get(name);
 };
 

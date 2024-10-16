@@ -30,7 +30,7 @@ export interface Workspace extends Copyright {
   owner: Member;
   members: Member[];
   routes: Route[];
-  times: Date[];
+  times: string[];
   gates: Gate[];
 }
 

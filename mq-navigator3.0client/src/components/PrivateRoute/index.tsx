@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import useCustomMember from '@hooks/useCustomMember';
-import { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 
 interface Props {
   // show: boolean;

@@ -1,15 +1,16 @@
+import React from 'react';
 import { Suspense, lazy } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 
 const Loading = <div>Loading....</div>;
-const WorkspaceAnalyze = lazy(() => import('@pages/workspace/analyze'));
-const WorkspaceSetting = lazy(() => import('@pages/workspace/setting'));
+const WorkspaceAnalyze = lazy(() => import('@pages/workspace/Analyze'));
+const WorkspaceSetting = lazy(() => import('@pages/workspace/Setting'));
 
 const WorkspaceRouter = (): RouteObject[] => {
   return [
     {
       path: '',
-      element: <Navigate replace to="/workspace/:url/analyze" />,
+      element: <Navigate replace to="analyze" />,
     },
     {
       path: 'analyze',
