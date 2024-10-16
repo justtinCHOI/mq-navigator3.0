@@ -14,12 +14,12 @@ import { Outlet } from 'react-router-dom';
 
 import {
   AddButton,
-  Channels,
-  Chats,
+  CenterDiv,
   Header,
   LogOutButton,
   ProfileImg,
   ProfileModal,
+  RightDiv,
   RightMenu,
   WorkspaceButton,
   Workspaces,
@@ -121,13 +121,13 @@ const BasicLayout = () => {
           })}
           <AddButton onClick={onClickCreateWorkspace}>+</AddButton>
         </Workspaces>
-        <Channels>
+        <CenterDiv>
           <Map />
           <PlayList />
-        </Channels>
-        <Chats>
+        </CenterDiv>
+        <RightDiv>
           <Outlet />
-        </Chats>
+        </RightDiv>
       </WorkspaceWrapper>
       <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
         <form onSubmit={onCreateWorkspace}>

@@ -35,9 +35,7 @@ const WorkspacePage = () => {
           </button>
         </div>
       </Header>
-      <MenuScroll>
-        <Outlet />
-      </MenuScroll>
+      <Outlet />
       <InviteWorkspaceModal
         show={showInviteWorkspaceModal}
         onCloseModal={onCloseModal}

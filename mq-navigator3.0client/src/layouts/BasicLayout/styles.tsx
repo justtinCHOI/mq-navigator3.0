@@ -76,7 +76,7 @@ export const Workspaces = styled.div`
   padding: 15px 0 0;
 `;
 
-export const Channels = styled.nav`
+export const CenterDiv = styled.nav`
   //width: 260px;
   flex: 3;
   display: inline-flex;
@@ -178,7 +178,7 @@ export const WorkspaceModal = styled.div`
   }
 `;
 
-export const Chats = styled.div`
+export const RightDiv = styled.div`
   flex: 2;
 `;
 
