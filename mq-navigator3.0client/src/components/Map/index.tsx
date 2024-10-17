@@ -24,11 +24,7 @@ const Map = () => {
     };
   }, []);
 
-  return (
-    <div>
-      <MapContainer id="viewMap"></MapContainer>
-    </div>
-  );
+  return <MapContainer id="viewMap"></MapContainer>;
 };
 
 export default Map;

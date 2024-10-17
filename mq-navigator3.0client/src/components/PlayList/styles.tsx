@@ -2,7 +2,13 @@ import styled from '@emotion/styled';
 
 export const PlayListContainer = styled.div`
   width: 100%;
-  height: 238px;
+  height: 120px;
+`;
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 export const ContentLine = styled.div`
@@ -11,8 +17,18 @@ export const ContentLine = styled.div`
   flex-shrink: 0;
 `;
 
+export const ContentLineText = styled.p`
+  margin: 10px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-weight: 500;
+`;
+
 export const ContentLineDiv = styled.div`
-  margin: 20px;
+  margin: 10px;
   height: 40px;
   border-radius: 4px;
   padding: 5px;
@@ -27,21 +43,24 @@ export const ContentLineDiv = styled.div`
   }
 `;
 
-export const RightContentIcon = styled.i`
-  flex: 1;
-  margin: auto;
+export const ContentLineInput = styled.div`
+  margin: 10px;
+  height: 40px;
+  border-radius: 4px;
   padding: 5px;
-  font-size: 24px;
-  cursor: pointer;
-  transition: color 0.3s ease, transform 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
 
-  &:active {
-    color: #000;
+  &:focus {
+    outline: none;
+    border-color: #666;
+    box-shadow: 0 0 5px #ccc;
   }
 `;
 
 export const SelectOption = styled.select`
-  margin: 20px;
+  margin: 10px;
   height: 40px;
   border: none;
   box-sizing: border-box;
@@ -53,6 +72,64 @@ export const SelectOption = styled.select`
   &:focus {
     outline: none;
     box-shadow: none;
+  }
+`;
+export const CustomIconButton = styled.button`
+  display: flex;
+  margin: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+export const CustomTextButton = styled.button`
+  margin: 10px;
+  padding: 5px 10px;
+  color: #000;
+  border: 1px solid #999;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px #ccc;
+  }
+`;
+
+export const RightContentIcon = styled.i`
+  flex: 1;
+  margin: auto;
+  padding: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:active {
+    color: #000;
   }
 `;
 

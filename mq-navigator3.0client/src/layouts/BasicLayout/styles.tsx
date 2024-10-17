@@ -6,7 +6,7 @@ export const RightMenu = styled.div`
 
 export const Header = styled.header`
   height: 38px;
-  background: #350d36;
+  background: rgba(20, 0, 100);
   color: #ffffff;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
   padding: 5px;
@@ -68,23 +68,21 @@ export const Workspaces = styled.div`
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  background: #3f0e40;
-  border-top: 1px solid rgb(82, 38, 83);
-  border-right: 1px solid rgb(82, 38, 83);
+  background: rgba(30, 10, 120);
+  border-top: 1px solid rgb(50, 20, 170);
+  border-right: 1px solid rgb(50, 20, 170);
   vertical-align: top;
   text-align: center;
   padding: 15px 0 0;
 `;
 
 export const CenterDiv = styled.nav`
-  //width: 260px;
-  flex: 3;
+  flex: 1;
   display: inline-flex;
   flex-direction: column;
-  background: #3f0e40;
+  background: rgba(30, 10, 120);
   color: rgb(188, 171, 188);
   vertical-align: top;
-  //height: 100vh; // +
 
   & a {
     padding-left: 36px;
@@ -179,7 +177,7 @@ export const WorkspaceModal = styled.div`
 `;
 
 export const RightDiv = styled.div`
-  flex: 2;
+  flex: 1;
 `;
 
 export const AddButton = styled.button`

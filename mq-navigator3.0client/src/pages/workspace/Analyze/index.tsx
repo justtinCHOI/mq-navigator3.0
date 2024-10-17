@@ -1,7 +1,7 @@
 import React from 'react';
-import DisplayList from 'components/Setting/DisplayList';
-import GateList from 'components/Setting/GateList';
+import GateList from '@components/Analyze/GateList';
 import { Section } from '@pages/workspace/Analyze/styles';
+import DisplayList from '@components/Analyze/DisplayList';
 
 const Analyze = () => {
   return (
