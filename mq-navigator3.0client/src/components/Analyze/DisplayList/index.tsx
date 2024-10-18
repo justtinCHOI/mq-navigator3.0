@@ -6,33 +6,33 @@ import { Content, ContentLine, ContentLineText } from '@components/PlayList/styl
 import EachDisplay from '@components/Analyze/EachDisplay/EachDisplay';
 const DisplayList = () => {
   return (
-    <Content style={{ height: 'calc((100vh - 144px) / 2)' }}>
+    <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '60px' }}>
         <ContentLine>
-          <ContentLineText className="width70px">Gate Range</ContentLineText>
-          <ContentLineText className="width70px">
+          <ContentLineText className="width100px">Gate Range</ContentLineText>
+          <ContentLineText className="flex">
             Time
             <br />
             (m)
           </ContentLineText>
-          <ContentLineText>
+          <ContentLineText className="flex">
             Elasped Time
             <br />
             hhmmss
           </ContentLineText>
-          <ContentLineText>
+          <ContentLineText className="flex">
             Estimated Time
             <br />
             hhmmss
           </ContentLineText>
-          <ContentLineText>
+          <ContentLineText className="flex">
             Speed
             <br />
             km/h
           </ContentLineText>
         </ContentLine>
       </Content>
-      <ScrollZone style={{ height: 'calc((100vh - 144px) / 2) - 60px' }}>
+      <ScrollZone style={{ height: 'calc((100vh - 126px) / 2) - 60px' }}>
         <Scrollbars>
           {Array.from({ length: 10 }, (_, index) => (
             <EachDisplay key={index + 1} />

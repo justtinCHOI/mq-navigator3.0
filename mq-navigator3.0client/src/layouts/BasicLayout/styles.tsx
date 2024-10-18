@@ -138,7 +138,7 @@ export const WorkspaceName = styled.button`
   border-bottom: 1px solid rgb(82, 38, 83);
   font-weight: 900;
   font-size: 24px;
-  background: transparent;
+  background: rgba(30, 10, 120);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -166,7 +166,7 @@ export const WorkspaceModal = styled.div`
     height: 28px;
     padding: 4px;
     border: none;
-    background: transparent;
+    background: rgba(30, 10, 120);
     border-top: 1px solid rgb(28, 29, 28);
     cursor: pointer;
 
@@ -186,7 +186,7 @@ export const AddButton = styled.button`
   display: inline-block;
   width: 40px;
   height: 40px;
-  background: transparent;
+  background: rgba(30, 10, 120);
   border: none;
   cursor: pointer;
 `;

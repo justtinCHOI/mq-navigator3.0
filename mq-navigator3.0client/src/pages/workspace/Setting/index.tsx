@@ -11,7 +11,7 @@ import SectionDataSetting from '@components/Setting/SectionDataSetting';
 
 const Setting = () => {
   return (
-    <ScrollZone>
+    <ScrollZone style={{ height: 'calc((100vh - 102px) / 2)' }}>
       <Scrollbars>
         <Section>
           <ColorSetting />

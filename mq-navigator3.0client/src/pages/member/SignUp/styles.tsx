@@ -59,7 +59,7 @@ export const Button = styled.button`
   width: 100%;
   max-width: 100%;
   color: #fff;
-  background-color: #4a154b;
+  background: rgba(30, 10, 120);
   border: none;
   font-size: 18px;
   font-weight: 900;

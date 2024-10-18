@@ -12,9 +12,7 @@ code {
     monospace;
 }
 
-.flex {
-  flex: 1;
-}
+
 .width30 {
   width: 30%;
 }
@@ -26,6 +24,9 @@ code {
 }
 .width100 {
   width: 100%;
+}
+.width6px{
+  width: 6px;
 }
 .width20px{
   width: 20px;
@@ -45,15 +46,24 @@ code {
 .width70px{
   width: 70px;
 }
+.width100px{
+  width: 100px;
+}
 .width110px{
   width: 110px;
 }
 .width120px{
   width: 120px;
 }
+.width140px{
+  width: 140px;
+}
 .spaceAround {
   justify-content: space-around;
 }
 .flexEnd {
   justify-content: flex-end;
+}
+.flex {
+  flex: 1;
 }

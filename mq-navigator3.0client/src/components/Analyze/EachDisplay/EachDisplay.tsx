@@ -1,36 +1,15 @@
 import React from 'react';
-import {
-  Content,
-  ContentLine,
-  ContentLineInput,
-  ContentLineText,
-  CustomIconButton,
-  SelectOption,
-} from '@components/PlayList/styles';
+import { Content, ContentLine, ContentLineText } from '@components/PlayList/styles';
 
 const EachDisplay = () => {
   return (
     <Content>
       <ContentLine>
-        <ContentLineText className="width70px"></ContentLineText>
-        <ContentLineInput className="width120px">1111 1111</ContentLineInput>
-        <SelectOption className="width50px">
-          <option value="north" selected>
-            N
-          </option>
-          <option value="south">S</option>
-        </SelectOption>
-        <ContentLineInput className="flex">37.0</ContentLineInput>
-        <SelectOption className="width50px">
-          <option value="east" selected>
-            E
-          </option>
-          <option value="west">W</option>
-        </SelectOption>
-        <ContentLineInput className="flex">37.0</ContentLineInput>
-        <CustomIconButton>
-          <i className="fa-solid fa-xmark"></i>
-        </CustomIconButton>
+        <ContentLineText className="width100px">first ~ current</ContentLineText>
+        <ContentLineText className="flex">2900</ContentLineText>
+        <ContentLineText className="flex">252700</ContentLineText>
+        <ContentLineText className="flex">252700</ContentLineText>
+        <ContentLineText className="flex">1</ContentLineText>
       </ContentLine>
     </Content>
   );

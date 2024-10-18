@@ -14,7 +14,7 @@ import '../../../index.css';
 
 const GateList = () => {
   return (
-    <Content style={{ height: 'calc((100vh - 136px) / 2)' }}>
+    <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '120px' }}>
         <ContentLine style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <SelectOption style={{ margin: '0 auto' }}>
@@ -50,9 +50,10 @@ const GateList = () => {
           <ContentLineText className="flex">Latitude</ContentLineText>
           <ContentLineText className="flex">Longitude</ContentLineText>
           <CustomIconButton style={{ visibility: 'hidden' }}>X</CustomIconButton>
+          <div className="width6px"></div>
         </ContentLine>
       </Content>
-      <ScrollZone style={{ height: 'calc((100vh - 136px) / 2) - 120px' }}>
+      <ScrollZone style={{ height: 'calc((100vh - 126px) / 2) - 120px' }}>
         <Scrollbars>
           {Array.from({ length: 10 }, (_, index) => (
             <EachGate key={index + 1} number={index + 1} />
