@@ -1,4 +1,4 @@
-import { MemberStatus, MemberRole, Member, Workspace } from '@typings/db';
+import {MemberStatus, MemberRole, Member, Workspace, Route} from '@typings/db';
 
 // 더미 데이터를 생성하는 함수
 const generateDummyData = () => {
@@ -11,12 +11,14 @@ const generateDummyData = () => {
       url: 'mqnavigator',
       owner: { id: 1 } as Member,
       members: [{ id: 1 } as Member, { id: 2 } as Member],
+      route: null as unknown as Route,
       routes: [],
-      times: [new Date().toISOString()],
       gates: [],
       isPublic: true,
       usage: 100,
       copyrightHolder: 'member',
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       id: 2,
@@ -24,12 +26,14 @@ const generateDummyData = () => {
       url: 'mqnavigator2',
       owner: { id: 2 } as Member,
       members: [{ id: 1 } as Member, { id: 2 } as Member],
+      route: null as unknown as Route,
       routes: [],
-      times: [new Date().toISOString()],
       gates: [],
       isPublic: true,
       usage: 100,
       copyrightHolder: 'owner',
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
   ];
 
@@ -45,8 +49,8 @@ const generateDummyData = () => {
       workspaces: [workspaceDummy[0], workspaceDummy[1]],
       memberRoleList: [MemberRole.USER],
       memberStatus: MemberStatus.ACTIVE,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       id: 2,
@@ -58,8 +62,8 @@ const generateDummyData = () => {
       workspaces: [workspaceDummy[0], workspaceDummy[1]],
       memberRoleList: [MemberRole.ADMIN],
       memberStatus: MemberStatus.ACTIVE,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
   );
 
@@ -76,9 +80,3 @@ const generateDummyData = () => {
 const { memberDummy, workspaceDummy } = generateDummyData();
 
 export { memberDummy, workspaceDummy };
-
-// // 워크스페이스에 멤버 추가
-// workspaceDummy[0].members = [memberDummy[0], memberDummy[1]];
-// workspaceDummy[0].owner = memberDummy[0];
-// workspaceDummy[1].members = [memberDummy[0], memberDummy[1]];
-// workspaceDummy[1].owner = memberDummy[1];

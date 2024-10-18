@@ -7,7 +7,7 @@ import {
   CustomIconButton,
   LeftContent,
   RightContent,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 import Sortable from 'sortablejs';
 import UseSelectOptionData from '@hooks/UseSelectOptionData';
 

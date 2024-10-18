@@ -1,31 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getWorkspaces, postAddWorkspaceMember, postCreateWorkspace } from '@api/workspaceApi';
-import { MemberStatus, Workspace } from '@typings/db';
-import { updateMember } from '@slices/memberSlice'; // Workspace 타입 임포트
+import { MemberStatus, Route, Workspace } from '@typings/db';
+import { updateMember } from '@slices/memberSlice';
 
 // 초기 상태: 단일 Workspace 객체
-const initState: {
-  owner: {
-    createdAt: string;
-    password: string;
-    modifiedAt: string;
-    name: string;
-    nickname: string;
-    memberRoleList: any[];
-    memberStatus: MemberStatus;
-    id: number;
-    workspaces: any[];
-    email: string;
-    ownedWorkspaces: any[];
-  };
-  routes: any[];
-  gates: any[];
-  times: any[];
-  members: any[];
-  name: string;
-  id: number;
-  url: string;
-} = {
+const initState: Workspace = {
   id: 0,
   name: '',
   url: '',
@@ -39,13 +18,18 @@ const initState: {
     workspaces: [],
     memberRoleList: [],
     memberStatus: MemberStatus.ACTIVE,
-    createdAt: '',
-    modifiedAt: '',
+    createdAt: null,
+    modifiedAt: null,
   },
   members: [],
+  route: null as unknown as Route,
   routes: [],
-  times: [],
   gates: [],
+  isPublic: false,
+  usage: 0,
+  copyrightHolder: '',
+  createdAt: null,
+  modifiedAt: null,
 };
 
 export const updateWorkspace = createAsyncThunk('updateWorkspace', async (workspace: Workspace) => {

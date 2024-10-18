@@ -58,8 +58,8 @@ export const signup = async (signupParam: { email: string; nickname: string; pas
     workspaces: [],
     memberRoleList: [MemberRole.USER], // 기본적으로 USER 역할 부여
     memberStatus: MemberStatus.ACTIVE,
-    createdAt: new Date().toISOString(),
-    modifiedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
   };
 
   memberDummy.push(newMember); // 메모리에 새로운 멤버 추가

@@ -1,5 +1,4 @@
 import Map from '@components/Map';
-import PlayList from '@components/PlayList';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
@@ -28,6 +27,7 @@ import {
 import useCustomMember from '@hooks/useCustomMember';
 import { Workspace } from '@typings/db';
 import { postCreateWorkspace } from '@api/workspaceApi';
+import Playbar from '@components/Playbar';
 
 const BasicLayout = () => {
   const { memberState } = useCustomMember();
@@ -123,7 +123,7 @@ const BasicLayout = () => {
         </Workspaces>
         <CenterDiv>
           <Map />
-          <PlayList />
+          <Playbar />
         </CenterDiv>
         <RightDiv>
           <Outlet />

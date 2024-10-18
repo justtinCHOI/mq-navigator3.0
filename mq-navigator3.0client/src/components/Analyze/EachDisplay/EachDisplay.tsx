@@ -1,5 +1,5 @@
 import React from 'react';
-import { Content, ContentLine, ContentLineText } from '@components/PlayList/styles';
+import { Content, ContentLine, ContentLineText } from '@components/Playbar/styles';
 
 const EachDisplay = () => {
   return (

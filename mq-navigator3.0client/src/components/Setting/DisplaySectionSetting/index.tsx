@@ -7,7 +7,7 @@ import {
   CustomIconButton,
   LeftContent,
   RightContent,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 import UseSelectOptionGateRange from '@hooks/UseSelectOptionGateRange';
 import Sortable from 'sortablejs';
 

@@ -36,6 +36,10 @@ public class Workspace extends Copyright{
     )
     private List<Member> members = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "main_route_id")  // 메인 Route를 가리키는 컬럼
+    private Route route;
+
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> routes = new ArrayList<>();
 

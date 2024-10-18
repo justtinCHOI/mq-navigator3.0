@@ -7,7 +7,7 @@ import {
   LeftContent,
   RightContent,
   SelectOption,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 
 const RefreshIntervalSetting = () => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContentLine, ContentLineText, SelectOption } from '@components/PlayList/styles';
+import { ContentLine, ContentLineText, SelectOption } from '@components/Playbar/styles';
 
 // 함수형 컴포넌트로 정의
 const UseSelectOptionColor = ({ phase }: { phase: string }) => {

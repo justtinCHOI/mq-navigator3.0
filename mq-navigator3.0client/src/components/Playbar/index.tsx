@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  PlayListContainer,
+  PlaybarContainer,
   ContentLine,
   ContentLineDiv,
   RightContentIcon,
@@ -8,10 +8,10 @@ import {
   ProgressBar,
   TimeDisplay,
   ProgressContainer,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 
-const PlayList = () => (
-  <PlayListContainer>
+const Playbar = () => (
+  <PlaybarContainer>
     <ContentLine>
       <ContentLineDiv></ContentLineDiv>
       <RightContentIcon className="fa-solid fa-backward"></RightContentIcon>
@@ -38,7 +38,7 @@ const PlayList = () => (
         </ProgressContainer>
       </ContentLineDiv>
     </ContentLine>
-  </PlayListContainer>
+  </PlaybarContainer>
 );
 
-export default PlayList;
+export default Playbar;

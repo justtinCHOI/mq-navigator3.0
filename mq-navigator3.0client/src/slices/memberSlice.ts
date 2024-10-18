@@ -13,8 +13,8 @@ const initState: Member = {
   workspaces: [],
   memberRoleList: [],
   memberStatus: MemberStatus.INACTIVE,
-  createdAt: '',
-  modifiedAt: '',
+  createdAt: null,
+  modifiedAt: null,
 };
 
 // 로그인 비동기 처리 액션

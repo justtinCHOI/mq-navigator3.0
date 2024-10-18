@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Container, Header } from '@pages/workspace/styles';
 import useCustomWorkspace from '@hooks/useCustomWorkspace';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
-import { CustomIconButton } from '@components/PlayList/styles';
+import { CustomIconButton } from '@components/Playbar/styles';
 import useCustomMove from '@hooks/useCustomMove';
 
 const WorkspacePage = () => {

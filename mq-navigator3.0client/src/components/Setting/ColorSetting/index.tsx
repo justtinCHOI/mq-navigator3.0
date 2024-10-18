@@ -1,5 +1,5 @@
 import React from 'react';
-import { Content, ContentLineText, ContentRow, LeftContent, RightContent } from '@components/PlayList/styles';
+import { Content, ContentLineText, ContentRow, LeftContent, RightContent } from '@components/Playbar/styles';
 import UseSelectOptionColor from '@hooks/UseSelectOptionColor';
 
 // ColorSetting 컴포넌트

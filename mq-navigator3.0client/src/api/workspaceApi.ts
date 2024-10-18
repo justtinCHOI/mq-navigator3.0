@@ -24,7 +24,7 @@
 // src/api/workspaceApi.ts
 
 import { workspaceDummy, memberDummy } from './dummyData'; // 더미 데이터 가져오기
-import { Workspace } from '@typings/db';
+import { Route, Workspace } from '@typings/db';
 
 // 워크스페이스 가져오기
 export const getWorkspaces = async (): Promise<Workspace[]> => {
@@ -33,7 +33,10 @@ export const getWorkspaces = async (): Promise<Workspace[]> => {
 };
 
 // 워크스페이스 생성
-export const postCreateWorkspace = async (workspaceCreateParam: { name: string; url: string }): Promise<Workspace[]> => {
+export const postCreateWorkspace = async (workspaceCreateParam: {
+  name: string;
+  url: string;
+}): Promise<Workspace[]> => {
   // 중복된 워크스페이스 URL이 있는지 확인
   const existingWorkspace = workspaceDummy.find((ws) => ws.url === workspaceCreateParam.url);
   if (existingWorkspace) {
@@ -47,12 +50,14 @@ export const postCreateWorkspace = async (workspaceCreateParam: { name: string; 
     url: workspaceCreateParam.url,
     owner: memberDummy[0], // 기본적으로 첫 번째 멤버를 소유자로 설정 (임의로 설정)
     members: [memberDummy[0]], // 기본적으로 소유자를 멤버로 추가
+    route: null as unknown as Route,
     routes: [],
-    times: [new Date().toISOString()],
     gates: [],
     isPublic: true,
     usage: 100,
     copyrightHolder: memberDummy[0].name,
+    createdAt: new Date(),
+    modifiedAt: new Date(),
   };
 
   workspaceDummy.push(newWorkspace); // 더미 데이터 배열에 새 워크스페이스 추가

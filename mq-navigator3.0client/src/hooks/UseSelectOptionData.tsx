@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectOption } from '@components/PlayList/styles';
+import { SelectOption } from '@components/Playbar/styles';
 
 const UseSelectOptionData = () => {
   return (

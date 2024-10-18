@@ -1,3 +1,20 @@
+export interface Member extends Auditable {
+  id: number;
+  email: string;
+  name: string;
+  nickname: string;
+  password: string;
+  ownedWorkspaces: Workspace[];
+  workspaces: Workspace[];
+  memberRoleList: MemberRole[];
+  memberStatus: MemberStatus;
+}
+
+export interface Auditable {
+  createdAt: Date | null;
+  modifiedAt: Date | null;
+}
+
 export enum MemberStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
@@ -8,20 +25,6 @@ export enum MemberRole {
   ADMIN = 'ADMIN',
 }
 
-export interface Member {
-  id: number;
-  email: string;
-  name: string;
-  nickname: string;
-  password: string;
-  ownedWorkspaces: Workspace[];
-  workspaces: Workspace[];
-  memberRoleList: MemberRole[];
-  memberStatus: MemberStatus;
-  createdAt: string;
-  modifiedAt: string;
-}
-
 // Workspace 타입 정의
 export interface Workspace extends Copyright {
   id: number;
@@ -29,8 +32,8 @@ export interface Workspace extends Copyright {
   url: string;
   owner: Member;
   members: Member[];
+  route: Route;
   routes: Route[];
-  times: string[];
   gates: Gate[];
 }
 
@@ -41,7 +44,7 @@ export interface Route extends Copyright {
   workspace: Workspace;
 }
 
-export interface Copyright {
+export interface Copyright extends Auditable {
   isPublic: boolean;
   usage: number;
   copyrightHolder: string;
@@ -51,6 +54,8 @@ export interface Gate {
   id: number;
   index: number;
   coordinate: Coordinate;
+  time: Date;
+  traveledDistance: number;
   workspace: Workspace;
 }
 
@@ -108,10 +113,14 @@ export interface DisplaySection {
 }
 
 export enum Location {
-  START = 'START',
-  END = 'END',
-  CURRENT = 'CURRENT',
-  SELECTED = 'SELECTED',
+  FIRST_GATE = 'FIRST_GATE',
+  LAST_GATE = 'LAST_GATE',
+  PREVIOUS_GATE_BASED_ON_SELECTED = 'PREVIOUS_GATE_BASED_ON_SELECTED',
+  LATEST_GATE_BASED_ON_SELECTED = 'LATEST_GATE_BASED_ON_SELECTED',
+  NEXT_GATE_BASED_ON_SELECTED = 'NEXT_GATE_BASED_ON_SELECTED',
+  PREVIOUS_GATE_BASED_ON_CURRENT = 'PREVIOUS_GATE_BASED_ON_CURRENT',
+  LATEST_GATE_BASED_ON_CURRENT = 'LATEST_GATE_BASED_ON_CURRENT',
+  NEXT_GATE_BASED_ON_CURRENT = 'NEXT_GATE_BASED_ON_CURRENT',
 }
 
 export enum SectionData {
@@ -120,4 +129,9 @@ export enum SectionData {
   ESTIMATED_TIME = 'ESTIMATED_TIME',
   ELAPSED_SPEED = 'ELAPSED_SPEED',
   ESTIMATED_SPEED = 'ESTIMATED_SPEED',
+}
+
+export interface Playbar {
+  selectedTime: Date;
+  selectedPoint: Gate;
 }

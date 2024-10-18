@@ -2,7 +2,7 @@ import React from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { ScrollZone } from '@pages/workspace/Analyze/styles';
 import '../../../index.css';
-import { Content, ContentLine, ContentLineText } from '@components/PlayList/styles';
+import { Content, ContentLine, ContentLineText } from '@components/Playbar/styles';
 import EachDisplay from '@components/Analyze/EachDisplay/EachDisplay';
 const DisplayList = () => {
   return (

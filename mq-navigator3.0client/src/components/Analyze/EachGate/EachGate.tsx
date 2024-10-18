@@ -6,7 +6,7 @@ import {
   ContentLineText,
   CustomIconButton,
   SelectOption,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 import '../../../index.css';
 
 interface EachGateProps {

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
@@ -19,6 +21,12 @@ public class Gate {
 
     @Embedded
     private Coordinate coordinate;
+
+    @Column
+    private LocalDateTime time;
+
+    @Column
+    private Long traveledDistance;
 
     @ManyToOne
     @JoinColumn(name = "workspace_id", nullable = false)

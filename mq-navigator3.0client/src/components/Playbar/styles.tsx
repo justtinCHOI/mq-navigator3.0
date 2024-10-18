@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const PlayListContainer = styled.div`
+export const PlaybarContainer = styled.div`
   width: 100%;
   height: 120px;
 `;

@@ -6,7 +6,7 @@ import {
   ContentRow,
   LeftContent,
   RightContent,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 import UseSelectOptionGateRange from '@hooks/UseSelectOptionGateRange';
 
 const SpeedPredictionIntervalSetting = () => {

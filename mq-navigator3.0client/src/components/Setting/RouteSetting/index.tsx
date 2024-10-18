@@ -7,7 +7,7 @@ import {
   ContentRow,
   LeftContent,
   RightContent,
-} from '@components/PlayList/styles';
+} from '@components/Playbar/styles';
 
 const RouteSetting = () => {
   const rightContentRef = useRef<HTMLDivElement>(null); // Ref 생성
