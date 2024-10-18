@@ -14,7 +14,6 @@ const RouteSetting = () => {
 
   useEffect(() => {
     if (rightContentRef.current) {
-      // SortableJS를 rightContent에 적용
       Sortable.create(rightContentRef.current, {
         animation: 150, // 드래그 시 애니메이션 적용
         ghostClass: 'sortable-ghost', // 드래그 중 요소의 스타일 변경
@@ -30,16 +29,10 @@ const RouteSetting = () => {
             <ContentLineText>Routes</ContentLineText>
           </Content>
         </LeftContent>
-        <RightContent ref={rightContentRef}> {/* RightContent에 ref 추가 */}
+        <RightContent ref={rightContentRef}>
           {Array.from({ length: 4 }, (_, index) => {
             const RouteName = 'Route' + (index + 1);
-            return (
-              <ContentLineInput
-                key={index + 1}
-                className="width180px"
-                defaultValue={RouteName}
-              />
-            );
+            return <ContentLineInput key={index + 1} className="width180px" defaultValue={RouteName} />;
           })}
         </RightContent>
       </ContentRow>

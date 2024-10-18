@@ -1,6 +1,13 @@
 import React from 'react';
-import { Content, ContentLineText, ContentRow, LeftContent, RightContent } from '@components/PlayList/styles';
-import UseSelectOptionGate from '@hooks/UseSelectOptionGate';
+import {
+  Content,
+  ContentLine,
+  ContentLineText,
+  ContentRow,
+  LeftContent,
+  RightContent,
+} from '@components/PlayList/styles';
+import UseSelectOptionGateRange from '@hooks/UseSelectOptionGateRange';
 
 const SpeedPredictionIntervalSetting = () => {
   return (
@@ -12,7 +19,7 @@ const SpeedPredictionIntervalSetting = () => {
           </Content>
         </LeftContent>
         <RightContent>
-          <UseSelectOptionGate />
+          <UseSelectOptionGateRange />
         </RightContent>
       </ContentRow>
     </Content>

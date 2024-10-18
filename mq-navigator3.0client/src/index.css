@@ -61,6 +61,12 @@ code {
 .width180px{
   width: 180px;
 }
+.width220px{
+  width: 220px;
+}
+.width300px{
+  width: 300px;
+}
 .spaceAround {
   justify-content: space-around;
 }
@@ -69,4 +75,9 @@ code {
 }
 .flex {
   flex: 1;
+}
+
+.sortable-ghost {
+  opacity: 0.5; /* 드래그 중인 요소의 투명도를 낮춤 */
+  background-color: #f0f0f0; /* 배경색 변경 */
 }
