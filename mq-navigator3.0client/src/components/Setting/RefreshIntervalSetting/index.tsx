@@ -24,6 +24,7 @@ const RefreshIntervalSetting = () => {
               <option value="1" selected>
                 1
               </option>
+              <option value="3">3</option>
               <option value="10">10</option>
               <option value="60">60</option>
             </SelectOption>

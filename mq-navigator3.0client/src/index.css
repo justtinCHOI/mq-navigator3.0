@@ -58,6 +58,9 @@ code {
 .width140px{
   width: 140px;
 }
+.width180px{
+  width: 180px;
+}
 .spaceAround {
   justify-content: space-around;
 }

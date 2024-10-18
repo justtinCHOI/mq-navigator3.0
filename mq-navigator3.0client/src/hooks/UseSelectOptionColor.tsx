@@ -7,12 +7,12 @@ const UseSelectOptionColor = ({ phase }: { phase: string }) => {
     <ContentLine>
       <ContentLineText style={{ width: '200px' }}>{phase}</ContentLineText>
       <SelectOption className="width140px">
-        <option value="SkyBlue" selected>
+        <option value="SKYBLUE" selected>
           Sky Blue
         </option>
-        <option value="Purple">Purple</option>
-        <option value="Yellow">Yellow</option>
-        <option value="LightGreen">Light Green</option>
+        <option value="PURPLE">Purple</option>
+        <option value="YELLOW">Yellow</option>
+        <option value="LIGHTGREEN">Light Green</option>
       </SelectOption>
     </ContentLine>
   );

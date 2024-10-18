@@ -1,6 +1,13 @@
 import React from 'react';
-import { Content, ContentLineText, ContentRow, LeftContent, RightContent } from '@components/PlayList/styles';
-import UseSelectOptionColor from '@hooks/UseSelectOptionColor';
+import {
+  Content,
+  ContentLine,
+  ContentLineText,
+  ContentRow,
+  LeftContent,
+  RightContent,
+  SelectOption,
+} from '@components/PlayList/styles';
 
 const ToleranceRangeSetting = () => {
   return (
@@ -8,16 +15,20 @@ const ToleranceRangeSetting = () => {
       <ContentRow>
         <LeftContent>
           <Content>
-            <ContentLineText>Tolerance Rage</ContentLineText>
+            <ContentLineText>Tolerance Range</ContentLineText>
           </Content>
         </LeftContent>
         <RightContent>
-          <Content>
-            <UseSelectOptionColor phase="Initial Phase" />
-            <UseSelectOptionColor phase="Deceleration Phase" />
-            <UseSelectOptionColor phase="Acceleration Phase" />
-            <UseSelectOptionColor phase="Constant Speed Phase" />
-          </Content>
+          <ContentLine>
+            <SelectOption className="width50px">
+              <option value="5" selected>
+                5
+              </option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+            </SelectOption>
+            <ContentLineText>second</ContentLineText>
+          </ContentLine>
         </RightContent>
       </ContentRow>
     </Content>

@@ -24,6 +24,9 @@ public class Setting {
     private RefreshInterval refreshInterval;
 
     @Enumerated(EnumType.STRING)
+    private ToleranceRange toleranceRange;
+
+    @Enumerated(EnumType.STRING)
     private SpeedPredictionInterval speedPredictionInterval;
 
     @ElementCollection

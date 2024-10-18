@@ -64,6 +64,7 @@ export interface Setting {
   member: Member;
   colorSetting: ColorSetting;
   refreshInterval: RefreshInterval;
+  toleranceRange: ToleranceRange;
   speedPredictionInterval: SpeedPredictionInterval;
   displaySections: DisplaySection[];
   sectionDatas: SectionData[];
@@ -88,6 +89,12 @@ export enum RefreshInterval {
   THREE = 'THREE',
   TEN = 'TEN',
   SIXTY = 'SIXTY',
+}
+
+export enum ToleranceRange {
+  FIVE = 'FIVE',
+  TEN = 'TEN',
+  TWENTY = 'TWENTY',
 }
 
 export enum SpeedPredictionInterval {

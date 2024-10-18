@@ -61,7 +61,7 @@ export const ContentLineDiv = styled.div`
   }
 `;
 
-export const ContentLineInput = styled.div`
+export const ContentLineInput = styled.input`
   margin: 10px;
   height: 40px;
   border-radius: 4px;
