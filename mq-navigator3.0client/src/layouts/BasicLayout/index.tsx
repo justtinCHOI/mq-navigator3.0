@@ -25,7 +25,7 @@ import {
   WorkspaceWrapper,
 } from './styles';
 import useCustomMember from '@hooks/useCustomMember';
-import { Workspace } from '@typings/db';
+import { IWorkspace } from '@typings/db';
 import { postCreateWorkspace } from '@api/workspaceApi';
 import Playbar from '@components/Playbar';
 
@@ -112,7 +112,7 @@ const BasicLayout = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-          {memberState?.workspaces.map((ws: Workspace) => {
+          {memberState?.workspaces.map((ws: IWorkspace) => {
             return (
               <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>

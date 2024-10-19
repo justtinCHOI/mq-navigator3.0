@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PlaybarState } from '@typings/db';
 
 const initialState: PlaybarState = {
+  currentTime: null,
   isLive: false,
   selectedTime: null,
   selectedPoint: null,

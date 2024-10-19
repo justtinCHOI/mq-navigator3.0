@@ -1,14 +1,14 @@
 import {
-  getWorkspacesAsync,
+  getWorkspaceAsync,
   postAddWorkspaceMemberAsync,
   postCreateWorkspaceAsync,
-  updateWorkspace,
+  updateWorkspaceStateAsync,
 } from '@slices/workspaceSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-import { Member, Workspace } from '@typings/db';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
+import { IMember, IWorkspace } from '@typings/db';
 
 const useCustomWorkspace = () => {
   // 이하 redux
@@ -19,7 +19,7 @@ const useCustomWorkspace = () => {
   const workspaceState = useSelector((state: RootState) => state.workspaceSlice);
 
   const getWorkspace = () => {
-    dispatch(getWorkspacesAsync());
+    dispatch(getWorkspaceAsync());
   };
 
   const postCreateWorkspace = (workspaceCreateParam: { name: string; url: string }) => {
@@ -31,20 +31,20 @@ const useCustomWorkspace = () => {
   };
 
   // 워크스페이스 업데이트 (로그인 후 워크스페이스 정보 업데이트)
-  const updateWorkspaceWithMember = (memberState: Member) => {
+  const updateWorkspaceWithMember = (memberState: IMember) => {
     // login 성공 시 workspaces[1] 정보를 workspaceSlice에 업데이트
     if (memberState.workspaces && memberState.workspaces.length > 1) {
       const workspaceToUpdate = memberState.workspaces[1];
-      dispatch(updateWorkspace(workspaceToUpdate)); // 워크스페이스 업데이트 액션 호출
+      dispatch(updateWorkspaceStateAsync(workspaceToUpdate)); // 워크스페이스 업데이트 액션 호출
     }
   };
 
   useEffect(() => {
     // URL이 변경될 때마다 workspaceSlice를 업데이트
     if (memberState?.workspaces) {
-      const selectedWorkspace = memberState.workspaces.find((workspace: Workspace) => workspace.url === url);
+      const selectedWorkspace = memberState.workspaces.find((workspace: IWorkspace) => workspace.url === url);
       if (selectedWorkspace) {
-        dispatch(updateWorkspace(selectedWorkspace));
+        dispatch(updateWorkspaceStateAsync(selectedWorkspace));
       }
     }
   }, [url, memberState?.workspaces, dispatch]);

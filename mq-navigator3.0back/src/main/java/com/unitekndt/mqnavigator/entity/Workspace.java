@@ -1,5 +1,6 @@
 package com.unitekndt.mqnavigator.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,4 +51,8 @@ public class Workspace extends Copyright{
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Gate> gates = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "setting_id", unique = true)
+    private Setting setting;
 }

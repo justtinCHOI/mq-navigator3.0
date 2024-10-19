@@ -13,9 +13,8 @@ public class Setting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @OneToOne(mappedBy = "setting", fetch = FetchType.LAZY)
+    private Workspace workspace;
 
     @Embedded
     private ColorSetting colorSetting;
@@ -36,4 +35,6 @@ public class Setting {
     @ElementCollection
     @CollectionTable(name = "setting_section_data", joinColumns = @JoinColumn(name = "setting_id"))
     private List<SectionData> sectionDatas;
+
+
 }

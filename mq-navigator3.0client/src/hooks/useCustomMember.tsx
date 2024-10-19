@@ -3,8 +3,8 @@ import { Navigate } from 'react-router';
 import { loginPostAsync, logout } from '@slices/memberSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-import { updateWorkspace } from '@slices/workspaceSlice';
-import { Member } from '@typings/db';
+import { updateWorkspaceStateAsync } from '@slices/workspaceSlice';
+import { IMember } from '@typings/db';
 
 const useCustomMember = () => {
   const navigate = useNavigate();
@@ -15,11 +15,11 @@ const useCustomMember = () => {
 
   const doLogin = async (loginParam: { email: string; password: string }) => {
     const action = await dispatch(loginPostAsync(loginParam));
-    const payload = action.payload as Member; // payload를 Member 타입으로 지정
+    const payload = action.payload as IMember;
     // 워크스페이스 업데이트 액션 호출
     if (payload && payload.workspaces && payload.workspaces.length > 0) {
       const workspaceToUpdate = payload.workspaces[0];
-      dispatch(updateWorkspace(workspaceToUpdate));
+      dispatch(updateWorkspaceStateAsync(workspaceToUpdate));
     }
     return payload;
   };

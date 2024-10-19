@@ -1,72 +1,43 @@
-export interface Member extends Auditable {
+export interface IMember {
   id: number;
   email: string;
   name: string;
   nickname: string;
   password: string;
-  ownedWorkspaces: Workspace[];
-  workspaces: Workspace[];
-  memberRoleList: MemberRole[];
-  memberStatus: MemberStatus;
+  workspaces: IWorkspace[];
 }
 
-export interface Auditable {
-  createdAt: Date | null;
-  modifiedAt: Date | null;
-}
-
-export enum MemberStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
-
-export enum MemberRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
-
-// Workspace 타입 정의
-export interface Workspace extends Copyright {
+export interface IWorkspace {
   id: number;
   name: string;
   url: string;
-  owner: Member;
-  members: Member[];
-  route: Route;
-  routes: Route[];
-  gates: Gate[];
+  ownerId: number;
+  members: number[];
+  routes: IRoute[];
+  route: IRoute;
 }
 
-export interface Route extends Copyright {
+export interface IRoute {
   id: number;
   name: string;
-  coordinates: Coordinate[];
-  workspace: Workspace;
 }
 
-export interface Copyright extends Auditable {
-  isPublic: boolean;
-  usage: number;
-  copyrightHolder: string;
-}
-
-export interface Gate {
+export interface IGate {
   id: number;
   index: number;
-  coordinate: Coordinate;
   time: Date;
+  coordinate: ICoordinate;
   traveledDistance: number;
-  workspace: Workspace;
 }
 
-export interface Coordinate {
+export interface ICoordinate {
   latitude: number;
   longitude: number;
 }
 
-export interface Setting {
+export interface ISetting {
   id: number;
-  member: Member;
+  workspaceId: number;
   colorSetting: ColorSetting;
   refreshInterval: RefreshInterval;
   toleranceRange: ToleranceRange;
@@ -132,12 +103,13 @@ export enum SectionData {
 }
 
 export interface PlaybarState {
+  currentTime: Date | null;
   isLive: boolean; // isLive 상태 추가
   selectedTime: Date | null;
-  selectedPoint: Gate | null;
-  firstGate: Gate | null;
-  lastGate: Gate | null;
-  previousGateBasedOnSelected: Gate | null;
-  latestGateBasedOnSelected: Gate | null;
-  nextGateBasedOnSelected: Gate | null;
+  selectedPoint: IGate | null;
+  firstGate: IGate | null;
+  lastGate: IGate | null;
+  previousGateBasedOnSelected: IGate | null;
+  latestGateBasedOnSelected: IGate | null;
+  nextGateBasedOnSelected: IGate | null;
 }
