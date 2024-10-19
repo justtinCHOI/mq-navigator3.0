@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getWorkspaces, postAddWorkspaceMember, postCreateWorkspace } from '@api/workspaceApi';
-import { MemberStatus, Route, Workspace } from '@typings/db';
+import { Gate, MemberStatus, Route, Workspace } from '@typings/db';
 import { updateMember } from '@slices/memberSlice';
 
 // 초기 상태: 단일 Workspace 객체
@@ -52,6 +52,11 @@ export const postCreateWorkspaceAsync = createAsyncThunk(
   },
 );
 
+// Workspace 업데이트 비동기 액션
+export const updateWorkspaceAsync = createAsyncThunk('updateWorkspaceAsync', async (workspace: Workspace) => {
+  return await updateWorkspaceData(workspace);
+});
+
 // 워크스페이스 멤버 추가 비동기 액션
 export const postAddWorkspaceMemberAsync = createAsyncThunk(
   'postAddWorkspaceMemberAsync',
@@ -64,7 +69,16 @@ export const postAddWorkspaceMemberAsync = createAsyncThunk(
 const workspaceSlice = createSlice({
   name: 'workspaceSlice',
   initialState: initState, // 단일 워크스페이스로 초기화
-  reducers: {},
+  reducers: {
+    // gates 업데이트 액션
+    updateGates: (state, action: PayloadAction<Gate[]>) => {
+      state.gates = action.payload;
+    },
+    // routes 업데이트 액션
+    updateRoutes: (state, action: PayloadAction<Route[]>) => {
+      state.routes = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(updateWorkspace.fulfilled, (state, action: PayloadAction<Workspace>) => {
@@ -83,6 +97,9 @@ const workspaceSlice = createSlice({
         console.log('postAddWorkspaceMemberAsync.fulfilled');
         return action.payload; // 업데이트된 워크스페이스 상태로 덮어쓰기
       })
+      .addCase(updateWorkspaceAsync.fulfilled, (state, action: PayloadAction<Workspace>) => {
+        return action.payload;
+      })
       .addCase(updateWorkspace.rejected, () => {
         console.log('updateWorkspace.rejected');
       })
@@ -94,6 +111,9 @@ const workspaceSlice = createSlice({
       })
       .addCase(postAddWorkspaceMemberAsync.rejected, () => {
         console.log('postAddWorkspaceMemberAsync.rejected');
+      })
+      .addCase(updateWorkspaceAsync.rejected, () => {
+        console.log('updateWorkspaceAsync.rejected');
       });
   },
 });

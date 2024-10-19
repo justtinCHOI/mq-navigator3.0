@@ -1,23 +1,30 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { Gate, Playbar } from '@typings/db';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Gate } from '@typings/db';
 
-const initialState: Playbar = {
-  selectedTime: null as unknown as Date,
-  selectedPoint: null as unknown as Gate,
+// 초기 상태 정의
+interface PlaybarState {
+  selectedTime: number; // 시간(초 단위)
+  selectedPoint: Gate | null;
+}
+
+const initialState: PlaybarState = {
+  selectedTime: 0,
+  selectedPoint: null,
 };
 
 const playbarSlice = createSlice({
-  name: 'playbarSlice',
+  name: 'playbar',
   initialState,
   reducers: {
     // 1초마다 시간이 증가하는 액션
-    incrementTime: () => {
-      // 시간에 맞게 포인트 갱신
+    incrementTime: (state, action: PayloadAction<number>) => {
+      state.selectedTime += action.payload;
+      // 시간이 변하면 selectedPoint도 업데이트 필요
     },
     // 사용자가 재생막대를 클릭했을 때
-    setPoint: () => {
-      // 클릭한 위치에 맞게 포인트 변경
-      // 포인트에 맞는 시간으로 갱신
+    setPoint: (state, action: PayloadAction<{ point: number; time: number }>) => {
+      state.selectedPoint = action.payload.point as unknown as Gate; // 임의 변환, 실제 Gate를 찾아야 함
+      state.selectedTime = action.payload.time;
     },
   },
 });
