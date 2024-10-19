@@ -1,33 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Gate } from '@typings/db';
-
-// 초기 상태 정의
-interface PlaybarState {
-  selectedTime: number; // 시간(초 단위)
-  selectedPoint: Gate | null;
-}
+import { PlaybarState } from '@typings/db';
 
 const initialState: PlaybarState = {
-  selectedTime: 0,
+  isLive: false,
+  selectedTime: null,
   selectedPoint: null,
+  firstGate: null,
+  lastGate: null,
+  previousGateBasedOnSelected: null,
+  latestGateBasedOnSelected: null,
+  nextGateBasedOnSelected: null,
 };
 
 const playbarSlice = createSlice({
-  name: 'playbar',
+  name: 'playbarSlice',
   initialState,
   reducers: {
-    // 1초마다 시간이 증가하는 액션
-    incrementTime: (state, action: PayloadAction<number>) => {
-      state.selectedTime += action.payload;
-      // 시간이 변하면 selectedPoint도 업데이트 필요
+    toggleLive: (state) => {
+      state.isLive = !state.isLive; // isLive 상태 토글
     },
-    // 사용자가 재생막대를 클릭했을 때
-    setPoint: (state, action: PayloadAction<{ point: number; time: number }>) => {
-      state.selectedPoint = action.payload.point as unknown as Gate; // 임의 변환, 실제 Gate를 찾아야 함
-      state.selectedTime = action.payload.time;
+    setLive: (state, action: PayloadAction<boolean>) => {
+      state.isLive = action.payload; // isLive 상태 설정
     },
+    // // selectedPoint에 따라 관련 상태 업데이트
+    // updateBasedOnSelected: (state, action: PayloadAction<Gate>) => {
+    //   const selectedGate = action.payload;
+    //   state.previousGateBasedOnSelected = /* 로직으로 계산 */;
+    //   state.latestGateBasedOnSelected = /* 로직으로 계산 */;
+    //   state.nextGateBasedOnSelected = /* 로직으로 계산 */;
+    // },
   },
 });
 
-export const { incrementTime, setPoint } = playbarSlice.actions;
+export const { toggleLive, setLive } = playbarSlice.actions;
 export default playbarSlice.reducer;

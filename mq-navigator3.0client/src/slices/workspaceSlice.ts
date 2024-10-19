@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getWorkspaces, postAddWorkspaceMember, postCreateWorkspace } from '@api/workspaceApi';
 import { Gate, MemberStatus, Route, Workspace } from '@typings/db';
-import { updateMember } from '@slices/memberSlice';
+import { updateMemberWorkspaces } from '@slices/memberSlice';
 
 // 초기 상태: 단일 Workspace 객체
 const initState: Workspace = {
@@ -32,30 +32,32 @@ const initState: Workspace = {
   modifiedAt: null,
 };
 
-export const updateWorkspace = createAsyncThunk('updateWorkspace', async (workspace: Workspace) => {
-  // 작업이 완료된 후 상태를 업데이트하는 방식으로
-  return workspace;
-});
-
 // 워크스페이스 리스트 가져오기 비동기 액션
 export const getWorkspacesAsync = createAsyncThunk('getWorkspacesAsync', async () => {
   return getWorkspaces();
 });
+
+
+
+// 작업이 완료된 후 상태를 업데이트
+export const updateWorkspace = createAsyncThunk('updateWorkspace', async (workspace: Workspace) => {
+  return workspace;
+});
+
+// // 작업이 완료된 후 서버의 상태를 업데이트
+// export const updateWorkspaceAsync = createAsyncThunk('updateWorkspaceAsync', async (workspace: Workspace) => {
+//   return await updateWorkspaceData(workspace);
+// });
 
 // 워크스페이스 생성 비동기 액션
 export const postCreateWorkspaceAsync = createAsyncThunk(
   'postCreateWorkspaceAsync',
   async (workspaceCreateParam: { name: string; url: string }, { dispatch }) => {
     const updatedWorkspaces: Workspace[] = await postCreateWorkspace(workspaceCreateParam);
-    dispatch(updateMember(updatedWorkspaces)); // 워크스페이스 업데이트 액션 호출
+    dispatch(updateMemberWorkspaces(updatedWorkspaces)); // 워크스페이스 업데이트 액션 호출
     return;
   },
 );
-
-// Workspace 업데이트 비동기 액션
-export const updateWorkspaceAsync = createAsyncThunk('updateWorkspaceAsync', async (workspace: Workspace) => {
-  return await updateWorkspaceData(workspace);
-});
 
 // 워크스페이스 멤버 추가 비동기 액션
 export const postAddWorkspaceMemberAsync = createAsyncThunk(
@@ -97,9 +99,9 @@ const workspaceSlice = createSlice({
         console.log('postAddWorkspaceMemberAsync.fulfilled');
         return action.payload; // 업데이트된 워크스페이스 상태로 덮어쓰기
       })
-      .addCase(updateWorkspaceAsync.fulfilled, (state, action: PayloadAction<Workspace>) => {
-        return action.payload;
-      })
+      // .addCase(updateWorkspaceAsync.fulfilled, (state, action: PayloadAction<Workspace>) => {
+      //   return action.payload;
+      // })
       .addCase(updateWorkspace.rejected, () => {
         console.log('updateWorkspace.rejected');
       })
@@ -112,9 +114,9 @@ const workspaceSlice = createSlice({
       .addCase(postAddWorkspaceMemberAsync.rejected, () => {
         console.log('postAddWorkspaceMemberAsync.rejected');
       })
-      .addCase(updateWorkspaceAsync.rejected, () => {
-        console.log('updateWorkspaceAsync.rejected');
-      });
+      // .addCase(updateWorkspaceAsync.rejected, () => {
+      //   console.log('updateWorkspaceAsync.rejected');
+      // });
   },
 });
 

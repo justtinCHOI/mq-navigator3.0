@@ -4,7 +4,7 @@ import { Gate } from '@typings/db';
 // 초기 상태 정의
 const initialState: Gate[] = [];
 
-const gateListSlice = createSlice({
+const gatesSlice = createSlice({
   name: 'gateList',
   initialState,
   reducers: {
@@ -22,5 +22,5 @@ const gateListSlice = createSlice({
   },
 });
 
-export const { updateGate, updateAllGates } = gateListSlice.actions;
-export default gateListSlice.reducer;
+export const { updateGate, updateAllGates } = gatesSlice.actions;
+export default gatesSlice.reducer;

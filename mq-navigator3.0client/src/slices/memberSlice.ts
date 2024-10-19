@@ -50,7 +50,7 @@ const memberSlice = createSlice({
       removeCookie('member');
       return { ...initState };
     },
-    updateMember: (state, action: PayloadAction<Workspace[]>) => {
+    updateMemberWorkspaces: (state, action: PayloadAction<Workspace[]>) => {
       state.workspaces = action.payload; // 상태 수정
     },
   },
@@ -75,6 +75,6 @@ const memberSlice = createSlice({
   },
 });
 
-export const { login, logout, updateMember } = memberSlice.actions;
+export const { login, logout, updateMemberWorkspaces } = memberSlice.actions;
 
 export default memberSlice.reducer;

@@ -1,4 +1,4 @@
-import {MemberStatus, MemberRole, Member, Workspace, Route} from '@typings/db';
+import { MemberStatus, MemberRole, Member, Workspace, Route} from '@typings/db';
 
 // 더미 데이터를 생성하는 함수
 const generateDummyData = () => {

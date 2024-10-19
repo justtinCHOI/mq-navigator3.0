@@ -2,6 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import memberSlice from '@slices/memberSlice';
 import workspaceSlice from '@slices/workspaceSlice';
 import playbarSlice from '@slices/playbarSlice';
+import gatesSlice from '@slices/gatesSlice';
+// import settingSlice from '@slices/settingSlice';
 
 // RootState 타입 정의
 export type RootState = ReturnType<typeof store.getState>;
@@ -14,6 +16,8 @@ const store = configureStore({
     memberSlice: memberSlice,
     workspaceSlice: workspaceSlice,
     playbarSlice: playbarSlice,
+    gatesSlice: gatesSlice,
+    // settingSlice: settingSlice,
   },
 });
 

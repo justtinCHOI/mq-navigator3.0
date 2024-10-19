@@ -131,7 +131,13 @@ export enum SectionData {
   ESTIMATED_SPEED = 'ESTIMATED_SPEED',
 }
 
-export interface Playbar {
-  selectedTime: Date;
-  selectedPoint: Gate;
+export interface PlaybarState {
+  isLive: boolean; // isLive 상태 추가
+  selectedTime: Date | null;
+  selectedPoint: Gate | null;
+  firstGate: Gate | null;
+  lastGate: Gate | null;
+  previousGateBasedOnSelected: Gate | null;
+  latestGateBasedOnSelected: Gate | null;
+  nextGateBasedOnSelected: Gate | null;
 }
