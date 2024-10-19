@@ -24,13 +24,13 @@ export interface IRoute {
 
 export interface IGate {
   id: number;
-  index: number;
+  sequence: number;
   time: Date;
-  coordinate: ICoordinate;
+  coordinate: Coordinate;
   traveledDistance: number;
 }
 
-export interface ICoordinate {
+export interface Coordinate {
   latitude: number;
   longitude: number;
 }

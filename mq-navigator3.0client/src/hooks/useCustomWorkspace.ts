@@ -18,8 +18,8 @@ const useCustomWorkspace = () => {
   const memberState = useSelector((state: RootState) => state.memberSlice); // memberSlice에서 상태 가져오기
   const workspaceState = useSelector((state: RootState) => state.workspaceSlice);
 
-  const getWorkspace = () => {
-    dispatch(getWorkspaceAsync());
+  const getWorkspace = (url: string) => {
+    dispatch(getWorkspaceAsync(url));
   };
 
   const postCreateWorkspace = (workspaceCreateParam: { name: string; url: string }) => {

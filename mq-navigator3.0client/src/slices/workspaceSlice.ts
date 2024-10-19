@@ -15,8 +15,8 @@ const initState: IWorkspace = {
 };
 
 // 워크스페이스 리스트 가져오기 비동기 액션
-export const getWorkspaceAsync = createAsyncThunk('getWorkspacesAsync', async () => {
-  return getWorkspace();
+export const getWorkspaceAsync = createAsyncThunk('getWorkspacesAsync', async (url: string) => {
+  return getWorkspace(url);
 });
 
 // 작업이 완료된 후 상태를 업데이트

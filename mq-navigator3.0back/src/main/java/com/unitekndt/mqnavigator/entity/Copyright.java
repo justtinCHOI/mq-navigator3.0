@@ -17,7 +17,7 @@ public abstract class Copyright extends Auditable {
     private Boolean isPublic;
 
     @Column(nullable = false)
-    private Long usage;
+    private Long useAmount;
 
     @Column(nullable = false)
     private String copyrightHolder;

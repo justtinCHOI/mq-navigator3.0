@@ -17,7 +17,7 @@ public class Gate {
     private Long id;
 
     @Column
-    private Long index;
+    private Long sequence;
 
     @Embedded
     private Coordinate coordinate;

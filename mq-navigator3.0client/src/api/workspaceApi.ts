@@ -2,10 +2,10 @@ import { API_SERVER_HOST } from '@api/memberApi';
 import jwtAxios from '@utils/jwtUtil';
 import { IWorkspace } from '@typings/db';
 
-const host = `${API_SERVER_HOST}/api/workspaces`;
+const host = `${API_SERVER_HOST}/api/workspace`;
 
-export const getWorkspace = async () => {
-  const res = await jwtAxios.get(`${host}/`);
+export const getWorkspace = async (url: string) => {
+  const res = await jwtAxios.get(`${host}/${url}`);
 
   return res.data;
 };
