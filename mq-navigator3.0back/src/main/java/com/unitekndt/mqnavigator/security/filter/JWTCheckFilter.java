@@ -2,6 +2,8 @@ package com.unitekndt.mqnavigator.security.filter;
 
 import com.google.gson.Gson;
 import com.unitekndt.mqnavigator.dto.MemberDTO;
+import com.unitekndt.mqnavigator.entity.Member;
+import com.unitekndt.mqnavigator.service.MemberService;
 import jakarta.servlet.FilterChain;
 import com.unitekndt.mqnavigator.util.JWTUtil;
 import jakarta.servlet.ServletException;
@@ -21,16 +23,23 @@ import java.util.Map;
 public class JWTCheckFilter extends OncePerRequestFilter {
     // OncePerRequestFilter : spring security 가 여러가지 필터를 제공하지만 모든 경우에 체크하는 필터
 
+    private  MemberService memberService;
+
+    // MemberService를 생성자로 주입
+    public JWTCheckFilter(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
 
-        //api/member/ 경로의 호출은 체크하지 않음
-        if (path.startsWith("/api/member/login")) {
+        if(path.startsWith("/api/member/signup") || path.startsWith("/api/member/login") || request.getMethod().equals("OPTIONS")) {
             return true;
         }
 
-        return path.startsWith("/stockfish/mqnavigator/analyze/");
+        return path.startsWith("/workspace/mqnavigator/analyze/");
     }
 
     @Override
@@ -56,8 +65,24 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             //SpringSecurityHolderContext 에다가 Member 정보를 넣어줘야한다.
             //authorization 성공시 -> MemberDTO 정보를 얻어낼 수 있다.
 
-            Long id = ((Long) claims.get("id"));
+//            Long id = ((Long) claims.get("id"));
+            Long id = claims.get("id") instanceof Integer
+                    ? Long.valueOf((Integer) claims.get("id"))
+                    : (Long) claims.get("id");
+            log.info("JWT ID : {}", id);
+
+            Member member = memberService.getMemberById(id);
+            if (member == null) {
+                log.error("Member not found for id: " + id);
+                throw new NullPointerException("Member not found");
+            }
+
+            log.info("memberService email : {}", member.getEmail());
+
             String email = (String) claims.get("email");
+
+            log.info("claims email : {}", email);
+
             String name = (String) claims.get("name");
             String nickname = (String) claims.get("nickname");
             String password = (String) claims.get("password");

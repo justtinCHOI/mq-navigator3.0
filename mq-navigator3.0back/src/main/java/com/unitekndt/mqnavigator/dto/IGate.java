@@ -1,13 +1,19 @@
 package com.unitekndt.mqnavigator.dto;
 
 import com.unitekndt.mqnavigator.entity.Coordinate;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@Builder
 public class IGate {
     private Long id;
-    private Integer index;
-    private LocalDateTime time;  // Date 대신 LocalDateTime 사용
-    private Coordinate coordinate;  // ICoordinate 객체를 CoordinateDto로 변환
-    private Double traveledDistance;
+    private Long sequence;
+    private Coordinate coordinate;
+    private LocalDateTime time;
+    private Long traveledDistance;
 }

@@ -1,16 +1,18 @@
 package com.unitekndt.mqnavigator.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "workspaces")
 public class Workspace extends Copyright{
 
@@ -42,11 +44,6 @@ public class Workspace extends Copyright{
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> routes = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name = "workspace_times", joinColumns = @JoinColumn(name = "workspace_id"))
-    @Column(name = "time")
-    private List<LocalDateTime> times = new ArrayList<>();
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Gate> gates = new ArrayList<>();

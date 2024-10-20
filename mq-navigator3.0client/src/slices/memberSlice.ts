@@ -1,26 +1,18 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginPost } from '@api/memberApi';
+import { getWorkspaces, loginPost } from '@api/memberApi';
 import { getCookie, removeCookie, setCookie } from '@utils/cookieUtil';
-import { IMember, IWorkspace } from '@typings/db';
+import { IMember, IWorkspace, memberSliceState } from '@typings/db';
 
-const initState: IMember = {
+const initState: memberSliceState = {
   id: 0,
   email: '',
   name: '',
   nickname: '',
   password: '',
   workspaces: [],
+  accessToken: '',
+  refreshToken: '',
 };
-
-// 로그인 비동기 처리 액션
-export const loginPostAsync = createAsyncThunk<IMember, { email: string; password: string }>(
-  'loginPostAsync',
-  async (param) => {
-    const memberInfo = await loginPost(param); // loginPost 결과를 await로 처리
-    setCookie('member', JSON.stringify(memberInfo), 1); // 1일 동안 쿠키 유지
-    return memberInfo; // memberInfo 반환
-  },
-);
 
 const loadMemberCookie = (): IMember | undefined => {
   const memberInfo = getCookie('member');
@@ -33,13 +25,31 @@ const loadMemberCookie = (): IMember | undefined => {
   return memberInfo;
 };
 
+// 로그인 비동기 처리 액션
+export const loginPostAsync = createAsyncThunk('loginPostAsync', async (param: { email: string; password: string }) => {
+  const memberInfo = await loginPost(param);
+  setCookie('member', JSON.stringify(memberInfo), 1); // 1일 동안 쿠키 유지
+  return memberInfo;
+});
+
+export const getWorkspacesAsync = createAsyncThunk('getWorkspacesAsync', async () => {
+  return await getWorkspaces();
+});
+
+// 비동기 로그인 액션 생성
+export const loginStateAsync = createAsyncThunk<memberSliceState, memberSliceState>(
+  'loginStateAsync',
+  async (memberState: memberSliceState) => {
+    // 실제 로그인 로직 수행 후 필요한 데이터 반환
+    setCookie('member', JSON.stringify(memberState), 1); // 1일 동안 쿠키 유지
+    return memberState;
+  },
+);
+
 const memberSlice = createSlice({
   name: 'memberSlice',
   initialState: loadMemberCookie() || initState, // 쿠키가 없다면 초기값 사용
   reducers: {
-    login: (state, action: PayloadAction<IMember>) => {
-      setCookie('member', JSON.stringify(action.payload), 1); // 1일 동안 쿠키 유지
-    },
     logout: () => {
       console.log('logout...');
       removeCookie('member');
@@ -61,15 +71,24 @@ const memberSlice = createSlice({
         }
         return payload;
       })
+      .addCase(getWorkspacesAsync.fulfilled, (state, action: PayloadAction<IWorkspace[]>) => {
+        state.workspaces = action.payload;
+      })
+      .addCase(loginStateAsync.fulfilled, (state, action: PayloadAction<IMember>) => {
+        return action.payload;
+      })
       .addCase(loginPostAsync.pending, () => {
-        console.log('pending');
+        console.log('loginPostAsync pending');
       })
       .addCase(loginPostAsync.rejected, (state, action) => {
-        console.log('Login failed:', action.error.message);
+        console.log('loginPostAsync failed:', action.error.message);
+      })
+      .addCase(loginStateAsync.rejected, (state, action) => {
+        console.log('loginStateAsync failed:', action.error.message);
       });
   },
 });
 
-export const { login, logout, updateMemberWorkspaces } = memberSlice.actions;
+export const { logout, updateMemberWorkspaces } = memberSlice.actions;
 
 export default memberSlice.reducer;

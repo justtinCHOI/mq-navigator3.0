@@ -30,7 +30,7 @@ import { postCreateWorkspace } from '@api/workspaceApi';
 import Playbar from '@components/Playbar';
 
 const BasicLayout = () => {
-  const { memberState } = useCustomMember();
+  const { isLogin, memberState } = useCustomMember();
   const { doLogout, moveToPath } = useCustomMember();
 
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
@@ -90,7 +90,7 @@ const BasicLayout = () => {
   return (
     <div>
       <Header>
-        {memberState && (
+        {isLogin && memberState && (
           <RightMenu>
             <span onClick={onClickUserProfile}>
               <ProfileImg src={gravatar.url(memberState.email, { s: '28px', d: 'retro' })} alt={memberState.nickname} />
@@ -112,7 +112,7 @@ const BasicLayout = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-          {memberState?.workspaces.map((ws: IWorkspace) => {
+          {memberState.workspaces?.map((ws: IWorkspace) => {
             return (
               <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>

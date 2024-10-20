@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { getCookie, setCookie } from './cookieUtil';
 import { API_SERVER_HOST } from '@api/memberApi';
+import { memberSliceState } from '@typings/db';
 
 const jwtAxios = axios.create();
 
@@ -20,7 +21,7 @@ const refreshJWT = async (accessToken: string, refreshToken: string): Promise<an
 const beforeReq = (
   config: InternalAxiosRequestConfig,
 ): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> => {
-  const memberCookieValue: string | undefined = getCookie('member');
+  const memberCookieValue: memberSliceState | undefined = getCookie('member');
 
   if (!memberCookieValue) {
     console.log('Member NOT FOUND');
@@ -30,7 +31,8 @@ const beforeReq = (
       },
     });
   }
-  const { accessToken } = JSON.parse(memberCookieValue);
+
+  const accessToken = memberCookieValue.accessToken;
 
   if (config.headers) {
     // Authorization 헤더 처리
@@ -54,7 +56,7 @@ const beforeRes = async (res: AxiosResponse) => {
     //에러가 발생한다면? (token 문제)
     //쿠키에서 refreshToken 을 가져와서 새로운 token 을 생성
     // 사용자가 axios 요청을 하고 에러가 발생할 떄마다 갱신된 값을 다시 저장
-    const memberCookieValue: string | undefined = getCookie('member');
+    const memberCookieValue: memberSliceState | undefined = getCookie('member');
 
     if (!memberCookieValue) {
       // memberCookieValue가 없을 때 예외 처리
@@ -65,14 +67,12 @@ const beforeRes = async (res: AxiosResponse) => {
       });
     }
 
-    const parsedMemberCookieValue = JSON.parse(memberCookieValue);
+    const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken);
 
-    const result = await refreshJWT(parsedMemberCookieValue.accessToken, parsedMemberCookieValue.refreshToken);
+    memberCookieValue.accessToken = result.accessToken;
+    memberCookieValue.refreshToken = result.refreshToken;
 
-    parsedMemberCookieValue.accessToken = result.accessToken;
-    parsedMemberCookieValue.refreshToken = result.refreshToken;
-
-    setCookie('member', JSON.stringify(parsedMemberCookieValue), 1);
+    setCookie('member', JSON.stringify(memberCookieValue), 1);
 
     //원래의 호출 을 accessToken 을 header 에 넣어서 다시 요청
     const originalRequest = res.config;

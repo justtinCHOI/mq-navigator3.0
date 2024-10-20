@@ -11,13 +11,17 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
-//404를 포함해서 대부분의 에러코드를 200으로 통일하고 에러상세를 추가해준다.
+
 @Log4j2
 public class APILoginFailHandler implements AuthenticationFailureHandler{
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        //에러상세 Map -> (gson) jsonStr -> jsonStr
+
+        log.error("Login failed due to: " + exception.getMessage());
+        log.error("request: " + request);
+        log.error("response: " + response);
+        log.error("exception: " + exception);
 
         Gson gson = new Gson();
 

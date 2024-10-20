@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface MemberRepository extends JpaRepository<Member, String> {//email 이 pk 이므로 String
 
     //email 을 이용하여 MemberRole 을 포함한 Member 가져오기
@@ -13,5 +15,9 @@ public interface MemberRepository extends JpaRepository<Member, String> {//email
   @EntityGraph(attributePaths = {"memberRoleList"})
   @Query("select m from Member m where m.email = :email")
   Member getWithRoles(@Param("email") String email);
+
+    Optional<Member> findByEmail(String email);
+
+    Optional<Member> findById(Long id);
 
 }

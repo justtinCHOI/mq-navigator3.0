@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router';
-import { loginPostAsync, logout } from '@slices/memberSlice';
+import { getWorkspacesAsync, loginPostAsync, logout } from '@slices/memberSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { updateWorkspaceStateAsync } from '@slices/workspaceSlice';
@@ -40,7 +40,25 @@ const useCustomMember = () => {
     return <Navigate replace to="/member/login" />;
   };
 
-  return { memberState, isLogin, doLogin, doLogout, moveToPath, moveToLogin, moveToLoginReturn };
+  const updateSlicesAfterLogin = () => {
+    dispatch(getWorkspacesAsync());
+    console.log('workspaces : ', memberState.workspaces);
+    if (memberState.workspaces && memberState.workspaces.length > 1) {
+      const workspaceToUpdate = memberState.workspaces[1];
+      moveToPath(`/workspace/${workspaceToUpdate}/`);
+    }
+  };
+
+  return {
+    memberState,
+    isLogin,
+    doLogin,
+    doLogout,
+    moveToPath,
+    moveToLogin,
+    moveToLoginReturn,
+    updateSlicesAfterLogin,
+  };
 };
 
 export default useCustomMember;

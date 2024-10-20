@@ -84,7 +84,7 @@ const config: Configuration = {
     proxy: [
       {
         context: ['/api'],
-        target: 'http://localhost:3095',
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
     ],

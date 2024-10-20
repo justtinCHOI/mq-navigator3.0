@@ -6,7 +6,7 @@ export const RightMenu = styled.div`
 
 export const Header = styled.header`
   height: 38px;
-  background: rgba(20, 0, 100);
+  background: rgba(10, 0, 90);
   color: #ffffff;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
   padding: 5px;
@@ -68,7 +68,7 @@ export const Workspaces = styled.div`
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(30, 10, 120);
+  background: rgba(20, 10, 110);
   border-top: 1px solid rgb(50, 20, 170);
   border-right: 1px solid rgb(50, 20, 170);
   vertical-align: top;
@@ -80,7 +80,7 @@ export const CenterDiv = styled.nav`
   flex: 1;
   display: inline-flex;
   flex-direction: column;
-  background: rgba(30, 10, 120);
+  background: rgba(20, 10, 110);
   color: rgb(188, 171, 188);
   vertical-align: top;
 

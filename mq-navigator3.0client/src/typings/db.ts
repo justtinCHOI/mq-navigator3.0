@@ -7,6 +7,17 @@ export interface IMember {
   workspaces: IWorkspace[];
 }
 
+export interface memberSliceState {
+  id: number;
+  email: string;
+  name: string;
+  nickname: string;
+  password: string;
+  workspaces: IWorkspace[];
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface IWorkspace {
   id: number;
   name: string;

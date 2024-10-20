@@ -20,9 +20,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Member member = memberRepository.getWithRoles(username); // Unique key 을 통해서 Member 정보를 꺼낸다.
+        log.info("loadUserByUsername email: {} ", email);
+
+        Member member = memberRepository.getWithRoles(email); // Unique key 을 통해서 Member 정보를 꺼낸다.
 
         if(member == null){
             throw new UsernameNotFoundException("Not Found");

@@ -1,1 +1,0 @@
-{"version":3,"file":"809.js","mappings":"yKAMA,QAJgB,WACd,OAAOA,EAAAA,cAAA,WACT,C","sources":["webpack://mq-navigator3.0client/./src/pages/workspace/Setting/index.tsx"],"sourcesContent":["import React from 'react';\n\nconst Setting = () => {\n  return <div></div>;\n};\n\nexport default Setting;\n"],"names":["React"],"sourceRoot":""}

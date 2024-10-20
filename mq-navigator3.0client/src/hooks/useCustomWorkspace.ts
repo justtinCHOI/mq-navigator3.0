@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from '../store';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { IMember, IWorkspace } from '@typings/db';
+import {getWorkspacesAsync} from "@slices/memberSlice";
 
 const useCustomWorkspace = () => {
   // 이하 redux
@@ -30,15 +31,6 @@ const useCustomWorkspace = () => {
     dispatch(postAddWorkspaceMemberAsync({ workspaceUrl, memberAddParam }));
   };
 
-  // 워크스페이스 업데이트 (로그인 후 워크스페이스 정보 업데이트)
-  const updateWorkspaceWithMember = (memberState: IMember) => {
-    // login 성공 시 workspaces[1] 정보를 workspaceSlice에 업데이트
-    if (memberState.workspaces && memberState.workspaces.length > 1) {
-      const workspaceToUpdate = memberState.workspaces[1];
-      dispatch(updateWorkspaceStateAsync(workspaceToUpdate)); // 워크스페이스 업데이트 액션 호출
-    }
-  };
-
   useEffect(() => {
     // URL이 변경될 때마다 workspaceSlice를 업데이트
     if (memberState?.workspaces) {
@@ -55,7 +47,6 @@ const useCustomWorkspace = () => {
     getWorkspace,
     postCreateWorkspace,
     postAddWorkspaceMember,
-    updateWorkspaceWithMember,
   };
 };
 export default useCustomWorkspace;

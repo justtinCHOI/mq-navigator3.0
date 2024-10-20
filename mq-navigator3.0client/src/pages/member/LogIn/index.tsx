@@ -2,14 +2,14 @@ import useInput from '@hooks/useInput';
 import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/member/SignUp/styles';
 import React, { useCallback, useEffect, useState } from 'react';
 import useCustomMember from '@hooks/useCustomMember';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
   const { memberState, doLogin } = useCustomMember();
   const navigate = useNavigate();
   const location = useLocation();
-  // const { from } = location.state || { from: { pathname: '/workspace/mqnavigator/analyze' } };
   const from = location.state?.from || { pathname: '/workspace/mqnavigator/analyze' };
+  const { updateSlicesAfterLogin } = useCustomMember();
 
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
@@ -20,39 +20,22 @@ const LogIn = () => {
       setLogInError(false);
       const loginParam = { email: email, password: password };
       doLogin(loginParam)
-        .then(() => {})
+        .then(() => {
+          updateSlicesAfterLogin();
+        })
         .catch((error) => {
           console.dir(error);
           setLogInError(error.response?.status === 401);
         });
     },
-    [doLogin, email, password],
+    [doLogin, email, password, updateSlicesAfterLogin],
   );
 
-  // if (memberState.email) {
-  //   // console.log('memberState', memberState);
-  //   navigate(from.pathname, { replace: true });
-  // }
-  // useEffect(() => {
-  //   if (memberState.email) {
-  //     console.log(memberState.email);
-  //     navigate(from.pathname, { replace: true });
-  //   }
-  // }, [from.pathname, memberState.email, navigate]);
-
-  // if (memberState.email) {
-  //   console.log('Navigating to:', from.pathname);
-  //   // navigate(from.pathname, { replace: true });
-  //   navigate('/workspace/mqnavigator/analyze', { replace: true });
-  // }
-
   useEffect(() => {
-    console.log('Current memberState:', memberState);
     if (memberState.email) {
-      console.log('Navigating to:', from.pathname);
       navigate(from.pathname, { replace: true });
     }
-  }, [from.pathname, memberState, navigate]);
+  }, [memberState.email, from.pathname, navigate]);
 
   return (
     <div id="container">
@@ -75,7 +58,7 @@ const LogIn = () => {
       </Form>
       <LinkContainer>
         아직 회원이 아니신가요?&nbsp;
-        <a href="/member/signup">회원가입 하러가기</a>
+        <Link to="/member/signup">회원가입 하러가기</Link>
       </LinkContainer>
     </div>
   );

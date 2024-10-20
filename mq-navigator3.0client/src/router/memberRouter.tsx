@@ -3,8 +3,8 @@ import { Suspense, lazy } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 
 const Loading = <div>Loading....</div>;
-const LoginPage = lazy(() => import('@pages/member/LogIn'));
-const LogoutPage = lazy(() => import('@pages/member/SignUp'));
+const LogInPage = lazy(() => import('@pages/member/LogIn'));
+const SignUpPage = lazy(() => import('@pages/member/SignUp'));
 
 const memberRouter = (): RouteObject[] => {
   return [
@@ -16,15 +16,15 @@ const memberRouter = (): RouteObject[] => {
       path: 'login',
       element: (
         <Suspense fallback={Loading}>
-          <LoginPage />
+          <LogInPage />
         </Suspense>
       ),
     },
     {
-      path: 'logout',
+      path: 'signup',
       element: (
         <Suspense fallback={Loading}>
-          <LogoutPage />
+          <SignUpPage />
         </Suspense>
       ),
     },

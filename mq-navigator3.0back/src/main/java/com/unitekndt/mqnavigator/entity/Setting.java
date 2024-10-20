@@ -1,12 +1,16 @@
 package com.unitekndt.mqnavigator.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Setting {
     @Id
@@ -30,11 +34,11 @@ public class Setting {
 
     @ElementCollection
     @CollectionTable(name = "setting_display_sections", joinColumns = @JoinColumn(name = "setting_id"))
-    private List<DisplaySection> displaySections;
+    private List<DisplaySection> displaySections = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "setting_section_data", joinColumns = @JoinColumn(name = "setting_id"))
-    private List<SectionData> sectionDatas;
+    private List<SectionData> sectionDatas = new ArrayList<>();
 
 
 }

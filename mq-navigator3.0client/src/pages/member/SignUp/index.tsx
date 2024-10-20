@@ -1,12 +1,12 @@
 import useInput from '@hooks/useInput';
 import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } from '@pages/member/SignUp/styles';
-import React, { useCallback, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useCustomMember from '@hooks/useCustomMember';
 import { signup } from '@api/memberApi';
 import { useDispatch } from 'react-redux';
-import { login } from '@slices/memberSlice';
-import useCustomWorkspace from "@hooks/useCustomWorkspace";
+import { loginStateAsync } from '@slices/memberSlice';
+import { memberSliceState } from '@typings/db';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -15,8 +15,7 @@ const SignUp = () => {
   const { memberState } = useCustomMember();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
-  const { moveToPath } = useCustomMember();
-  const { updateWorkspaceWithMember } = useCustomWorkspace();
+  const { updateSlicesAfterLogin } = useCustomMember();
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -55,12 +54,18 @@ const SignUp = () => {
         const singupParam = { email: email, nickname: nickname, password: password };
         signup(singupParam)
           .then((memberState) => {
-            dispatch(login(memberState));
-            updateWorkspaceWithMember(memberState);
-            moveToPath('/workspace/mqnavigator');
-          })
-          .then(() => {
-            setSignUpSuccess(true);
+            console.log('signup memberState : ', memberState);
+            // login이 성공한 후에 updateSlicesAfterLogin 실행
+            const member = memberState as memberSliceState;
+            // @ts-ignore
+            dispatch(loginStateAsync(member))
+              .then((result: memberSliceState) => {
+                console.log('Login succeeded', result);
+                updateSlicesAfterLogin(); // 로그인 후 슬라이스 업데이트
+              })
+              .catch((error: any) => {
+                console.log('Login failed', error);
+              });
           })
           .catch((error) => {
             console.log(error.response?.data);
@@ -68,15 +73,17 @@ const SignUp = () => {
           });
       }
     },
-    [nickname, mismatchError, email, password, dispatch, moveToPath],
+    [dispatch, email, mismatchError, nickname, password, updateSlicesAfterLogin],
   );
 
-  if (memberState) {
-    navigate(from.pathname, { replace: true });
-  }
+  useEffect(() => {
+    if (memberState.email) {
+      navigate(from.pathname, { replace: true });
+    }
+  }, [memberState.email, from.pathname, navigate]);
 
   return (
-    <div id="container">
+    <>
       <Header>MQ-Navigator</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
@@ -117,9 +124,9 @@ const SignUp = () => {
       </Form>
       <LinkContainer>
         이미 회원이신가요?&nbsp;
-        <a href="/member/login">로그인 하러가기</a>
+        <Link to="/member/login">로그인 하러가기</Link>
       </LinkContainer>
-    </div>
+    </>
   );
 };
 
