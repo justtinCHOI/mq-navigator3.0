@@ -9,7 +9,6 @@ const LogIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || { pathname: '/workspace/mqnavigator/analyze' };
-  const { updateSlicesAfterLogin } = useCustomMember();
 
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
@@ -21,14 +20,14 @@ const LogIn = () => {
       const loginParam = { email: email, password: password };
       doLogin(loginParam)
         .then(() => {
-          updateSlicesAfterLogin();
+          // updateSlicesAfterLogin();
         })
         .catch((error) => {
           console.dir(error);
           setLogInError(error.response?.status === 401);
         });
     },
-    [doLogin, email, password, updateSlicesAfterLogin],
+    [doLogin, email, password],
   );
 
   useEffect(() => {

@@ -6,15 +6,16 @@ import { memberSliceState } from '@typings/db';
 const jwtAxios = axios.create();
 
 const refreshJWT = async (accessToken: string, refreshToken: string): Promise<any> => {
-  //해더에 accessToken 파라미터에 refreshToken 을 넣어서 요청한다..
-
-  const host = API_SERVER_HOST;
-
-  const header = { headers: { Authorization: `Bearer ${accessToken}` } };
-
-  const res = await axios.get(`${host}/api/member/refresh?refreshToken=${refreshToken}`, header);
-
-  return res.data;
+  try {
+    const host = API_SERVER_HOST;
+    const header = { headers: { Authorization: `Bearer ${accessToken}` } };
+    const res = await axios.get(`${host}/api/member/refresh?refreshToken=${refreshToken}`, header);
+    console.log('refreshJWT:', res.data);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to refresh JWT:', error);
+    throw new Error('REFRESH_TOKEN_FAILED');
+  }
 };
 
 //요청을 보낼시 동작
@@ -52,11 +53,11 @@ const beforeRes = async (res: AxiosResponse) => {
   //'ERROR_ACCESS_TOKEN'
   const data = res.data;
 
-  if (data && data.error === 'ERROR_ACCESS_TOKEN') {
+  if (data && (data.error === 'ERROR_ACCESS_TOKEN' || 'Expired')) {
     //에러가 발생한다면? (token 문제)
     //쿠키에서 refreshToken 을 가져와서 새로운 token 을 생성
     // 사용자가 axios 요청을 하고 에러가 발생할 떄마다 갱신된 값을 다시 저장
-    const memberCookieValue: memberSliceState | undefined = getCookie('member');
+    const memberCookieValue: memberSliceState = getCookie('member');
 
     if (!memberCookieValue) {
       // memberCookieValue가 없을 때 예외 처리
@@ -66,6 +67,8 @@ const beforeRes = async (res: AxiosResponse) => {
         },
       });
     }
+
+    console.log('refreshJWT again');
 
     const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken);
 
@@ -79,7 +82,7 @@ const beforeRes = async (res: AxiosResponse) => {
 
     originalRequest.headers.Authorization = `Bearer ${result.accessToken}`;
 
-    return await axios(originalRequest);
+    return axios(originalRequest);
   }
 
   return res;

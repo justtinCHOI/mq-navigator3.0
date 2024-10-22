@@ -9,6 +9,7 @@ import com.unitekndt.mqnavigator.repository.MemberRepository;
 import com.unitekndt.mqnavigator.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 워크스페이스에 라우트 추가
         workspace.getRoutes().add(route);
+        workspace.setRoute(route);
 
         // 게이트 생성 및 설정
         List<Gate> gates = createGates(workspace, route.getCoordinates());
@@ -71,7 +73,6 @@ public class MemberServiceImpl implements MemberService {
 
         Map<String, String> unique =  createUnique();
 
-
         return Workspace.builder()
                 .name(unique.get("uniqueName"))
                 .url(unique.get("uniqueUrl"))
@@ -80,6 +81,7 @@ public class MemberServiceImpl implements MemberService {
                 .isPublic(true)
                 .useAmount(0L)
                 .members(new ArrayList<>()) // members 리스트 초기화
+                .route(new Route()) // members 리스트 초기화
                 .routes(new ArrayList<>()) // routes 초기화
                 .gates(new ArrayList<>())  // gates 초기화
                 .setting(createSetting())
@@ -191,28 +193,31 @@ public class MemberServiceImpl implements MemberService {
             List<IWorkspace> workspaceDTOs = new ArrayList<>();
             // 해당 회원의 워크스페이스 목록 가져오기
             for (Workspace workspace : member.get().getWorkspaces()) {
-                // Workspace를 IWorkspace DTO로 변환
-                IWorkspace workspaceDTO = IWorkspace.builder()
-                        .id(workspace.getId())
-                        .name(workspace.getName())
-                        .url(workspace.getUrl())
-                        .ownerId(workspace.getOwner().getId())
-                        .members(workspace.getMembers().stream().map(Member::getId).toList())  // members의 id만 추출
-                        .routes(workspace.getRoutes().stream()
-                                .map(route -> IRoute.builder()
-                                        .id(route.getId())
-                                        .name(route.getName())
-                                        .coordinates(route.getCoordinates())
-                                        .build())
-                                .toList())
-                        .route(IRoute.builder()
-                                .id(workspace.getRoute().getId())
-                                .name(workspace.getRoute().getName())
-                                .coordinates(workspace.getRoute().getCoordinates())
-                                .build())
-                        .build();
+                Route workspaceRoute = workspace.getRoute();
+                if (workspaceRoute != null) {
+                    // Workspace를 IWorkspace DTO로 변환
+                    IWorkspace workspaceDTO = IWorkspace.builder()
+                            .id(workspace.getId())
+                            .name(workspace.getName())
+                            .url(workspace.getUrl())
+                            .ownerId(workspace.getOwner().getId())
+                            .members(workspace.getMembers().stream().map(Member::getId).toList())  // members의 id만 추출
+                            .routes(workspace.getRoutes().stream()
+                                    .map(route -> IRoute.builder()
+                                            .id(route.getId())
+                                            .name(route.getName())
+                                            .coordinates(route.getCoordinates())
+                                            .build())
+                                    .toList())
+                            .route(IRoute.builder()
+                                    .id(workspace.getRoute().getId())
+                                    .name(workspace.getRoute().getName())
+                                    .coordinates(workspace.getRoute().getCoordinates())
+                                    .build())
+                            .build();
 
-                workspaceDTOs.add(workspaceDTO);
+                    workspaceDTOs.add(workspaceDTO);
+                }
             }
             return workspaceDTOs;
         } else {
@@ -221,17 +226,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member getMemberById(Long id) {
-        // MemberRepository를 통해 id로 회원 조회
-        Optional<Member> optionalMember = memberRepository.findById(id);
+    public Optional<Member> getMemberById(Long id) {
+        return memberRepository.findById(id);
+    }
 
-        // 만약 존재하지 않으면 예외를 발생시키거나 null을 반환
-        if (optionalMember.isEmpty()) {
-            throw new RuntimeException("Member not found for id: " + id);
-        }
-
-        // 존재하면 Member 객체 반환
-        return optionalMember.get();
+    @Override
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Not Found"));
     }
 
 }

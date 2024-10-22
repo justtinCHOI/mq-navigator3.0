@@ -33,17 +33,18 @@ const initialState: ISetting = {
 };
 
 // Setting 정보를 비동기로 받아오는 액션
-export const fetchSettingAsync = createAsyncThunk('fetchSettingAsync', async (url: string) => {
+export const getSettingAsync = createAsyncThunk('getSettingAsync', async (url: string) => {
   return await getSetting(url);
 });
 
 // SettingSlice 정의
 const settingSlice = createSlice({
-  name: 'setting',
+  name: 'settingSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchSettingAsync.fulfilled, (state, action: PayloadAction<ISetting>) => {
+    builder.addCase(getSettingAsync.fulfilled, (state, action: PayloadAction<ISetting>) => {
+      console.log('getSettingAsync.fulfilled');
       return action.payload;
     });
   },

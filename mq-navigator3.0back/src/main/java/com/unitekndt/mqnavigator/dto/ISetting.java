@@ -1,9 +1,11 @@
 package com.unitekndt.mqnavigator.dto;
 
 import com.unitekndt.mqnavigator.entity.*;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public class ISetting {
     private Long id;
     private Long workspaceId;

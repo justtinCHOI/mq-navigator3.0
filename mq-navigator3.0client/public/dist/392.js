@@ -1,1 +1,173 @@
-"use strict";(self.webpackChunkmq_navigator3_0client=self.webpackChunkmq_navigator3_0client||[]).push([[392],{8046:(e,n,t)=>{t.d(n,{By:()=>M,JA:()=>U,JH:()=>P,Mi:()=>C,OQ:()=>S,U9:()=>z,UC:()=>A,Us:()=>y,hj:()=>j,lP:()=>O,lV:()=>V,qT:()=>D,r0:()=>w,wV:()=>k,z2:()=>J,zb:()=>G});var l,r,a,c,o,i,u,s,m,d,p,E,f,x,h,g,v=t(3530);function b(e,n){return n||(n=e.slice(0)),Object.freeze(Object.defineProperties(e,{raw:{value:Object.freeze(n)}}))}var w=v.A.div(l||(l=b(["\n  width: 100%;\n  height: 120px;\n"]))),A=v.A.div(r||(r=b(["\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n"]))),y=v.A.div(a||(a=b(["\n  display: flex;\n  flex-direction: row;\n"]))),U=v.A.div(c||(c=b(["\n  display: flex;\n  flex-direction: column;\n  width: 170px;\n  justify-content: center;\n  align-items: center;\n"]))),C=v.A.div(o||(o=b(["\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n"]))),k=v.A.div(i||(i=b(["\n  display: flex;\n  flex-direction: row;\n  flex-shrink: 0;\n"]))),V=v.A.p(u||(u=b(["\n  margin: 10px;\n  height: 40px;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n  align-items: center;\n  font-weight: 500;\n"]))),O=v.A.div(s||(s=b(["\n  margin: 10px;\n  height: 40px;\n  border-radius: 4px;\n  padding: 5px;\n  font-size: 16px;\n  font-weight: 500;\n  box-sizing: border-box;\n\n  &:focus {\n    outline: none;\n    border-color: #666;\n    box-shadow: 0 0 5px #ccc;\n  }\n"]))),z=v.A.input(m||(m=b(["\n  margin: 10px;\n  height: 40px;\n  border-radius: 4px;\n  padding: 5px;\n  font-size: 16px;\n  font-weight: 500;\n  box-sizing: border-box;\n\n  &:focus {\n    outline: none;\n    border-color: #666;\n    box-shadow: 0 0 5px #ccc;\n  }\n"]))),S=v.A.select(d||(d=b(["\n  margin: 10px;\n  height: 40px;\n  border: none;\n  box-sizing: border-box;\n  border-radius: 4px;\n  padding: 5px;\n  font-size: 16px;\n  font-weight: 500;\n\n  &:focus {\n    outline: none;\n    box-shadow: none;\n  }\n"]))),P=v.A.button(p||(p=b(["\n  display: flex;\n  margin: 10px;\n  width: 40px;\n  height: 40px;\n  border-radius: 4px;\n  justify-content: space-around;\n  align-items: center;\n  font-size: 15px;\n  cursor: pointer;\n  transition: background-color 0.3s ease, transform 0.3s ease;\n\n  &:hover {\n    background-color: #ccc;\n  }\n\n  &:active {\n    transform: scale(0.95);\n  }\n"]))),M=v.A.button(E||(E=b(["\n  margin: 10px;\n  padding: 5px 10px;\n  color: #000;\n  border: 1px solid #999;\n  border-radius: 4px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n  transition: background-color 0.3s ease, transform 0.3s ease;\n\n  &:hover {\n    background-color: #ccc;\n  }\n\n  &:active {\n    transform: scale(0.95);\n  }\n\n  &:focus {\n    outline: none;\n    box-shadow: 0 0 5px #ccc;\n  }\n"]))),j=v.A.i(f||(f=b(["\n  flex: 1;\n  margin: auto;\n  padding: 5px;\n  font-size: 24px;\n  cursor: pointer;\n  transition: color 0.3s ease, transform 0.3s ease;\n\n  &:active {\n    color: #000;\n  }\n"]))),G=v.A.div(x||(x=b(["\n  bottom: 30px;\n  position: relative;\n  display: flex;\n  align-items: center;\n  width: 100%;\n  margin: 20px;\n  height: 40px;\n"]))),J=v.A.input(h||(h=b(["\n  width: 100%;\n  height: 10px;\n  appearance: none;\n  background-color: #ccc;\n  cursor: pointer;\n  margin-right: 20px;\n\n  &::-webkit-slider-thumb {\n    appearance: none;\n    width: 20px;\n    height: 20px;\n    background-color: #333;\n    border-radius: 50%;\n    cursor: pointer;\n    transition: background-color 0.3s ease;\n  }\n\n  &:active::-webkit-slider-thumb {\n    background-color: #333;\n  }\n"]))),D=v.A.div(g||(g=b(["\n  display: flex;\n  justify-content: space-between;\n  width: 120px;\n  padding: 20px;\n  font-size: 14px;\n  font-weight: 500;\n"])))},8639:(e,n,t)=>{t.d(n,{a:()=>i,w:()=>o});var l,r,a=t(3530);function c(e,n){return n||(n=e.slice(0)),Object.freeze(Object.defineProperties(e,{raw:{value:Object.freeze(n)}}))}var o=a.A.section(l||(l=c(["\n  margin: 0 10px 10px 10px;\n  border: 1px solid #eee;\n  display: flex;\n  flex-direction: column;\n"]))),i=a.A.div(r||(r=c(["\n  width: 100%;\n  display: flex;\n  flex: 1;\n"])))},5392:(e,n,t)=>{t.r(n),t.d(n,{default:()=>v});var l=t(6540),r=t(2295),a=t(8639),c=t(246),o=t(8046);const i=function(){var e=(0,l.useRef)(null);return(0,l.useEffect)((function(){e.current&&c.Ay.create(e.current,{animation:150,ghostClass:"sortable-ghost"})}),[]),l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Routes"))),l.createElement(o.Mi,{ref:e},Array.from({length:4},(function(e,n){var t="Route"+(n+1);return l.createElement(o.U9,{key:n+1,className:"width180px",defaultValue:t})})))))},u=function(e){var n=e.phase;return l.createElement(o.wV,null,l.createElement(o.lV,{style:{width:"200px"}},n),l.createElement(o.OQ,{className:"width140px"},l.createElement("option",{value:"SKYBLUE",selected:!0},"Sky Blue"),l.createElement("option",{value:"PURPLE"},"Purple"),l.createElement("option",{value:"YELLOW"},"Yellow"),l.createElement("option",{value:"LIGHTGREEN"},"Light Green")))},s=function(){return l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Colors"))),l.createElement(o.Mi,null,l.createElement(o.UC,null,l.createElement(u,{phase:"Initial Phase"}),l.createElement(u,{phase:"Deceleration Phase"}),l.createElement(u,{phase:"Acceleration Phase"}),l.createElement(u,{phase:"Constant Speed Phase"})))))},m=function(){return l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Refresh Interval"))),l.createElement(o.Mi,null,l.createElement(o.wV,null,l.createElement(o.OQ,{className:"width50px"},l.createElement("option",{value:"1",selected:!0},"1"),l.createElement("option",{value:"3"},"3"),l.createElement("option",{value:"10"},"10"),l.createElement("option",{value:"60"},"60")),l.createElement(o.lV,null,"second")))))},d=function(){return l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Tolerance Range"))),l.createElement(o.Mi,null,l.createElement(o.wV,null,l.createElement(o.OQ,{className:"width50px"},l.createElement("option",{value:"5",selected:!0},"5"),l.createElement("option",{value:"10"},"10"),l.createElement("option",{value:"20"},"20")),l.createElement(o.lV,null,"second")))))},p=function(){return l.createElement(o.OQ,{className:"width300px"},l.createElement("option",{value:"firstGate",selected:!0},"first gate"),l.createElement("option",{value:"lastGate"},"last gate"),l.createElement("option",{value:"previousGateBasedOnSelected"},"previous gate based on selected"),l.createElement("option",{value:"latestGateBasedOnSelected"},"latest gate based on selected"),l.createElement("option",{value:"nextGateBasedOnSelected"},"next gate based on selected"),l.createElement("option",{value:"previousGateBasedOnCurrent"},"previous gate based on current"),l.createElement("option",{value:"latestGateBasedOnCurrent"},"latest gate based on current"),l.createElement("option",{value:"nextGateBasedOnCurrent"},"next gate based on current"))},E=function(){return l.createElement(o.wV,null,l.createElement(p,null),l.createElement(o.lV,{style:{width:"50px"}},"~"),l.createElement(p,null))},f=function(){return l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Speed Prediction Interval"))),l.createElement(o.Mi,null,l.createElement(E,null))))},x=function(){var e=(0,l.useRef)(null);return(0,l.useEffect)((function(){e.current&&c.Ay.create(e.current,{animation:150,ghostClass:"sortable-ghost"})}),[]),l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Display Sections"))),l.createElement(o.Mi,{ref:e},Array.from({length:4},(function(e,n){return l.createElement(o.wV,{key:n+1},l.createElement(E,null),l.createElement(o.JH,null,l.createElement("i",{className:"fa-solid fa-xmark"})))})))))},h=function(){return l.createElement(o.OQ,{className:"width220px"},l.createElement("option",{value:"DISTANCE",selected:!0},"distance"),l.createElement("option",{value:"ELAPSED_TIME"},"elapsed time"),l.createElement("option",{value:"ESTIMATED_TIME"},"estimated time"),l.createElement("option",{value:"ELAPSED_SPEED"},"elapsed speed"),l.createElement("option",{value:"ESTIMATED_SPEED"},"estimated speed"))},g=function(){var e=(0,l.useRef)(null);return(0,l.useEffect)((function(){e.current&&c.Ay.create(e.current,{animation:150,ghostClass:"sortable-ghost"})}),[]),l.createElement(o.UC,null,l.createElement(o.Us,null,l.createElement(o.JA,null,l.createElement(o.UC,null,l.createElement(o.lV,null,"Section Datas"))),l.createElement(o.Mi,{ref:e},Array.from({length:4},(function(e,n){return l.createElement(o.wV,{key:n+1},l.createElement(h,null),l.createElement(o.JH,null,l.createElement("i",{className:"fa-solid fa-xmark"})))})))))},v=function(){return l.createElement(a.a,{style:{height:"calc((100vh - 102px) / 2)"}},l.createElement(r.ur,null,l.createElement(a.w,null,l.createElement(s,null)),l.createElement(a.w,null,l.createElement(m,null)),l.createElement(a.w,null,l.createElement(d,null)),l.createElement(a.w,null,l.createElement(f,null)),l.createElement(a.w,null,l.createElement(i,null)),l.createElement(a.w,null,l.createElement(x,null)),l.createElement(a.w,null,l.createElement(g,null))))}}}]);
+"use strict";(self.webpackChunkmq_navigator3_0client=self.webpackChunkmq_navigator3_0client||[]).push([[392],{8046:(e,t,l)=>{l.d(t,{By:()=>x,JA:()=>o,JH:()=>E,Mi:()=>i,OQ:()=>p,U9:()=>d,UC:()=>r,Us:()=>c,hj:()=>h,lP:()=>m,lV:()=>u,qT:()=>v,r0:()=>a,wV:()=>s,z2:()=>g,zb:()=>f});var n=l(3530);const a=n.A.div`
+  width: 100%;
+  height: 120px;
+`,r=n.A.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`,c=n.A.div`
+  display: flex;
+  flex-direction: row;
+`,o=n.A.div`
+  display: flex;
+  flex-direction: column;
+  width: 170px;
+  justify-content: center;
+  align-items: center;
+`,i=n.A.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`,s=n.A.div`
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+`,u=n.A.p`
+  margin: 10px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-weight: 500;
+`,m=n.A.div`
+  margin: 10px;
+  height: 40px;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #666;
+    box-shadow: 0 0 5px #ccc;
+  }
+`,d=n.A.input`
+  margin: 10px;
+  height: 40px;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #666;
+    box-shadow: 0 0 5px #ccc;
+  }
+`,p=n.A.select`
+  margin: 10px;
+  height: 40px;
+  border: none;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 500;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+`,E=n.A.button`
+  display: flex;
+  margin: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`,x=n.A.button`
+  margin: 10px;
+  padding: 5px 10px;
+  color: #000;
+  border: 1px solid #999;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px #ccc;
+  }
+`,h=n.A.i`
+  flex: 1;
+  margin: auto;
+  padding: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:active {
+    color: #000;
+  }
+`,f=n.A.div`
+  bottom: 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 20px;
+  height: 40px;
+`,g=n.A.input`
+  width: 100%;
+  height: 10px;
+  appearance: none;
+  background-color: #ccc;
+  cursor: pointer;
+  margin-right: 20px;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  &:active::-webkit-slider-thumb {
+    background-color: #333;
+  }
+`,v=n.A.div`
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+  padding: 20px;
+  font-size: 14px;
+  font-weight: 500;
+`},8639:(e,t,l)=>{l.d(t,{a:()=>r,w:()=>a});var n=l(3530);const a=n.A.section`
+  margin: 0 10px 10px 10px;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+`,r=n.A.div`
+  width: 100%;
+  display: flex;
+  flex: 1;
+`},5392:(e,t,l)=>{l.r(t),l.d(t,{default:()=>v});var n=l(6540),a=l(2295),r=l(8639),c=l(246),o=l(8046);const i=()=>{const e=(0,n.useRef)(null);return(0,n.useEffect)((()=>{e.current&&c.Ay.create(e.current,{animation:150,ghostClass:"sortable-ghost"})}),[]),n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Routes"))),n.createElement(o.Mi,{ref:e},Array.from({length:4},((e,t)=>{const l="Route"+(t+1);return n.createElement(o.U9,{key:t+1,className:"width180px",defaultValue:l})})))))},s=({phase:e})=>n.createElement(o.wV,null,n.createElement(o.lV,{style:{width:"200px"}},e),n.createElement(o.OQ,{className:"width140px"},n.createElement("option",{value:"SKYBLUE",selected:!0},"Sky Blue"),n.createElement("option",{value:"PURPLE"},"Purple"),n.createElement("option",{value:"YELLOW"},"Yellow"),n.createElement("option",{value:"LIGHTGREEN"},"Light Green"))),u=()=>n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Colors"))),n.createElement(o.Mi,null,n.createElement(o.UC,null,n.createElement(s,{phase:"Initial Phase"}),n.createElement(s,{phase:"Deceleration Phase"}),n.createElement(s,{phase:"Acceleration Phase"}),n.createElement(s,{phase:"Constant Speed Phase"}))))),m=()=>n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Refresh Interval"))),n.createElement(o.Mi,null,n.createElement(o.wV,null,n.createElement(o.OQ,{className:"width50px"},n.createElement("option",{value:"1",selected:!0},"1"),n.createElement("option",{value:"3"},"3"),n.createElement("option",{value:"10"},"10"),n.createElement("option",{value:"60"},"60")),n.createElement(o.lV,null,"second"))))),d=()=>n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Tolerance Range"))),n.createElement(o.Mi,null,n.createElement(o.wV,null,n.createElement(o.OQ,{className:"width50px"},n.createElement("option",{value:"5",selected:!0},"5"),n.createElement("option",{value:"10"},"10"),n.createElement("option",{value:"20"},"20")),n.createElement(o.lV,null,"second"))))),p=()=>n.createElement(o.OQ,{className:"width300px"},n.createElement("option",{value:"firstGate",selected:!0},"first gate"),n.createElement("option",{value:"lastGate"},"last gate"),n.createElement("option",{value:"previousGateBasedOnSelected"},"previous gate based on selected"),n.createElement("option",{value:"latestGateBasedOnSelected"},"latest gate based on selected"),n.createElement("option",{value:"nextGateBasedOnSelected"},"next gate based on selected"),n.createElement("option",{value:"previousGateBasedOnCurrent"},"previous gate based on current"),n.createElement("option",{value:"latestGateBasedOnCurrent"},"latest gate based on current"),n.createElement("option",{value:"nextGateBasedOnCurrent"},"next gate based on current")),E=()=>n.createElement(o.wV,null,n.createElement(p,null),n.createElement(o.lV,{style:{width:"50px"}},"~"),n.createElement(p,null)),x=()=>n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Speed Prediction Interval"))),n.createElement(o.Mi,null,n.createElement(E,null)))),h=()=>{const e=(0,n.useRef)(null);return(0,n.useEffect)((()=>{e.current&&c.Ay.create(e.current,{animation:150,ghostClass:"sortable-ghost"})}),[]),n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Display Sections"))),n.createElement(o.Mi,{ref:e},Array.from({length:4},((e,t)=>n.createElement(o.wV,{key:t+1},n.createElement(E,null),n.createElement(o.JH,null,n.createElement("i",{className:"fa-solid fa-xmark"}))))))))},f=()=>n.createElement(o.OQ,{className:"width220px"},n.createElement("option",{value:"DISTANCE",selected:!0},"distance"),n.createElement("option",{value:"ELAPSED_TIME"},"elapsed time"),n.createElement("option",{value:"ESTIMATED_TIME"},"estimated time"),n.createElement("option",{value:"ELAPSED_SPEED"},"elapsed speed"),n.createElement("option",{value:"ESTIMATED_SPEED"},"estimated speed")),g=()=>{const e=(0,n.useRef)(null);return(0,n.useEffect)((()=>{e.current&&c.Ay.create(e.current,{animation:150,ghostClass:"sortable-ghost"})}),[]),n.createElement(o.UC,null,n.createElement(o.Us,null,n.createElement(o.JA,null,n.createElement(o.UC,null,n.createElement(o.lV,null,"Section Datas"))),n.createElement(o.Mi,{ref:e},Array.from({length:4},((e,t)=>n.createElement(o.wV,{key:t+1},n.createElement(f,null),n.createElement(o.JH,null,n.createElement("i",{className:"fa-solid fa-xmark"}))))))))},v=()=>n.createElement(r.a,{style:{height:"calc((100vh - 102px) / 2)"}},n.createElement(a.ur,null,n.createElement(r.w,null,n.createElement(u,null)),n.createElement(r.w,null,n.createElement(m,null)),n.createElement(r.w,null,n.createElement(d,null)),n.createElement(r.w,null,n.createElement(x,null)),n.createElement(r.w,null,n.createElement(i,null)),n.createElement(r.w,null,n.createElement(h,null)),n.createElement(r.w,null,n.createElement(g,null))))}}]);

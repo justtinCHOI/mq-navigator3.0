@@ -14,9 +14,10 @@ public interface MemberRepository extends JpaRepository<Member, String> {//email
   //ElementCollection 을 포함하여 구하고 싶을 떄는 EntityGraph 를 사용한다.
   @EntityGraph(attributePaths = {"memberRoleList"})
   @Query("select m from Member m where m.email = :email")
-  Member getWithRoles(@Param("email") String email);
+  Optional<Member> getWithRoles(@Param("email") String email);
 
     Optional<Member> findByEmail(String email);
+//    Member findByEmail(String email);
 
     Optional<Member> findById(Long id);
 

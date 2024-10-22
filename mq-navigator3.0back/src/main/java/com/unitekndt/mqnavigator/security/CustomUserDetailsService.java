@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,14 +23,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        log.info("loadUserByUsername email: {} ", email);
+        Optional<Member> memberOpt = memberRepository.getWithRoles(email);
 
-        Member member = memberRepository.getWithRoles(email); // Unique key 을 통해서 Member 정보를 꺼낸다.
+        // 로그 출력 시 Optional 내부의 값 확인
+        memberOpt.ifPresent(member -> log.info("loadUserByUsername member: {}", member));
 
-        if(member == null){
-            throw new UsernameNotFoundException("Not Found");
-        }
+        // Optional이 비어있는 경우 처리
+        Member member = memberOpt.orElseThrow(() -> new UsernameNotFoundException("Not Found"));
 
+        return createMemberDTO(member);
+    }
+
+    // 중복 코드 정리를 위한 메서드
+    private MemberDTO createMemberDTO(Member member) {
         return new MemberDTO(
                 member.getId(),
                 member.getEmail(),
@@ -38,8 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 member.getPassword(),
                 member.getMemberRoleList()
                         .stream()
-                        .map(Enum::name).collect(Collectors.toList()));
-
+                        .map(Enum::name)
+                        .collect(Collectors.toList()));
     }
-
 }

@@ -12,4 +12,6 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
     // URL로 워크스페이스가 존재하는지 확인하는 메서드
     boolean existsByUrl(String url);
+
+    Workspace findByUrl(String url);
 }

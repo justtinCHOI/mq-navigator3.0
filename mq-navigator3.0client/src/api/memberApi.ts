@@ -8,18 +8,6 @@ const host = `${API_SERVER_HOST}/api/member`;
 export const loginPost = async (loginParam: { email: string; password: string }) => {
   console.log(' loginPost loginParam : ', loginParam);
 
-  // const header = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
-  //
-  // const params = new URLSearchParams();
-  // params.append('email', loginParam.email);
-  // params.append('password', loginParam.password);
-  //
-  // console.log('URLSearchParams:', params.toString());
-  //
-  // const res = await axios.post(`${host}/login`, params.toString(), header);
-  //
-  // console.log(' loginPost ', res.data);
-
   const header = { headers: { 'Content-Type': 'x-www-form-urlencoded' } };
 
   const form = new FormData();
@@ -40,7 +28,7 @@ export const signup = async (singupParam: { email: string; nickname: string; pas
 export const getWorkspaces = async () => {
   try {
     const res = await jwtAxios.get(`${API_SERVER_HOST}/api/member/workspaces`);
-    console.log('getWorkspaces data ', res.data);
+    console.log('memberApi getWorkspaces data ', res.data);
     return res.data;
   } catch (error: any) {
     console.error('Error fetching workspaces:', error.response?.data);

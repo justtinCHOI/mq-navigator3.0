@@ -1,113 +1,92 @@
 package com.unitekndt.mqnavigator.security.filter;
 
 import com.google.gson.Gson;
-import com.unitekndt.mqnavigator.dto.MemberDTO;
-import com.unitekndt.mqnavigator.entity.Member;
-import com.unitekndt.mqnavigator.service.MemberService;
+import com.unitekndt.mqnavigator.security.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import com.unitekndt.mqnavigator.util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
 
+//@Component
 @Log4j2
-public class JWTCheckFilter extends OncePerRequestFilter {
-    // OncePerRequestFilter : spring security 가 여러가지 필터를 제공하지만 모든 경우에 체크하는 필터
+//public class JWTCheckFilter extends OncePerRequestFilter {
+public class JWTCheckFilter {
 
-    private  MemberService memberService;
-
-    // MemberService를 생성자로 주입
-    public JWTCheckFilter(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-
-        if(path.startsWith("/api/member/signup") || path.startsWith("/api/member/login") || request.getMethod().equals("OPTIONS")) {
-            return true;
-        }
-
-        return path.startsWith("/workspace/mqnavigator/analyze/");
-    }
-
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        //JWT 를 검증하고, 유효한 경우 SecurityContext 에 인증 정보를 설정합니다.
-        //header 에 authorization 이 있는데 type 은 bearer 를 표준으로 쓴다.
-
-        //1. Header ->  토큰 검사 -> claims 2. claims -> MemberDTO 3.
-
-        String authHeaderStr = request.getHeader("Authorization");
-
-        if (authHeaderStr == null || !authHeaderStr.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        try {
-            //"Bearer {JWT 문자열}"
-            String accessToken = authHeaderStr.substring(7); // 7개 문자 잘라내기
-            Map<String, Object> claims = JWTUtil.validateToken(accessToken); //유효한지 검사
-            log.info("claims {}", claims);
-
-            //SpringSecurityHolderContext 에다가 Member 정보를 넣어줘야한다.
-            //authorization 성공시 -> MemberDTO 정보를 얻어낼 수 있다.
-
-//            Long id = ((Long) claims.get("id"));
-            Long id = claims.get("id") instanceof Integer
-                    ? Long.valueOf((Integer) claims.get("id"))
-                    : (Long) claims.get("id");
-            log.info("JWT ID : {}", id);
-
-            Member member = memberService.getMemberById(id);
-            if (member == null) {
-                log.error("Member not found for id: " + id);
-                throw new NullPointerException("Member not found");
-            }
-
-            log.info("memberService email : {}", member.getEmail());
-
-            String email = (String) claims.get("email");
-
-            log.info("claims email : {}", email);
-
-            String name = (String) claims.get("name");
-            String nickname = (String) claims.get("nickname");
-            String password = (String) claims.get("password");
-            List<String> roleNames = (List<String>) claims.get("roleNames");
-
-            MemberDTO memberDTO = new MemberDTO(id, email, name, nickname, password, roleNames);
-
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(memberDTO, password, memberDTO.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-            filterChain.doFilter(request, response);
-
-        } catch (Exception e) {
-            log.error("JWT Check Error..............");
-            log.error(e.getMessage());
-
-            Gson gson = new Gson();
-            String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
-
-            response.setContentType("application/json");
-            PrintWriter printWriter = response.getWriter();
-            printWriter.println(msg);
-            printWriter.close();
-        }
-    }
+//    private final CustomUserDetailsService userDetailsService;
+//
+//    @Autowired
+//    public JWTCheckFilter(CustomUserDetailsService userDetailsService) {
+//        this.userDetailsService = userDetailsService;
+//    }
+//
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        String path = request.getRequestURI();
+//
+//        return path.startsWith("/api/member/signup") || path.startsWith("/api/member/login") || path.startsWith("/api/member/refresh") || request.getMethod().equals("OPTIONS");
+//    }
+//
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//
+//        String authHeaderStr = request.getHeader("Authorization");
+//
+//        if (authHeaderStr == null || !authHeaderStr.startsWith("Bearer ")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        try {
+//            String accessToken = authHeaderStr.substring(7); // 7개 문자 잘라내기
+//            Map<String, Object> claims = JWTUtil.validateToken(accessToken); //유효한지 검사
+//
+//            String email = (String) claims.get("email");
+//
+//            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+//            UsernamePasswordAuthenticationToken authenticationToken =
+//                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//
+//            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//
+//            filterChain.doFilter(request, response);
+//
+//        } catch (Exception e) {
+////            log.error("JWT Check Error..............");
+////            log.error(e.getMessage());
+////
+////            Gson gson = new Gson();
+////            String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
+////
+////            response.setContentType("application/json");
+////            PrintWriter printWriter = response.getWriter();
+////            printWriter.println(msg);
+////            printWriter.close();
+//            handleException(response, e.getMessage());
+//        }
+//    }
+//
+//    private void handleException(HttpServletResponse response, String errorMsg) throws IOException {
+//        log.error("JWT Check Error: {}", errorMsg);
+//
+//        Gson gson = new Gson();
+//        String msg = gson.toJson(Map.of("error", errorMsg));
+//
+//        response.setContentType("application/json");
+//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // 401 Unauthorized
+//        PrintWriter printWriter = response.getWriter();
+//        printWriter.println(msg);
+//        printWriter.close();
+//    }
 }

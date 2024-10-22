@@ -42,6 +42,7 @@ const config: Configuration = {
               '@babel/preset-env',
               {
                 targets: { browsers: ['IE 10'] },
+                // targets: { browsers: ['last 2 versions', 'not dead'] }, // 최신 브라우저로 타겟 변경
                 debug: isDevelopment,
               },
             ],
@@ -86,6 +87,7 @@ const config: Configuration = {
         context: ['/api'],
         target: 'http://localhost:8080',
         changeOrigin: true,
+        // ws: true,
       },
     ],
   },

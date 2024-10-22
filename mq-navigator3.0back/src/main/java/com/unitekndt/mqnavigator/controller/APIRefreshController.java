@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -23,7 +24,7 @@ public class APIRefreshController {
         //해더.Authorization -> accessToken , 매개변수 -> refreshToken
 
         if (refreshToken == null) {
-            throw new CustomJWTException("NULL_REFRASH");
+            throw new CustomJWTException("NULL_REFRESH");
         }
         if (authHeader == null || authHeader.length() < 7) {
             throw new CustomJWTException("INVALID_STRING");
@@ -52,7 +53,8 @@ public class APIRefreshController {
     private boolean checkTime(Integer exp) {
 
         //JWT exp를 날짜로 변환
-        java.util.Date expDate = new java.util.Date((long) exp * (1000));
+//        java.util.Date expDate = new java.util.Date((long) exp * (1000));
+        Date expDate = new Date((long) exp * 1000);
 
         //현재 시간과의 차이 계산 - 밀리세컨즈
         long gap = expDate.getTime() - System.currentTimeMillis();

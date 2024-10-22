@@ -40,12 +40,19 @@ const useCustomMember = () => {
     return <Navigate replace to="/member/login" />;
   };
 
-  const updateSlicesAfterLogin = () => {
-    dispatch(getWorkspacesAsync());
-    console.log('workspaces : ', memberState.workspaces);
-    if (memberState.workspaces && memberState.workspaces.length > 1) {
-      const workspaceToUpdate = memberState.workspaces[1];
-      moveToPath(`/workspace/${workspaceToUpdate}/`);
+  const updateSlicesAfterLogin = async () => {
+    try {
+      // 비동기로 워크스페이스 데이터를 불러옴
+      const action = await dispatch(getWorkspacesAsync());
+      const workspaces = action.payload;
+
+      // workspaces가 있고, 길이가 1보다 큰 경우 특정 워크스페이스로 이동
+      if (workspaces && workspaces.length > 1) {
+        const workspaceToUpdate = workspaces[1].url; // `url` 필드 사용
+        moveToPath(`/workspace/${workspaceToUpdate}/`);
+      }
+    } catch (error) {
+      console.error('Failed to update slices after login:', error);
     }
   };
 

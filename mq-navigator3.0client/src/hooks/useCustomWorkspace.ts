@@ -1,5 +1,4 @@
 import {
-  getWorkspaceAsync,
   postAddWorkspaceMemberAsync,
   postCreateWorkspaceAsync,
   updateWorkspaceStateAsync,
@@ -8,8 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
-import { IMember, IWorkspace } from '@typings/db';
-import {getWorkspacesAsync} from "@slices/memberSlice";
+import { IWorkspace } from '@typings/db';
 
 const useCustomWorkspace = () => {
   // 이하 redux
@@ -18,10 +16,6 @@ const useCustomWorkspace = () => {
   const { url } = useParams<{ url: string }>(); // URL에서 워크스페이스의 URL 추출
   const memberState = useSelector((state: RootState) => state.memberSlice); // memberSlice에서 상태 가져오기
   const workspaceState = useSelector((state: RootState) => state.workspaceSlice);
-
-  const getWorkspace = (url: string) => {
-    dispatch(getWorkspaceAsync(url));
-  };
 
   const postCreateWorkspace = (workspaceCreateParam: { name: string; url: string }) => {
     dispatch(postCreateWorkspaceAsync(workspaceCreateParam));
@@ -44,7 +38,6 @@ const useCustomWorkspace = () => {
   return {
     workspaceState,
     workspaces,
-    getWorkspace,
     postCreateWorkspace,
     postAddWorkspaceMember,
   };

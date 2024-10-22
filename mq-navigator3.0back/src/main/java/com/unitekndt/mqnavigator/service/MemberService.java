@@ -7,6 +7,7 @@ import com.unitekndt.mqnavigator.entity.Member;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -16,8 +17,11 @@ public interface MemberService {
 
   List<IWorkspace> getWorkspacesByEmail(String email);
 
-    Member getMemberById(Long id);
-  
+  Optional<Member> getMemberById(Long id);
+
+//  Optional<Member> getMemberByEmail(String email);
+Member getMemberByEmail(String email);
+
   default MemberDTO entityToDTO(Member member) {
       return new MemberDTO(
             member.getId(),

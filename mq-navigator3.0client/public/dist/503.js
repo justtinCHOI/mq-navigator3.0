@@ -1,1 +1,28 @@
-"use strict";(self.webpackChunkmq_navigator3_0client=self.webpackChunkmq_navigator3_0client||[]).push([[503],{2503:(e,n,t)=>{t.r(n),t.d(n,{default:()=>r});var a=t(6540),i=t(7767),l=t(7224);const r=function(){return a.createElement(l.mc,null,a.createElement(i.sv,null))}},7224:(e,n,t)=>{t.d(n,{Y9:()=>p,mc:()=>o});var a,i,l,r=t(3530);function c(e,n){return n||(n=e.slice(0)),Object.freeze(Object.defineProperties(e,{raw:{value:Object.freeze(n)}}))}var o=r.A.div(a||(a=c(["\n  display: flex;\n  flex-wrap: wrap;\n  height: calc(100vh - 38px);\n  flex-flow: column;\n  position: relative;\n"]))),p=r.A.header(i||(i=c(["\n  height: 64px;\n  display: flex;\n  width: 100%;\n  --saf-0: rgba(var(--sk_foreground_low, 29, 28, 29), 0.13);\n  box-shadow: 0 1px 0 var(--saf-0);\n  padding: 20px 16px 20px 20px;\n  font-weight: bold;\n  align-items: center;\n"])));r.A.div(l||(l=c(["\n  position: absolute;\n  top: 64px;\n  left: 0;\n  width: 100%;\n  height: calc(100% - 64px);\n  background: white;\n  opacity: 0.7;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 40px;\n"])))}}]);
+"use strict";(self.webpackChunkmq_navigator3_0client=self.webpackChunkmq_navigator3_0client||[]).push([[503],{2503:(e,t,a)=>{a.r(t),a.d(t,{default:()=>o});var i=a(6540),l=a(7767),n=a(7224);const o=()=>i.createElement(n.mc,null,i.createElement(l.sv,null))},7224:(e,t,a)=>{a.d(t,{Y9:()=>n,mc:()=>l});var i=a(3530);const l=i.A.div`
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100vh - 38px);
+  flex-flow: column;
+  position: relative;
+`,n=i.A.header`
+  height: 64px;
+  display: flex;
+  width: 100%;
+  --saf-0: rgba(var(--sk_foreground_low, 29, 28, 29), 0.13);
+  box-shadow: 0 1px 0 var(--saf-0);
+  padding: 20px 16px 20px 20px;
+  font-weight: bold;
+  align-items: center;
+`;i.A.div`
+  position: absolute;
+  top: 64px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 64px);
+  background: white;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+`}}]);

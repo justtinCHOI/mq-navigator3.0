@@ -1,1 +1,173 @@
-"use strict";(self.webpackChunkmq_navigator3_0client=self.webpackChunkmq_navigator3_0client||[]).push([[679],{8046:(e,n,t)=>{t.d(n,{By:()=>R,JA:()=>N,JH:()=>O,Mi:()=>A,OQ:()=>C,U9:()=>U,UC:()=>y,Us:()=>V,hj:()=>T,lP:()=>j,lV:()=>z,qT:()=>Q,r0:()=>v,wV:()=>k,z2:()=>M,zb:()=>J});var l,a,r,i,c,o,s,m,u,d,p,x,f,h,E,g,b=t(3530);function w(e,n){return n||(n=e.slice(0)),Object.freeze(Object.defineProperties(e,{raw:{value:Object.freeze(n)}}))}var v=b.A.div(l||(l=w(["\n  width: 100%;\n  height: 120px;\n"]))),y=b.A.div(a||(a=w(["\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n"]))),V=b.A.div(r||(r=w(["\n  display: flex;\n  flex-direction: row;\n"]))),N=b.A.div(i||(i=w(["\n  display: flex;\n  flex-direction: column;\n  width: 170px;\n  justify-content: center;\n  align-items: center;\n"]))),A=b.A.div(c||(c=w(["\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n"]))),k=b.A.div(o||(o=w(["\n  display: flex;\n  flex-direction: row;\n  flex-shrink: 0;\n"]))),z=b.A.p(s||(s=w(["\n  margin: 10px;\n  height: 40px;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n  align-items: center;\n  font-weight: 500;\n"]))),j=b.A.div(m||(m=w(["\n  margin: 10px;\n  height: 40px;\n  border-radius: 4px;\n  padding: 5px;\n  font-size: 16px;\n  font-weight: 500;\n  box-sizing: border-box;\n\n  &:focus {\n    outline: none;\n    border-color: #666;\n    box-shadow: 0 0 5px #ccc;\n  }\n"]))),U=b.A.input(u||(u=w(["\n  margin: 10px;\n  height: 40px;\n  border-radius: 4px;\n  padding: 5px;\n  font-size: 16px;\n  font-weight: 500;\n  box-sizing: border-box;\n\n  &:focus {\n    outline: none;\n    border-color: #666;\n    box-shadow: 0 0 5px #ccc;\n  }\n"]))),C=b.A.select(d||(d=w(["\n  margin: 10px;\n  height: 40px;\n  border: none;\n  box-sizing: border-box;\n  border-radius: 4px;\n  padding: 5px;\n  font-size: 16px;\n  font-weight: 500;\n\n  &:focus {\n    outline: none;\n    box-shadow: none;\n  }\n"]))),O=b.A.button(p||(p=w(["\n  display: flex;\n  margin: 10px;\n  width: 40px;\n  height: 40px;\n  border-radius: 4px;\n  justify-content: space-around;\n  align-items: center;\n  font-size: 15px;\n  cursor: pointer;\n  transition: background-color 0.3s ease, transform 0.3s ease;\n\n  &:hover {\n    background-color: #ccc;\n  }\n\n  &:active {\n    transform: scale(0.95);\n  }\n"]))),R=b.A.button(x||(x=w(["\n  margin: 10px;\n  padding: 5px 10px;\n  color: #000;\n  border: 1px solid #999;\n  border-radius: 4px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n  transition: background-color 0.3s ease, transform 0.3s ease;\n\n  &:hover {\n    background-color: #ccc;\n  }\n\n  &:active {\n    transform: scale(0.95);\n  }\n\n  &:focus {\n    outline: none;\n    box-shadow: 0 0 5px #ccc;\n  }\n"]))),T=b.A.i(f||(f=w(["\n  flex: 1;\n  margin: auto;\n  padding: 5px;\n  font-size: 24px;\n  cursor: pointer;\n  transition: color 0.3s ease, transform 0.3s ease;\n\n  &:active {\n    color: #000;\n  }\n"]))),J=b.A.div(h||(h=w(["\n  bottom: 30px;\n  position: relative;\n  display: flex;\n  align-items: center;\n  width: 100%;\n  margin: 20px;\n  height: 40px;\n"]))),M=b.A.input(E||(E=w(["\n  width: 100%;\n  height: 10px;\n  appearance: none;\n  background-color: #ccc;\n  cursor: pointer;\n  margin-right: 20px;\n\n  &::-webkit-slider-thumb {\n    appearance: none;\n    width: 20px;\n    height: 20px;\n    background-color: #333;\n    border-radius: 50%;\n    cursor: pointer;\n    transition: background-color 0.3s ease;\n  }\n\n  &:active::-webkit-slider-thumb {\n    background-color: #333;\n  }\n"]))),Q=b.A.div(g||(g=w(["\n  display: flex;\n  justify-content: space-between;\n  width: 120px;\n  padding: 20px;\n  font-size: 14px;\n  font-weight: 500;\n"])))},9679:(e,n,t)=>{t.r(n),t.d(n,{default:()=>u});var l=t(6540),a=t(2295),r=t(8639),i=t(8046);t(2216);const c=function(e){var n=e.number;return l.createElement(i.UC,null,l.createElement(i.wV,null,l.createElement(i.lV,{className:"width70px"},n),l.createElement(i.U9,{className:"width120px",defaultValue:"1111 1111"}),l.createElement(i.OQ,{className:"width50px"},l.createElement("option",{value:"north",selected:!0},"N"),l.createElement("option",{value:"south"},"S")),l.createElement(i.U9,{className:"flex",defaultValue:"37.0"}),l.createElement(i.OQ,{className:"width50px"},l.createElement("option",{value:"east",selected:!0},"E"),l.createElement("option",{value:"west"},"W")),l.createElement(i.U9,{className:"flex",defaultValue:"37.0"}),l.createElement(i.JH,null,l.createElement("i",{className:"fa-solid fa-xmark"}))))},o=function(){return l.createElement(i.UC,{style:{height:"calc((100vh - 126px) / 2)"}},l.createElement(i.UC,{style:{height:"120px"}},l.createElement(i.wV,{style:{justifyContent:"space-between",alignItems:"center"}},l.createElement(i.OQ,{style:{margin:"0 auto"}},l.createElement("option",{value:"Route011",selected:!0},"Route011"),l.createElement("option",{value:"Route012",selected:!0},"Route012"),l.createElement("option",{value:"Route013",selected:!0},"Route013"),l.createElement("option",{value:"Route014",selected:!0},"Route014")),l.createElement("div",{style:{display:"inline-flex",gap:"10px"}},l.createElement(i.By,null,"Save"),l.createElement(i.By,null,"Modify"))),l.createElement(i.wV,null,l.createElement(i.lV,{className:"width70px"},"Gate",l.createElement("br",null),"Number"),l.createElement(i.lV,{className:"width120px"},"Time",l.createElement("br",null),"MMDD hhmmss"),l.createElement(i.lV,{className:"flex"},"Latitude"),l.createElement(i.lV,{className:"flex"},"Longitude"),l.createElement(i.JH,{style:{visibility:"hidden"}},"X"),l.createElement("div",{className:"width6px"}))),l.createElement(r.a,{style:{height:"calc((100vh - 126px) / 2) - 120px"}},l.createElement(a.ur,null,Array.from({length:10},(function(e,n){return l.createElement(c,{key:n+1,number:n+1})})))))},s=function(){return l.createElement(i.UC,null,l.createElement(i.wV,null,l.createElement(i.lV,{className:"width100px"},"first ~ current"),l.createElement(i.lV,{className:"flex"},"2900"),l.createElement(i.lV,{className:"flex"},"252700"),l.createElement(i.lV,{className:"flex"},"252700"),l.createElement(i.lV,{className:"flex"},"1")))},m=function(){return l.createElement(i.UC,{style:{height:"calc((100vh - 126px) / 2)"}},l.createElement(i.UC,{style:{height:"60px"}},l.createElement(i.wV,null,l.createElement(i.lV,{className:"width100px"},"Gate Range"),l.createElement(i.lV,{className:"flex"},"Time",l.createElement("br",null),"(m)"),l.createElement(i.lV,{className:"flex"},"Elasped Time",l.createElement("br",null),"hhmmss"),l.createElement(i.lV,{className:"flex"},"Estimated Time",l.createElement("br",null),"hhmmss"),l.createElement(i.lV,{className:"flex"},"Speed",l.createElement("br",null),"km/h"))),l.createElement(r.a,{style:{height:"calc((100vh - 126px) / 2) - 60px"}},l.createElement(a.ur,null,Array.from({length:10},(function(e,n){return l.createElement(s,{key:n+1})})))))},u=function(){return l.createElement(l.Fragment,null,l.createElement(r.w,null,l.createElement(o,null)),l.createElement(r.w,null,l.createElement(m,null)))}},8639:(e,n,t)=>{t.d(n,{a:()=>o,w:()=>c});var l,a,r=t(3530);function i(e,n){return n||(n=e.slice(0)),Object.freeze(Object.defineProperties(e,{raw:{value:Object.freeze(n)}}))}var c=r.A.section(l||(l=i(["\n  margin: 0 10px 10px 10px;\n  border: 1px solid #eee;\n  display: flex;\n  flex-direction: column;\n"]))),o=r.A.div(a||(a=i(["\n  width: 100%;\n  display: flex;\n  flex: 1;\n"])))}}]);
+"use strict";(self.webpackChunkmq_navigator3_0client=self.webpackChunkmq_navigator3_0client||[]).push([[679],{8046:(e,t,l)=>{l.d(t,{By:()=>h,JA:()=>c,JH:()=>u,Mi:()=>o,OQ:()=>x,U9:()=>p,UC:()=>r,Us:()=>i,hj:()=>f,lP:()=>d,lV:()=>m,qT:()=>b,r0:()=>n,wV:()=>s,z2:()=>g,zb:()=>E});var a=l(3530);const n=a.A.div`
+  width: 100%;
+  height: 120px;
+`,r=a.A.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`,i=a.A.div`
+  display: flex;
+  flex-direction: row;
+`,c=a.A.div`
+  display: flex;
+  flex-direction: column;
+  width: 170px;
+  justify-content: center;
+  align-items: center;
+`,o=a.A.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`,s=a.A.div`
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+`,m=a.A.p`
+  margin: 10px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-weight: 500;
+`,d=a.A.div`
+  margin: 10px;
+  height: 40px;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #666;
+    box-shadow: 0 0 5px #ccc;
+  }
+`,p=a.A.input`
+  margin: 10px;
+  height: 40px;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #666;
+    box-shadow: 0 0 5px #ccc;
+  }
+`,x=a.A.select`
+  margin: 10px;
+  height: 40px;
+  border: none;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: 500;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+`,u=a.A.button`
+  display: flex;
+  margin: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`,h=a.A.button`
+  margin: 10px;
+  padding: 5px 10px;
+  color: #000;
+  border: 1px solid #999;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px #ccc;
+  }
+`,f=a.A.i`
+  flex: 1;
+  margin: auto;
+  padding: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:active {
+    color: #000;
+  }
+`,E=a.A.div`
+  bottom: 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 20px;
+  height: 40px;
+`,g=a.A.input`
+  width: 100%;
+  height: 10px;
+  appearance: none;
+  background-color: #ccc;
+  cursor: pointer;
+  margin-right: 20px;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  &:active::-webkit-slider-thumb {
+    background-color: #333;
+  }
+`,b=a.A.div`
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+  padding: 20px;
+  font-size: 14px;
+  font-weight: 500;
+`},9679:(e,t,l)=>{l.r(t),l.d(t,{default:()=>d});var a=l(6540),n=l(2295),r=l(8639),i=l(8046);l(2216);const c=({number:e})=>a.createElement(i.UC,null,a.createElement(i.wV,null,a.createElement(i.lV,{className:"width70px"},e),a.createElement(i.U9,{className:"width120px",defaultValue:"1111 1111"}),a.createElement(i.OQ,{className:"width50px"},a.createElement("option",{value:"north",selected:!0},"N"),a.createElement("option",{value:"south"},"S")),a.createElement(i.U9,{className:"flex",defaultValue:"37.0"}),a.createElement(i.OQ,{className:"width50px"},a.createElement("option",{value:"east",selected:!0},"E"),a.createElement("option",{value:"west"},"W")),a.createElement(i.U9,{className:"flex",defaultValue:"37.0"}),a.createElement(i.JH,null,a.createElement("i",{className:"fa-solid fa-xmark"})))),o=()=>a.createElement(i.UC,{style:{height:"calc((100vh - 126px) / 2)"}},a.createElement(i.UC,{style:{height:"120px"}},a.createElement(i.wV,{style:{justifyContent:"space-between",alignItems:"center"}},a.createElement(i.OQ,{style:{margin:"0 auto"}},a.createElement("option",{value:"Route011",selected:!0},"Route011"),a.createElement("option",{value:"Route012",selected:!0},"Route012"),a.createElement("option",{value:"Route013",selected:!0},"Route013"),a.createElement("option",{value:"Route014",selected:!0},"Route014")),a.createElement("div",{style:{display:"inline-flex",gap:"10px"}},a.createElement(i.By,null,"Save"),a.createElement(i.By,null,"Modify"))),a.createElement(i.wV,null,a.createElement(i.lV,{className:"width70px"},"Gate",a.createElement("br",null),"Number"),a.createElement(i.lV,{className:"width120px"},"Time",a.createElement("br",null),"MMDD hhmmss"),a.createElement(i.lV,{className:"flex"},"Latitude"),a.createElement(i.lV,{className:"flex"},"Longitude"),a.createElement(i.JH,{style:{visibility:"hidden"}},"X"),a.createElement("div",{className:"width6px"}))),a.createElement(r.a,{style:{height:"calc((100vh - 126px) / 2) - 120px"}},a.createElement(n.ur,null,Array.from({length:10},((e,t)=>a.createElement(c,{key:t+1,number:t+1})))))),s=()=>a.createElement(i.UC,null,a.createElement(i.wV,null,a.createElement(i.lV,{className:"width100px"},"first ~ current"),a.createElement(i.lV,{className:"flex"},"2900"),a.createElement(i.lV,{className:"flex"},"252700"),a.createElement(i.lV,{className:"flex"},"252700"),a.createElement(i.lV,{className:"flex"},"1"))),m=()=>a.createElement(i.UC,{style:{height:"calc((100vh - 126px) / 2)"}},a.createElement(i.UC,{style:{height:"60px"}},a.createElement(i.wV,null,a.createElement(i.lV,{className:"width100px"},"Gate Range"),a.createElement(i.lV,{className:"flex"},"Time",a.createElement("br",null),"(m)"),a.createElement(i.lV,{className:"flex"},"Elasped Time",a.createElement("br",null),"hhmmss"),a.createElement(i.lV,{className:"flex"},"Estimated Time",a.createElement("br",null),"hhmmss"),a.createElement(i.lV,{className:"flex"},"Speed",a.createElement("br",null),"km/h"))),a.createElement(r.a,{style:{height:"calc((100vh - 126px) / 2) - 60px"}},a.createElement(n.ur,null,Array.from({length:10},((e,t)=>a.createElement(s,{key:t+1})))))),d=()=>a.createElement(a.Fragment,null,a.createElement(r.w,null,a.createElement(o,null)),a.createElement(r.w,null,a.createElement(m,null)))},8639:(e,t,l)=>{l.d(t,{a:()=>r,w:()=>n});var a=l(3530);const n=a.A.section`
+  margin: 0 10px 10px 10px;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+`,r=a.A.div`
+  width: 100%;
+  display: flex;
+  flex: 1;
+`}}]);
