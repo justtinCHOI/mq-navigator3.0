@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { updateWorkspaceStateAsync } from '@slices/workspaceSlice';
 import { IMember } from '@typings/db';
+import { getSettingAsync } from '@slices/settingSlice';
+import { getGatesAsync} from "@slices/gatesSlice";
 
 const useCustomMember = () => {
   const navigate = useNavigate();
@@ -40,16 +42,37 @@ const useCustomMember = () => {
     return <Navigate replace to="/member/login" />;
   };
 
-  const updateSlicesAfterLogin = async () => {
+  const updateSlices = async (url: string) => {
     try {
-      // 비동기로 워크스페이스 데이터를 불러옴
-      const action = await dispatch(getWorkspacesAsync());
-      const workspaces = action.payload;
+      const workspacesAction = await dispatch(getWorkspacesAsync());
+      const workspaces = workspacesAction.payload;
 
-      // workspaces가 있고, 길이가 1보다 큰 경우 특정 워크스페이스로 이동
-      if (workspaces && workspaces.length > 1) {
-        const workspaceToUpdate = workspaces[1].url; // `url` 필드 사용
-        moveToPath(`/workspace/${workspaceToUpdate}/`);
+      if (workspaces && workspaces.length > 0) {
+        const settingAction = await dispatch(getSettingAsync(url));
+        const setting = settingAction.payload;
+
+        if (setting) {
+          const gatesAction = await dispatch(getGatesAsync(url));
+          const gate = gatesAction.payload;
+        }
+      } else {
+        console.error('No workspaces found or workspaces length is less than 1');
+      }
+    } catch (error) {
+      console.error('Failed to update slices after login:', error);
+    }
+  };
+
+  const updateUrlAfterLogin = async () => {
+    try {
+      const workspacesAction = await dispatch(getWorkspacesAsync());
+      const workspaces = workspacesAction.payload;
+
+      if (workspaces && workspaces.length > 0) {
+        const workspaceToUpdate = workspaces[0].url;
+        moveToPath(`/workspace/${workspaceToUpdate}/analyze`);
+      } else {
+        console.error('No workspaces found or workspaces length is less than 1');
       }
     } catch (error) {
       console.error('Failed to update slices after login:', error);
@@ -64,7 +87,8 @@ const useCustomMember = () => {
     moveToPath,
     moveToLogin,
     moveToLoginReturn,
-    updateSlicesAfterLogin,
+    updateSlices,
+    updateUrlAfterLogin,
   };
 };
 

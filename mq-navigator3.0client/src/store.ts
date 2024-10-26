@@ -3,6 +3,7 @@ import memberSlice from '@slices/memberSlice';
 import workspaceSlice from '@slices/workspaceSlice';
 import playbarSlice from '@slices/playbarSlice';
 import gatesSlice from '@slices/gatesSlice';
+import settingSlice from "@slices/settingSlice";
 // import settingSlice from '@slices/settingSlice';
 
 // RootState 타입 정의
@@ -17,7 +18,7 @@ const store = configureStore({
     workspaceSlice: workspaceSlice,
     playbarSlice: playbarSlice,
     gatesSlice: gatesSlice,
-    // settingSlice: settingSlice,
+    settingSlice: settingSlice,
   },
 });
 

@@ -55,9 +55,7 @@ public class MemberController {
     // 토큰에서 사용자 정보를 추출
     Member member = tokenService.getUserFromToken(token);
 
-    List<IWorkspace> workspaces = memberService.getWorkspacesByEmail(member.getEmail());
-
-    // 사용자 이메일을 기반으로 작업 공간 조회
-    return workspaces;
+      // 사용자 이메일을 기반으로 작업 공간 조회
+    return memberService.getWorkspacesByEmail(member.getEmail());
   }
 }

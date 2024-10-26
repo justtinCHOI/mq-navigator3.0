@@ -118,9 +118,29 @@ public class MemberServiceImpl implements MemberService {
                 .refreshInterval(RefreshInterval.ONE)      // 기본 값 설정
                 .toleranceRange(ToleranceRange.FIVE)       // 기본 값 설정
                 .speedPredictionInterval(SpeedPredictionInterval.FIRST) // 기본 값 설정
-                .displaySections(new ArrayList<>())        // DisplaySection 리스트 초기화
-                .sectionDatas(new ArrayList<>())           // SectionData 리스트 초기화
+                .displaySections(createDefaultDisplaySections())  // DisplaySection 리스트 초기화 및 값 설정
+                .sectionDatas(createDefaultSectionDatas())   // SectionData 리스트 초기화 및 값 설정
                 .build();
+    }
+
+    // 기본 DisplaySection 설정
+    private List<DisplaySection> createDefaultDisplaySections() {
+        List<DisplaySection> displaySections = new ArrayList<>();
+        displaySections.add(new DisplaySection(Location.FIRST_GATE, Location.LAST_GATE));
+        displaySections.add(new DisplaySection(Location.PREVIOUS_GATE_BASED_ON_SELECTED, Location.NEXT_GATE_BASED_ON_SELECTED));
+        displaySections.add(new DisplaySection(Location.PREVIOUS_GATE_BASED_ON_CURRENT, Location.NEXT_GATE_BASED_ON_CURRENT));
+        return displaySections;
+    }
+
+    // 기본 SectionData 설정
+    private List<SectionData> createDefaultSectionDatas() {
+        List<SectionData> sectionDatas = new ArrayList<>();
+        sectionDatas.add(SectionData.DISTANCE);
+        sectionDatas.add(SectionData.ELAPSED_TIME);
+        sectionDatas.add(SectionData.ESTIMATED_TIME);
+        sectionDatas.add(SectionData.ELAPSED_SPEED);
+        sectionDatas.add(SectionData.ESTIMATED_SPEED);
+        return sectionDatas;
     }
 
     // 기본 ColorSetting 생성 메서드

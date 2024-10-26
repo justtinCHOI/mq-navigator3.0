@@ -1,14 +1,14 @@
 package com.unitekndt.mqnavigator.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @Builder
-@Getter
-@Setter
+//@JsonInclude(JsonInclude.Include.NON_NULL)  // null 값은 직렬화하지 않음
 public class IWorkspace {
     private Long id;
     private String name;

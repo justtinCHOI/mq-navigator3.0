@@ -1,19 +1,25 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import useCustomMember from '@hooks/useCustomMember';
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import UseCustomSetting from '@hooks/useCustomSetting';
+import UseCustomGates from '@hooks/useCustomGates';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isLogin, memberState, updateSlicesAfterLogin } = useCustomMember();
+  const { isLogin, memberState, updateSlices } = useCustomMember();
+  const { settingState } = UseCustomSetting();
+  const { gatesState } = UseCustomGates();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const { url } = useParams<{ url: string }>(); // URL에서 워크스페이스의 URL 추출
 
-  // useEffect로 로그인 상태일 때 workspaces가 없을 경우만 호출
   useEffect(() => {
-    if (isLogin && !memberState.workspaces) {
+    if (isLogin && url && (!memberState.workspaces || settingState.id == 0 || gatesState.length == 0)) {
       setIsLoading(true);
-      updateSlicesAfterLogin().finally(() => setIsLoading(false));
+      console.log('useEffect updateSlices');
+      updateSlices(url).finally(() => setIsLoading(false));
     }
-  }, [isLogin, memberState.workspaces, updateSlicesAfterLogin]);
+  }, [gatesState, isLogin, memberState.workspaces, settingState, updateSlices, url]);
 
   if (!isLogin) {
     return <Navigate to="/member/login" state={{ from: location }} />;

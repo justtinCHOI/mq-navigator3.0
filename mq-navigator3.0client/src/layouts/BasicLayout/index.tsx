@@ -27,7 +27,7 @@ import {
 import useCustomMember from '@hooks/useCustomMember';
 import { postCreateWorkspace } from '@api/workspaceApi';
 import Playbar from '@components/Playbar';
-import {IWorkspace} from "@typings/db";
+import { IWorkspace } from '@typings/db';
 
 const BasicLayout = () => {
   const { isLogin, memberState } = useCustomMember();

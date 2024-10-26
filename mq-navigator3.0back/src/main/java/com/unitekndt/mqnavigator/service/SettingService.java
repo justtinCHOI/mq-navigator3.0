@@ -6,37 +6,49 @@ import com.unitekndt.mqnavigator.entity.Setting;
 import com.unitekndt.mqnavigator.entity.Workspace;
 import com.unitekndt.mqnavigator.repository.SettingRepository;
 import com.unitekndt.mqnavigator.repository.WorkspaceRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class SettingService {
 
     private final WorkspaceRepository workspaceRepository;
-    private final SettingRepository settingRepository;
+//    private final SettingRepository settingRepository;
 
-    public SettingService(WorkspaceRepository workspaceRepository, SettingRepository settingRepository) {
+//    public SettingService(WorkspaceRepository workspaceRepository, SettingRepository settingRepository) {
+//        this.workspaceRepository = workspaceRepository;
+//        this.settingRepository = settingRepository;
+//    }
+    public SettingService(WorkspaceRepository workspaceRepository) {
         this.workspaceRepository = workspaceRepository;
-        this.settingRepository = settingRepository;
     }
 
     public ISetting getSettingByWorkspaceUrlAndMember(String workspaceUrl, Member member) {
         // workspaceUrl로 Workspace를 찾음
         Workspace workspace = workspaceRepository.findByUrl(workspaceUrl);
+        log.info("Setting Service workspace : {}", workspace);
+
         if (workspace == null || !workspace.getMembers().contains(member)) {
             return null; // workspace가 없거나 권한이 없을 경우 null 반환
         }
 
         // Workspace에서 Setting 조회
         Setting setting = workspace.getSetting();
+
         if (setting == null) {
+            log.info("Setting Service setting : null");
             return null; // 설정이 없는 경우 null 반환
         }
+        log.info("Setting Service setting : {}", setting.toString());
+        log.info("Setting Service displaySections : {}", setting.getDisplaySections());
+        log.info("Setting Service sectionDatas : {}", setting.getSectionDatas());
 
         // Setting을 DTO로 변환하여 반환
-        return convertToDto(setting);
+        return entityToDto(setting);
     }
 
-    private ISetting convertToDto(Setting setting) {
+    private ISetting entityToDto(Setting setting) {
         return ISetting.builder()
                 .id(setting.getId())
                 .workspaceId(setting.getWorkspace().getId())

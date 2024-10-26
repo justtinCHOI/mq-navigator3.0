@@ -15,7 +15,7 @@ const SignUp = () => {
   const { memberState } = useCustomMember();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
-  const { updateSlicesAfterLogin } = useCustomMember();
+  const { updateUrlAfterLogin } = useCustomMember();
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -61,7 +61,7 @@ const SignUp = () => {
             dispatch(loginStateAsync(member))
               .then((result: memberSliceState) => {
                 console.log('Login succeeded', result);
-                updateSlicesAfterLogin(); // 로그인 후 슬라이스 업데이트
+                updateUrlAfterLogin().then();
               })
               .catch((error: any) => {
                 console.log('Login failed', error);
@@ -73,7 +73,7 @@ const SignUp = () => {
           });
       }
     },
-    [dispatch, email, mismatchError, nickname, password, updateSlicesAfterLogin],
+    [dispatch, email, mismatchError, nickname, password, updateUrlAfterLogin],
   );
 
   useEffect(() => {

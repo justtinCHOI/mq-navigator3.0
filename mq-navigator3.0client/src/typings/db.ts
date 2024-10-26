@@ -124,3 +124,8 @@ export interface PlaybarState {
   latestGateBasedOnSelected: IGate | null;
   nextGateBasedOnSelected: IGate | null;
 }
+
+export interface MarkerPosition {
+  lat: number;
+  lng: number;
+}

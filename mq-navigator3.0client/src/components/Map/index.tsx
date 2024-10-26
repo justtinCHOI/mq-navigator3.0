@@ -1,30 +1,82 @@
-import React, { useEffect } from 'react';
-import { MapContainer } from '@components/Map/styles';
+import React, { useEffect, useState, useRef, useCallback, useContext } from 'react';
+import { APIProvider, GoogleMapsContext, Map } from '@vis.gl/react-google-maps';
+import useCustomGates from '@hooks/useCustomGates';
 
-const Map = () => {
-  let viewMap; // Create와 View 메뉴에 대한 별도의 지도
-  const initialLocation = { lat: 37.5665, lng: 126.978 }; // 초기 좌표
+const MapComponent: React.FC = () => {
+  const mapRef = useRef<google.maps.Map | null>(null); // map 참조
+  const [markers, setMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
+  const initialLocation = { lat: 37.5665, lng: 126.978 };
+  const { gatesState, updateGates } = useCustomGates();
+  const mapContext = useContext(GoogleMapsContext);
 
   useEffect(() => {
-    // 구글 지도 API 스크립트 추가
-    const script = document.createElement('script');
-    script.src =
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyDfXQ99l7TWfyfvujf8d52Ug1EDl5ok20M&v=weekly&libraries=marker';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
+    if (gatesState.length && mapRef.current) {
+      updateMapMarkers();
+    }
+  }, [gatesState]);
 
-    script.onload = () => {
-      // 스크립트가 로드된 후 지도 초기화
-      viewMap = new (window as any).google.maps.Map(document.getElementById('viewMap'), {
-        zoom: 10,
-        center: initialLocation,
-        mapId: 'DEMO_MAP_ID2',
-      });
-    };
-  }, []);
+  const updateMapMarkers = useCallback(() => {
+    if (!mapContext?.map) return;
+    // 기존 마커 삭제
+    markers.forEach((marker) => (marker.map = null));
+    setMarkers([]);
 
-  return <MapContainer id="viewMap"></MapContainer>;
+    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
+    const newPath: google.maps.LatLngLiteral[] = [];
+
+    gatesState.forEach((gate, index) => {
+      const { latitude: lat, longitude: lng } = gate.coordinate;
+
+      if (lat && lng) {
+        const markerPosition: google.maps.LatLngLiteral = { lat, lng };
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          position: markerPosition,
+          map: mapRef.current,
+          gmpDraggable: true,
+          title: `Point ${index + 1}`,
+        });
+
+        marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
+          const latLng = event.latLng;
+          if (latLng) {
+            const newPosition = { lat: latLng.lat(), lng: latLng.lng() };
+            updateGates(index, newPosition);
+            updateMapMarkers();
+          }
+        });
+
+        newMarkers.push(marker);
+        newPath.push(markerPosition);
+      }
+    });
+
+    setMarkers(newMarkers);
+    updatePolyline(newPath);
+  }, [gatesState, markers, updateGates]);
+
+  const updatePolyline = (path: google.maps.LatLngLiteral[]) => {
+    if (polyline) {
+      polyline.setMap(null);
+    }
+
+    const newPolyline = new google.maps.Polyline({
+      path: path,
+      geodesic: true,
+      strokeColor: '#999977',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+    });
+
+    newPolyline.setMap(mapRef.current);
+    setPolyline(newPolyline);
+  };
+
+  return (
+    <APIProvider apiKey={'AIzaSyDfXQ99l7TWfyfvujf8d52Ug1EDl5ok20M'}>
+      <Map style={{ width: '100%', height: '100%' }} defaultCenter={initialLocation} defaultZoom={10} />
+    </APIProvider>
+  );
 };
 
-export default Map;
+export default MapComponent;
