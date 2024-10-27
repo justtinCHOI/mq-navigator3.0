@@ -1,9 +1,14 @@
 import React from 'react';
 import { Content, ContentLineText, ContentRow, LeftContent, RightContent } from '@components/Playbar/styles';
 import UseSelectOptionColor from '@hooks/UseSelectOptionColor';
+import { ColorSetting } from '@typings/db';
 
-// ColorSetting 컴포넌트
-const ColorSetting = () => {
+interface ColorSettingProps {
+  colorSetting: ColorSetting;
+  handleSettingChange: (field: string, value: string) => void;
+}
+
+const ColorsSetting: React.FC<ColorSettingProps> = ({ colorSetting, handleSettingChange }) => {
   return (
     <Content>
       <ContentRow>
@@ -14,10 +19,26 @@ const ColorSetting = () => {
         </LeftContent>
         <RightContent>
           <Content>
-            <UseSelectOptionColor phase="Initial Phase" />
-            <UseSelectOptionColor phase="Deceleration Phase" />
-            <UseSelectOptionColor phase="Acceleration Phase" />
-            <UseSelectOptionColor phase="Constant Speed Phase" />
+            <UseSelectOptionColor
+              phase="initialColor"
+              selectedColor={colorSetting.initialColor}
+              handleSettingChange={(field, value) => handleSettingChange('initialColor', value)}
+            />
+            <UseSelectOptionColor
+              phase="decelerationColor"
+              selectedColor={colorSetting.decelerationColor}
+              handleSettingChange={(field, value) => handleSettingChange('decelerationColor', value)}
+            />
+            <UseSelectOptionColor
+              phase="constantSpeedColor"
+              selectedColor={colorSetting.constantSpeedColor}
+              handleSettingChange={(field, value) => handleSettingChange('constantSpeedColor', value)}
+            />
+            <UseSelectOptionColor
+              phase="accelerationColor"
+              selectedColor={colorSetting.accelerationColor}
+              handleSettingChange={(field, value) => handleSettingChange('accelerationColor', value)}
+            />
           </Content>
         </RightContent>
       </ContentRow>
@@ -25,4 +46,4 @@ const ColorSetting = () => {
   );
 };
 
-export default ColorSetting;
+export default ColorsSetting;

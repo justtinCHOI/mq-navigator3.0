@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   Color,
+  IGate,
   ISetting,
   Location,
   RefreshInterval,
@@ -8,7 +9,7 @@ import {
   SpeedPredictionInterval,
   ToleranceRange,
 } from '@typings/db';
-import { getSetting } from '@api/settingApi';
+import { getSetting, updateSetting } from '@api/settingApi';
 
 // 초기 상태 정의
 const initialState: ISetting = {
@@ -37,16 +38,39 @@ export const getSettingAsync = createAsyncThunk('getSettingAsync', async (url: s
   return await getSetting(url);
 });
 
+interface UpdateSettingPayload {
+  url: string;
+  setting: ISetting;
+}
+
+export const updateSettingAsync = createAsyncThunk(
+  'updateSettingAsync',
+  async ({ url, setting }: UpdateSettingPayload) => {
+    return await updateSetting(url, setting);
+  },
+);
+
 // SettingSlice 정의
 const settingSlice = createSlice({
   name: 'settingSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getSettingAsync.fulfilled, (state, action: PayloadAction<ISetting>) => {
-      console.log('getSettingAsync.fulfilled');
-      return action.payload;
-    });
+    builder
+      .addCase(getSettingAsync.fulfilled, (state, action: PayloadAction<ISetting>) => {
+        console.log('getSettingAsync.fulfilled');
+        return action.payload;
+      })
+      .addCase(updateSettingAsync.fulfilled, (state, action: PayloadAction<ISetting>) => {
+        console.log('updateSettingAsync.fulfilled');
+        return action.payload;
+      })
+      .addCase(getSettingAsync.rejected, () => {
+        console.log('getSettingAsync.rejected');
+      })
+      .addCase(updateSettingAsync.rejected, () => {
+        console.log('updateSettingAsync.rejected');
+      });
   },
 });
 
