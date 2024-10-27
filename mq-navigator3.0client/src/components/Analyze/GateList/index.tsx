@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { ScrollZone } from '@pages/workspace/Analyze/styles';
 import EachGate from '@components/Analyze/EachGate/EachGate';
@@ -11,8 +11,33 @@ import {
   SelectOption,
 } from '@components/Playbar/styles';
 import '../../../index.css';
+import { IGate } from '@typings/db';
+import { useParams } from 'react-router';
+import useCustomGates from '@hooks/useCustomGates';
 
 const GateList = () => {
+  const { gatesState, updateGatesHook } = useCustomGates();
+  const [updateGatesState, setUpdateGatesState] = useState<IGate[]>([]);
+  const [isModify, setIsModify] = useState<boolean>(false);
+  const { url } = useParams<{ url: string }>();
+
+  useEffect(() => {
+    setUpdateGatesState(gatesState); // 초기 상태 설정
+  }, [gatesState]);
+
+  const onChangeToModify = () => setIsModify(true);
+
+  function onSaveGateList() {
+    if (url) {
+      updateGatesHook(url, updateGatesState); // 수정된 상태 전송 및 리덕스 업데이트
+    }
+    setIsModify(false); // 수정 불가 상태로 변경
+  }
+
+  const handleGateChange = (index: number, updatedGate: IGate) => {
+    setUpdateGatesState((prev) => prev.map((gate, i) => (i === index ? updatedGate : gate)));
+  };
+
   return (
     <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '120px' }}>
@@ -32,8 +57,11 @@ const GateList = () => {
             </option>
           </SelectOption>
           <div style={{ display: 'inline-flex', gap: '10px' }}>
-            <CustomTextButton>Save</CustomTextButton>
-            <CustomTextButton>Modify</CustomTextButton>
+            {isModify ? (
+              <CustomTextButton onClick={() => onSaveGateList()}>Save</CustomTextButton>
+            ) : (
+              <CustomTextButton onClick={() => onChangeToModify()}>Modify</CustomTextButton>
+            )}
           </div>
         </ContentLine>
         <ContentLine>
@@ -55,8 +83,14 @@ const GateList = () => {
       </Content>
       <ScrollZone style={{ height: 'calc((100vh - 126px) / 2) - 120px' }}>
         <Scrollbars>
-          {Array.from({ length: 10 }, (_, index) => (
-            <EachGate key={index + 1} number={index + 1} />
+          {gatesState.map((gateState, index) => (
+            <EachGate
+              key={index + 1}
+              keyValue={index + 1}
+              gateState={gateState}
+              isModify={isModify}
+              onGateChange={(updatedGate) => handleGateChange(index, updatedGate)}
+            />
           ))}
         </Scrollbars>
       </ScrollZone>

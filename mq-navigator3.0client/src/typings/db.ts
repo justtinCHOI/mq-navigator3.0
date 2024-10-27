@@ -36,7 +36,7 @@ export interface IRoute {
 export interface IGate {
   id: number;
   sequence: number;
-  time: Date;
+  time: string;
   coordinate: Coordinate;
   traveledDistance: number;
 }

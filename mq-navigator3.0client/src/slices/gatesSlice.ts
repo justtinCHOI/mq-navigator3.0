@@ -1,7 +1,7 @@
 // 초기 상태 정의
 import { IGate } from '@typings/db';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getGates } from '@api/gatesApi';
+import { getGates, updateGates } from '@api/gatesApi';
 
 const initialState: IGate[] = [];
 
@@ -10,8 +10,13 @@ export const getGatesAsync = createAsyncThunk('getGatesAsync', async (url: strin
   return await getGates(url);
 });
 
-export const updateGatesAsync = createAsyncThunk('updateGateAsync', async (gates: IGate[]) => {
-  return gates;
+interface UpdateGatesPayload {
+  url: string;
+  gates: IGate[];
+}
+
+export const updateGatesAsync = createAsyncThunk('updateGatesAsync', async ({ url, gates }: UpdateGatesPayload) => {
+  return await updateGates(url, gates);
 });
 
 const gatesSlice = createSlice({

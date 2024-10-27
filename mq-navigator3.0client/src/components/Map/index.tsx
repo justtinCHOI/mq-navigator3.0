@@ -1,21 +1,29 @@
-import React, { useEffect, useState, useRef, useCallback, useContext } from 'react';
-import { APIProvider, GoogleMapsContext, Map } from '@vis.gl/react-google-maps';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { APIProvider } from '@vis.gl/react-google-maps';
 import useCustomGates from '@hooks/useCustomGates';
 
+// type latLngCoordinates = { lat: number; lng: number };
+
 const MapComponent: React.FC = () => {
-  const mapRef = useRef<google.maps.Map | null>(null); // map 참조
+  const containerRef = useRef<HTMLDivElement | null>(null); // HTMLDivElement 참조
+  const mapRef = useRef<google.maps.Map | null>(null); // google.maps.Map 참조
   const [markers, setMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const [path, setPath] = useState<google.maps.LatLngLiteral[] | null>([]);
   const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
   const initialLocation = { lat: 37.5665, lng: 126.978 };
-  const { gatesState, updateGates } = useCustomGates();
-  const mapContext = useContext(GoogleMapsContext);
+  const { gatesState, updateGatesWithIndex } = useCustomGates();
 
   useEffect(() => {
-    if (mapContext?.map && !mapRef.current) {
-      mapRef.current = mapContext.map;
-      updateMapMarkers(); // 초기 마커 설정
+    if (containerRef.current && !mapRef.current) {
+      // div 요소에 Google Map 초기화
+      mapRef.current = new google.maps.Map(containerRef.current, {
+        center: initialLocation,
+        zoom: 10,
+        mapId: 'd7a1d96b7d5ef0af',
+      });
+      updateMapMarkers();
     }
-  }, [mapContext?.map]);
+  }, [initialLocation]);
 
   useEffect(() => {
     if (gatesState.length && mapRef.current) {
@@ -24,23 +32,15 @@ const MapComponent: React.FC = () => {
   }, [gatesState]);
 
   const updateMapMarkers = useCallback(() => {
-    if (!mapContext?.map) {
-      console.log('mapContenxt.map is null');
-      return;
-    }
-    // 기존 마커 삭제
-    markers.forEach((marker) => (marker.map = null));
+    if (!mapRef.current) return;
     setMarkers([]);
-
-    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
-    const newPath: google.maps.LatLngLiteral[] = [];
+    setPath([]);
 
     gatesState.forEach((gate, index) => {
       const { latitude: lat, longitude: lng } = gate.coordinate;
 
       if (lat && lng) {
-        const markerPosition: google.maps.LatLngLiteral = { lat, lng };
-        console.log('eachGate lat, lng : ', lat, lng);
+        const markerPosition: google.maps.LatLngLiteral = createPosition(lat, lng);
         const marker = new google.maps.marker.AdvancedMarkerElement({
           position: markerPosition,
           map: mapRef.current,
@@ -51,20 +51,20 @@ const MapComponent: React.FC = () => {
         marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
           const latLng = event.latLng;
           if (latLng) {
-            const newPosition = { lat: latLng.lat(), lng: latLng.lng() };
-            updateGates(index, newPosition);
-            updateMapMarkers();
+            const newPosition = createCoordinate(latLng.lat(), latLng.lng());
+            updateGatesWithIndex(index, newPosition);
           }
         });
 
-        newMarkers.push(marker);
-        newPath.push(markerPosition);
+        markers.push(marker);
+        path?.push(markerPosition);
       }
     });
 
-    setMarkers(newMarkers);
-    updatePolyline(newPath);
-  }, [gatesState, markers, updateGates]);
+    if (path) {
+      updatePolyline(path);
+    }
+  }, [gatesState, markers, updateGatesWithIndex]);
 
   const updatePolyline = (path: google.maps.LatLngLiteral[]) => {
     if (polyline) {
@@ -83,9 +83,17 @@ const MapComponent: React.FC = () => {
     setPolyline(newPolyline);
   };
 
+  function createCoordinate(latitude: number, longitude: number) {
+    return { latitude: latitude, longitude: longitude };
+  }
+
+  function createPosition(lat: number, lng: number) {
+    return { lat: lat, lng: lng };
+  }
+
   return (
     <APIProvider apiKey={'AIzaSyDfXQ99l7TWfyfvujf8d52Ug1EDl5ok20M'}>
-      <Map style={{ width: '100%', height: '100%' }} defaultCenter={initialLocation} defaultZoom={10} />
+      <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
     </APIProvider>
   );
 };

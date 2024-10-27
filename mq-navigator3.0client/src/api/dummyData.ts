@@ -69,9 +69,9 @@
 //
 //   // Workspace의 owner 필드와 members 필드에서 필요한 정보만 저장
 //   workspaceDummy[0].owner = { id: memberDummy[0].id, name: memberDummy[0].name } as Member;
-//   workspaceDummy[0].members = memberDummy.map(({ id, name }) => ({ id, name } as Member));
+//   workspaceDummy[0].members = memberDummy.GoogleMap(({ id, name }) => ({ id, name } as Member));
 //   workspaceDummy[1].owner = { id: memberDummy[1].id, name: memberDummy[1].name } as Member;
-//   workspaceDummy[1].members = memberDummy.map(({ id, name }) => ({ id, name } as Member));
+//   workspaceDummy[1].members = memberDummy.GoogleMap(({ id, name }) => ({ id, name } as Member));
 //
 //   return { memberDummy, workspaceDummy };
 // };

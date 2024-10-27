@@ -1,6 +1,7 @@
 import React from 'react';
 import { Content, ContentLine, ContentLineText } from '@components/Playbar/styles';
 
+// const EachDisplay = ({id, sequence, time, coordinate, traveledDistance}) => {
 const EachDisplay = () => {
   return (
     <Content>

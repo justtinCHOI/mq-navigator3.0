@@ -3,7 +3,7 @@ import memberSlice from '@slices/memberSlice';
 import workspaceSlice from '@slices/workspaceSlice';
 import playbarSlice from '@slices/playbarSlice';
 import gatesSlice from '@slices/gatesSlice';
-import settingSlice from "@slices/settingSlice";
+import settingSlice from '@slices/settingSlice';
 // import settingSlice from '@slices/settingSlice';
 
 // RootState 타입 정의
@@ -20,6 +20,13 @@ const store = configureStore({
     gatesSlice: gatesSlice,
     settingSlice: settingSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['getGatesAsync/fulfilled'], // 특정 액션 무시
+        ignoredPaths: ['gatesSlice.0.time'], // 특정 경로 무시
+      },
+    }),
 });
 
 export default store;

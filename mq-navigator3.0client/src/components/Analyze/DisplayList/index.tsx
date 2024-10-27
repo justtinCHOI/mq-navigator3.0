@@ -5,6 +5,7 @@ import '../../../index.css';
 import { Content, ContentLine, ContentLineText } from '@components/Playbar/styles';
 import EachDisplay from '@components/Analyze/EachDisplay/EachDisplay';
 const DisplayList = () => {
+
   return (
     <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '60px' }}>
@@ -37,6 +38,9 @@ const DisplayList = () => {
           {Array.from({ length: 10 }, (_, index) => (
             <EachDisplay key={index + 1} />
           ))}
+          {/*{gatesState.map((gateState, index) => (*/}
+          {/*  <EachDisplay key={index + 1} gateState={gateState} />*/}
+          {/*))}*/}
         </Scrollbars>
       </ScrollZone>
     </Content>
