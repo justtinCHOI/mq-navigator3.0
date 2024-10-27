@@ -11,13 +11,23 @@ const MapComponent: React.FC = () => {
   const mapContext = useContext(GoogleMapsContext);
 
   useEffect(() => {
+    if (mapContext?.map && !mapRef.current) {
+      mapRef.current = mapContext.map;
+      updateMapMarkers(); // 초기 마커 설정
+    }
+  }, [mapContext?.map]);
+
+  useEffect(() => {
     if (gatesState.length && mapRef.current) {
       updateMapMarkers();
     }
   }, [gatesState]);
 
   const updateMapMarkers = useCallback(() => {
-    if (!mapContext?.map) return;
+    if (!mapContext?.map) {
+      console.log('mapContenxt.map is null');
+      return;
+    }
     // 기존 마커 삭제
     markers.forEach((marker) => (marker.map = null));
     setMarkers([]);
@@ -30,6 +40,7 @@ const MapComponent: React.FC = () => {
 
       if (lat && lng) {
         const markerPosition: google.maps.LatLngLiteral = { lat, lng };
+        console.log('eachGate lat, lng : ', lat, lng);
         const marker = new google.maps.marker.AdvancedMarkerElement({
           position: markerPosition,
           map: mapRef.current,
