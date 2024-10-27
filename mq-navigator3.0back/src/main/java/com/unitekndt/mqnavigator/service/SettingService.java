@@ -14,14 +14,11 @@ import org.springframework.stereotype.Service;
 public class SettingService {
 
     private final WorkspaceRepository workspaceRepository;
-//    private final SettingRepository settingRepository;
+    private final SettingRepository settingRepository;
 
-//    public SettingService(WorkspaceRepository workspaceRepository, SettingRepository settingRepository) {
-//        this.workspaceRepository = workspaceRepository;
-//        this.settingRepository = settingRepository;
-//    }
-    public SettingService(WorkspaceRepository workspaceRepository) {
+    public SettingService(WorkspaceRepository workspaceRepository, SettingRepository settingRepository) {
         this.workspaceRepository = workspaceRepository;
+        this.settingRepository = settingRepository;
     }
 
     public ISetting getSettingByWorkspaceUrlAndMember(String workspaceUrl, Member member) {
@@ -48,6 +45,24 @@ public class SettingService {
         return entityToDto(setting);
     }
 
+    public ISetting updateSettingByWorkspaceUrl(String workspaceUrl, Member member, ISetting newSetting) {
+        Workspace workspace = workspaceRepository.findByUrl(workspaceUrl);
+        if (workspace == null || !workspace.getMembers().contains(member)) {
+            return null;
+        }
+
+        Setting existingSetting = workspace.getSetting();
+        if (existingSetting == null) {
+            log.info("Setting Service -> existing setting not found");
+            return null;
+        }
+
+        updateEntityFromDto(existingSetting, newSetting);
+        settingRepository.save(existingSetting);
+
+        return entityToDto(existingSetting);
+    }
+
     private ISetting entityToDto(Setting setting) {
         return ISetting.builder()
                 .id(setting.getId())
@@ -59,5 +74,14 @@ public class SettingService {
                 .displaySections(setting.getDisplaySections())
                 .sectionDatas(setting.getSectionDatas())
                 .build();
+    }
+
+    private void updateEntityFromDto(Setting setting, ISetting newSetting) {
+        setting.setColorSetting(newSetting.getColorSetting());
+        setting.setRefreshInterval(newSetting.getRefreshInterval());
+        setting.setToleranceRange(newSetting.getToleranceRange());
+        setting.setSpeedPredictionInterval(newSetting.getSpeedPredictionInterval());
+        setting.setDisplaySections(newSetting.getDisplaySections());
+        setting.setSectionDatas(newSetting.getSectionDatas());
     }
 }
