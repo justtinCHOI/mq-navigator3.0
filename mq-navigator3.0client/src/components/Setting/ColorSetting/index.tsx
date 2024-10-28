@@ -3,12 +3,12 @@ import { Content, ContentLineText, ContentRow, LeftContent, RightContent } from 
 import UseSelectOptionColor from '@hooks/UseSelectOptionColor';
 import { ColorSetting } from '@typings/db';
 
-interface ColorSettingProps {
+interface ColorsSettingProps {
   colorSetting: ColorSetting;
   handleSettingChange: (field: string, value: string) => void;
 }
 
-const ColorsSetting: React.FC<ColorSettingProps> = ({ colorSetting, handleSettingChange }) => {
+const ColorsSetting: React.FC<ColorsSettingProps> = ({ colorSetting, handleSettingChange }) => {
   return (
     <Content>
       <ContentRow>

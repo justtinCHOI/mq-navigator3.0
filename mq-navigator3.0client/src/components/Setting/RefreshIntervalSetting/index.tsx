@@ -8,8 +8,18 @@ import {
   RightContent,
   SelectOption,
 } from '@components/Playbar/styles';
+import { RefreshInterval } from '@typings/db';
 
-const RefreshIntervalSetting = () => {
+interface RefreshIntervalSettingProps {
+  refreshInterval: RefreshInterval;
+  handleSettingChange: (value: RefreshInterval) => void;
+}
+
+const RefreshIntervalSetting: React.FC<RefreshIntervalSettingProps> = ({ refreshInterval, handleSettingChange }) => {
+  const onChangeRefreshInterval = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleSettingChange(e.target.value as RefreshInterval);
+  };
+
   return (
     <Content>
       <ContentRow>
@@ -20,13 +30,11 @@ const RefreshIntervalSetting = () => {
         </LeftContent>
         <RightContent>
           <ContentLine>
-            <SelectOption className="width50px">
-              <option value="1" selected>
-                1
-              </option>
-              <option value="3">3</option>
-              <option value="10">10</option>
-              <option value="60">60</option>
+            <SelectOption className="width60px" value={refreshInterval} onChange={onChangeRefreshInterval}>
+              <option value={RefreshInterval.ONE}>1</option>
+              <option value={RefreshInterval.THREE}>3</option>
+              <option value={RefreshInterval.TEN}>10</option>
+              <option value={RefreshInterval.SIXTY}>60</option>
             </SelectOption>
             <ContentLineText>second</ContentLineText>
           </ContentLine>

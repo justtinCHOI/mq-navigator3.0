@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContentLine, ContentLineText, SelectOption } from '@components/Playbar/styles';
+import { ContentLine, ContentLineText } from '@components/Playbar/styles';
 import UseSelectOptionGate from '@hooks/UseSelectOptionGate';
 
 const UseSelectOptionGateRange = () => {

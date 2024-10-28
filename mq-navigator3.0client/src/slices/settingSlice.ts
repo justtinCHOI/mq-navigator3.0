@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   Color,
-  IGate,
   ISetting,
   Location,
   RefreshInterval,

@@ -6,10 +6,22 @@ import {
   ContentRow,
   LeftContent,
   RightContent,
+  SelectOption,
 } from '@components/Playbar/styles';
-import UseSelectOptionGateRange from '@hooks/UseSelectOptionGateRange';
+import { SpeedPredictionInterval } from '@typings/db';
 
-const SpeedPredictionIntervalSetting = () => {
+interface SpeedPredictionIntervalSettingProps {
+  speedPredictionInterval: SpeedPredictionInterval;
+  handleSettingChange: (value: SpeedPredictionInterval) => void;
+}
+
+const SpeedPredictionIntervalSetting: React.FC<SpeedPredictionIntervalSettingProps> = ({
+  speedPredictionInterval,
+  handleSettingChange,
+}) => {
+  const onChangeSpeedPredictionInterval = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleSettingChange(e.target.value as SpeedPredictionInterval);
+  };
   return (
     <Content>
       <ContentRow>
@@ -19,7 +31,18 @@ const SpeedPredictionIntervalSetting = () => {
           </Content>
         </LeftContent>
         <RightContent>
-          <UseSelectOptionGateRange />
+          <ContentLine>
+            <SelectOption
+              style={{ width: '200px' }}
+              value={speedPredictionInterval}
+              onChange={onChangeSpeedPredictionInterval}
+            >
+              <option value={SpeedPredictionInterval.FIRST}>firstGate</option>
+              <option value={SpeedPredictionInterval.PREVIOUS}>previousGate</option>
+            </SelectOption>
+            <ContentLineText style={{ width: '50px' }}>~</ContentLineText>
+            <ContentLineText>latestGate</ContentLineText>
+          </ContentLine>
         </RightContent>
       </ContentRow>
     </Content>

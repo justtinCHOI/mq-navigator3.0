@@ -9,28 +9,37 @@ import SpeedPredictionIntervalSetting from '@components/Setting/SpeedPredictionI
 import DisplaySectionSetting from '@components/Setting/DisplaySectionSetting';
 import SectionDataSetting from '@components/Setting/SectionDataSetting';
 import { ContentLine, CustomTextButton } from '@components/Playbar/styles';
-import { ISetting } from '@typings/db';
+import { IRoute, ISetting, IWorkspace } from '@typings/db';
 import useCustomSetting from '@hooks/useCustomSetting';
 import { useParams } from 'react-router';
+import useCustomWorkspace from '@hooks/useCustomWorkspace';
 
 const Setting = () => {
   const { settingState, updateSettingHook } = useCustomSetting();
   const [isModifiable, setIsModifiable] = useState<boolean>(false);
   const [updateSettingState, setUpdateSettingState] = useState<ISetting>(settingState);
   const { url } = useParams<{ url: string }>();
+  const { workspaceState, updateWorkspaceHook } = useCustomWorkspace();
+  const [updateRoutesState, setUpdateRoutesState] = useState<IRoute[]>(workspaceState.routes);
 
   useEffect(() => {
     setUpdateSettingState(settingState); // 초기 상태 설정
   }, [settingState]);
 
+  useEffect(() => {
+    setUpdateRoutesState(updateRoutesState); // 초기 상태 설정
+  }, [updateRoutesState, workspaceState.routes]);
+
   const onSaveSetting = () => {
     if (url && updateSettingState) {
       updateSettingHook(url, updateSettingState); // 수정된 상태 전송 및 리덕스 업데이트
+      const newWorkspace: IWorkspace = { ...workspaceState, routes: updateRoutesState };
+      updateWorkspaceHook(newWorkspace);
     }
     setIsModifiable(false); // 수정 불가 상태로 변경
   };
 
-  const handleSettingChange = (field: string, value: any) => {
+  const handleColorSettingChange = (field: string, value: any) => {
     console.log('handleSettingChange', field, value);
     setUpdateSettingState((prevState) => ({
       ...prevState,
@@ -39,6 +48,47 @@ const Setting = () => {
         [field]: value,
       },
     }));
+    setIsModifiable(true);
+  };
+
+  const handleRefreshIntervalSetting = (value: any) => {
+    console.log('handleRefreshIntervalSetting', value);
+    setUpdateSettingState((prevState) => ({
+      ...prevState,
+      refreshInterval: value,
+    }));
+    setIsModifiable(true);
+  };
+
+  const handleToleranceRangeSetting = (value: any) => {
+    console.log('handleToleranceRangeSetting', value);
+    setUpdateSettingState((prevState) => ({
+      ...prevState,
+      toleranceRange: value,
+    }));
+    setIsModifiable(true);
+  };
+
+  const handleSpeedPredictionIntervalSetting = (value: any) => {
+    console.log('handleSpeedPredictionIntervalSetting', value);
+    setUpdateSettingState((prevState) => ({
+      ...prevState,
+      speedPredictionInterval: value,
+    }));
+    setIsModifiable(true);
+  };
+
+  const handleRouteSetting = (index: number, updatedRouteName: string) => {
+    setUpdateRoutesState((prev) =>
+      prev.map((route, i) =>
+        i === index
+          ? {
+              ...route,
+              name: updatedRouteName,
+            }
+          : route,
+      ),
+    );
     setIsModifiable(true);
   };
 
@@ -52,19 +102,28 @@ const Setting = () => {
           </div>
         </ContentLine>
         <Section>
-          <ColorSetting colorSetting={updateSettingState.colorSetting} handleSettingChange={handleSettingChange} />
+          <ColorSetting colorSetting={updateSettingState.colorSetting} handleSettingChange={handleColorSettingChange} />
         </Section>
         <Section>
-          <RefreshIntervalSetting />
+          <RefreshIntervalSetting
+            refreshInterval={updateSettingState.refreshInterval}
+            handleSettingChange={handleRefreshIntervalSetting}
+          />
         </Section>
         <Section>
-          <ToleranceRangeSetting />
+          <ToleranceRangeSetting
+            toleranceRange={updateSettingState.toleranceRange}
+            handleSettingChange={handleToleranceRangeSetting}
+          />
         </Section>
         <Section>
-          <SpeedPredictionIntervalSetting />
+          <SpeedPredictionIntervalSetting
+            speedPredictionInterval={updateSettingState.speedPredictionInterval}
+            handleSettingChange={handleSpeedPredictionIntervalSetting}
+          />
         </Section>
         <Section>
-          <RouteSetting />
+          <RouteSetting routes={updateRoutesState} handleSettingChange={handleRouteSetting} />
         </Section>
         <Section>
           <DisplaySectionSetting />

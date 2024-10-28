@@ -8,8 +8,14 @@ import {
   LeftContent,
   RightContent,
 } from '@components/Playbar/styles';
+import { IRoute } from '@typings/db';
 
-const RouteSetting = () => {
+interface RouteSettingProps {
+  routes: IRoute[];
+  handleSettingChange?: (index: number, updatedRouteName: string) => void;
+}
+
+const RouteSetting: React.FC<RouteSettingProps> = ({ routes, handleSettingChange }) => {
   const rightContentRef = useRef<HTMLDivElement>(null); // Ref 생성
 
   useEffect(() => {
@@ -30,10 +36,13 @@ const RouteSetting = () => {
           </Content>
         </LeftContent>
         <RightContent ref={rightContentRef}>
-          {Array.from({ length: 4 }, (_, index) => {
-            const RouteName = 'Route' + (index + 1);
-            return <ContentLineInput key={index + 1} className="width180px" defaultValue={RouteName} />;
-          })}
+          {routes.map((route, index) => (
+            <ContentLineInput
+              key={index + 1}
+              defaultValue={route.name}
+              onChange={(e) => handleSettingChange && handleSettingChange(index, e.target.value)}
+            />
+          ))}
         </RightContent>
       </ContentRow>
     </Content>

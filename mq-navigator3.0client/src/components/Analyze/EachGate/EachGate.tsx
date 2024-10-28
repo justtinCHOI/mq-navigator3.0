@@ -9,7 +9,7 @@ import {
 } from '@components/Playbar/styles';
 import '../../../index.css';
 import { IGate } from '@typings/db';
-import {dateToString, stringToDate} from '@utils/dateUtil';
+import { dateToString, stringToDate } from '@utils/dateUtil';
 
 interface EachGateProps {
   gateState: IGate;

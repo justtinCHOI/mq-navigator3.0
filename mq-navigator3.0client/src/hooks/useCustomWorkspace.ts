@@ -1,6 +1,7 @@
 import {
   postAddWorkspaceMemberAsync,
   postCreateWorkspaceAsync,
+  updateWorkspaceAsync,
   updateWorkspaceStateAsync,
 } from '@slices/workspaceSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,11 +36,16 @@ const useCustomWorkspace = () => {
     }
   }, [url, memberState?.workspaces, dispatch]);
 
+  const updateWorkspaceHook = (newWorkspace: IWorkspace) => {
+    dispatch(updateWorkspaceAsync(newWorkspace));
+  };
+
   return {
     workspaceState,
     workspaces,
     postCreateWorkspace,
     postAddWorkspaceMember,
+    updateWorkspaceHook,
   };
 };
 export default useCustomWorkspace;

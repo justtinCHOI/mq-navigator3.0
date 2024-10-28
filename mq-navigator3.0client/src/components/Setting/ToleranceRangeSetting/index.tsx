@@ -8,8 +8,18 @@ import {
   RightContent,
   SelectOption,
 } from '@components/Playbar/styles';
+import { ToleranceRange } from '@typings/db';
 
-const ToleranceRangeSetting = () => {
+interface ToleranceRangeSettingProps {
+  toleranceRange: ToleranceRange;
+  handleSettingChange: (value: ToleranceRange) => void;
+}
+
+const ToleranceRangeSetting: React.FC<ToleranceRangeSettingProps> = ({ toleranceRange, handleSettingChange }) => {
+  const onChangeToleranceRange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleSettingChange(e.target.value as ToleranceRange);
+  };
+
   return (
     <Content>
       <ContentRow>
@@ -20,12 +30,10 @@ const ToleranceRangeSetting = () => {
         </LeftContent>
         <RightContent>
           <ContentLine>
-            <SelectOption className="width50px">
-              <option value="5" selected>
-                5
-              </option>
-              <option value="10">10</option>
-              <option value="20">20</option>
+            <SelectOption className="width60px" value={toleranceRange} onChange={onChangeToleranceRange}>
+              <option value={ToleranceRange.FIVE}>5</option>
+              <option value={ToleranceRange.TEN}>10</option>
+              <option value={ToleranceRange.TWENTY}>20</option>
             </SelectOption>
             <ContentLineText>second</ContentLineText>
           </ContentLine>
