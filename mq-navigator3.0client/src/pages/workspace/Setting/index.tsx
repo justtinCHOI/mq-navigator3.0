@@ -92,6 +92,36 @@ const Setting = () => {
     setIsModifiable(true);
   };
 
+  const handleDisplaySectionSettingChange = (index: number, field: string, value: any) => {
+    console.log('handleDisplaySectionSettingChange', field, value);
+
+    // 새로운 배열로 복사
+    const newDisplaySections = updateSettingState.displaySections.map((section, i) =>
+      i === index ? { ...section, [field]: value } : section,
+    );
+
+    // updateSettingState 업데이트
+    setUpdateSettingState((prevState) => ({
+      ...prevState,
+      displaySections: newDisplaySections,
+    }));
+    setIsModifiable(true);
+  };
+
+  const handleSectionDataSettingChange = (index: number, value: any) => {
+    console.log('handleDisplaySectionSettingChange', value);
+
+    // 새로운 배열로 복사
+    const newSectionDatas = updateSettingState.sectionDatas.map((data, i) => (i === index ? value : data));
+
+    // updateSettingState 업데이트
+    setUpdateSettingState((prevState) => ({
+      ...prevState,
+      sectionDatas: newSectionDatas,
+    }));
+    setIsModifiable(true);
+  };
+
   return (
     <ScrollZone style={{ height: 'calc((100vh - 102px) / 2)' }}>
       <Scrollbars>
@@ -126,10 +156,16 @@ const Setting = () => {
           <RouteSetting routes={updateRoutesState} handleSettingChange={handleRouteSetting} />
         </Section>
         <Section>
-          <DisplaySectionSetting />
+          <DisplaySectionSetting
+            displaySections={updateSettingState.displaySections}
+            handleSettingChange={handleDisplaySectionSettingChange}
+          />
         </Section>
         <Section>
-          <SectionDataSetting />
+          <SectionDataSetting
+            sectionDatas={updateSettingState.sectionDatas}
+            handleSettingChange={handleSectionDataSettingChange}
+          />
         </Section>
       </Scrollbars>
     </ScrollZone>

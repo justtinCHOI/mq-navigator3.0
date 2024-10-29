@@ -10,8 +10,14 @@ import {
 } from '@components/Playbar/styles';
 import UseSelectOptionGateRange from '@hooks/UseSelectOptionGateRange';
 import Sortable from 'sortablejs';
+import { DisplaySection } from '@typings/db';
 
-const DisplaySectionSetting = () => {
+interface DisplaySectionSettingProps {
+  displaySections: DisplaySection[];
+  handleSettingChange: (index: number, field: string, value: string) => void;
+}
+
+const DisplaySectionSetting: React.FC<DisplaySectionSettingProps> = ({ displaySections, handleSettingChange }) => {
   const rightContentRef = useRef<HTMLDivElement>(null); // Ref 생성
   useEffect(() => {
     if (rightContentRef.current) {
@@ -31,10 +37,14 @@ const DisplaySectionSetting = () => {
           </Content>
         </LeftContent>
         <RightContent ref={rightContentRef}>
-          {Array.from({ length: 4 }, (_, index) => {
+          {displaySections.map((displaySection, index) => {
             return (
               <ContentLine key={index + 1}>
-                <UseSelectOptionGateRange />
+                <UseSelectOptionGateRange
+                  key={index + 1}
+                  handleSettingChange={(field, value) => handleSettingChange(index, field, value)}
+                  displaySection={displaySection}
+                />
                 <CustomIconButton>
                   <i className="fa-solid fa-xmark"></i>
                 </CustomIconButton>

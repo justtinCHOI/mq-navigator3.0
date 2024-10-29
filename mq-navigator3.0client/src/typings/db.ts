@@ -36,7 +36,7 @@ export interface IRoute {
 export interface IGate {
   id: number;
   sequence: number;
-  time: string;
+  time: string; //ISO String
   coordinate: Coordinate;
   traveledDistance: number;
 }
@@ -114,9 +114,9 @@ export enum SectionData {
 }
 
 export interface PlaybarState {
-  currentTime: Date | null;
+  currentTime: string;
   isLive: boolean; // isLive 상태 추가
-  selectedTime: Date | null;
+  selectedTime: string;
   selectedPoint: IGate | null;
   firstGate: IGate | null;
   lastGate: IGate | null;

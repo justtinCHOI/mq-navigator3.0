@@ -10,8 +10,14 @@ import {
 } from '@components/Playbar/styles';
 import Sortable from 'sortablejs';
 import UseSelectOptionData from '@hooks/UseSelectOptionData';
+import { SectionData } from '@typings/db';
 
-const SectionDataSetting = () => {
+interface SectionDataSettingProps {
+  sectionDatas: SectionData[];
+  handleSettingChange: (index: number, value: string) => void;
+}
+
+const SectionDataSetting: React.FC<SectionDataSettingProps> = ({ sectionDatas, handleSettingChange }) => {
   const rightContentRef = useRef<HTMLDivElement>(null); // Ref 생성
   useEffect(() => {
     if (rightContentRef.current) {
@@ -31,10 +37,14 @@ const SectionDataSetting = () => {
           </Content>
         </LeftContent>
         <RightContent ref={rightContentRef}>
-          {Array.from({ length: 4 }, (_, index) => {
+          {sectionDatas.map((sectionData, index) => {
             return (
               <ContentLine key={index + 1}>
-                <UseSelectOptionData />
+                <UseSelectOptionData
+                  key={index + 1}
+                  handleSettingChange={(value) => handleSettingChange(index, value)}
+                  sectionData={sectionData}
+                />
                 <CustomIconButton>
                   <i className="fa-solid fa-xmark"></i>
                 </CustomIconButton>

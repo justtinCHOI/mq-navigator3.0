@@ -6,7 +6,7 @@ import useInput from '@hooks/useInput';
 import { Button, Input, Label } from '@pages/member/SignUp/styles';
 import gravatar from 'gravatar';
 import React, { useCallback, useState } from 'react';
-import {Link, Navigate} from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Outlet } from 'react-router-dom';
@@ -114,7 +114,7 @@ const BasicLayout = () => {
         <Workspaces>
           {memberState?.workspaces?.map((ws: IWorkspace) => {
             return (
-              <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
+              <Link key={ws.id} to={`/workspace/${ws.url}/`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
               </Link>
             );

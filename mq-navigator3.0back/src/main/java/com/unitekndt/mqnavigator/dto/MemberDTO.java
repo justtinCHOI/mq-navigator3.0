@@ -1,6 +1,5 @@
 package com.unitekndt.mqnavigator.dto;
 
-import com.unitekndt.mqnavigator.entity.Workspace;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

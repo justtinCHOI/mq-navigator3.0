@@ -1,19 +1,27 @@
 import React from 'react';
 import { SelectOption } from '@components/Playbar/styles';
+import { Location } from '@typings/db';
 
-const UseSelectOptionGate = () => {
+interface UseSelectOptionGateProps {
+  selectedLocation: Location;
+  handleSettingChange: (value: string) => void;
+}
+
+const UseSelectOptionGate: React.FC<UseSelectOptionGateProps> = ({ selectedLocation, handleSettingChange }) => {
+  const changeLocation = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleSettingChange(e.target.value as Location);
+  };
+
   return (
-    <SelectOption className="width300px">
-      <option value="firstGate" selected>
-        first gate
-      </option>
-      <option value="lastGate">last gate</option>
-      <option value="previousGateBasedOnSelected">previous gate based on selected</option>
-      <option value="latestGateBasedOnSelected">latest gate based on selected</option>
-      <option value="nextGateBasedOnSelected">next gate based on selected</option>
-      <option value="previousGateBasedOnCurrent">previous gate based on current</option>
-      <option value="latestGateBasedOnCurrent">latest gate based on current</option>
-      <option value="nextGateBasedOnCurrent">next gate based on current</option>
+    <SelectOption className="width300px" value={selectedLocation} onChange={changeLocation}>
+      <option value={Location.FIRST_GATE}>first gate</option>
+      <option value={Location.LAST_GATE}>last gate</option>
+      <option value={Location.PREVIOUS_GATE_BASED_ON_SELECTED}>previous gate based on selected</option>
+      <option value={Location.LATEST_GATE_BASED_ON_SELECTED}>latest gate based on selected</option>
+      <option value={Location.NEXT_GATE_BASED_ON_SELECTED}>next gate based on selected</option>
+      <option value={Location.PREVIOUS_GATE_BASED_ON_CURRENT}>previous gate based on current</option>
+      <option value={Location.LATEST_GATE_BASED_ON_CURRENT}>latest gate based on current</option>
+      <option value={Location.NEXT_GATE_BASED_ON_CURRENT}>next gate based on current</option>
     </SelectOption>
   );
 };

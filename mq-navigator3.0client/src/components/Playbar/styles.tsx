@@ -184,7 +184,7 @@ export const ProgressBar = styled.input`
   }
 `;
 
-export const TimeDisplay = styled.div`
+export const DistanceDisplay = styled.div`
   display: flex;
   justify-content: space-between;
   width: 120px;

@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PlaybarState } from '@typings/db';
+import { IGate, PlaybarState } from '@typings/db';
 
 const initialState: PlaybarState = {
-  currentTime: null,
+  currentTime: '',
   isLive: false,
-  selectedTime: null,
+  selectedTime: '',
   selectedPoint: null,
   firstGate: null,
   lastGate: null,
@@ -23,8 +23,14 @@ const playbarSlice = createSlice({
     setLive: (state, action: PayloadAction<boolean>) => {
       state.isLive = action.payload; // isLive 상태 설정
     },
-    // // selectedPoint에 따라 관련 상태 업데이트
-    // updateBasedOnSelected: (state, action: PayloadAction<Gate>) => {
+    updateSelectedTime: (state, action: PayloadAction<string>) => {
+      state.selectedTime = action.payload;
+    },
+    updateSelectedPoint: (state, action: PayloadAction<IGate | null>) => {
+      state.selectedPoint = action.payload;
+    },
+    // selectedPoint에 따라 관련 상태 업데이트
+    // updateBasedOnSelected: (state, action: PayloadAction<IGate>) => {
     //   const selectedGate = action.payload;
     //   state.previousGateBasedOnSelected = /* 로직으로 계산 */;
     //   state.latestGateBasedOnSelected = /* 로직으로 계산 */;
@@ -33,5 +39,5 @@ const playbarSlice = createSlice({
   },
 });
 
-export const { toggleLive, setLive } = playbarSlice.actions;
+export const { toggleLive, setLive, updateSelectedTime, updateSelectedPoint } = playbarSlice.actions;
 export default playbarSlice.reducer;
