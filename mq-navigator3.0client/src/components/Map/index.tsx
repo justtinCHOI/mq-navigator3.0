@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import useCustomGates from '@hooks/useCustomGates';
+import {InfoDiv} from "@components/Map/styles";
 
 // type latLngCoordinates = { lat: number; lng: number };
 
@@ -19,7 +20,8 @@ const MapComponent: React.FC = () => {
       mapRef.current = new google.maps.Map(containerRef.current, {
         center: initialLocation,
         zoom: 10,
-        mapId: 'd7a1d96b7d5ef0af',
+        // mapId: 'd7a1d96b7d5ef0af', //나
+        mapId: '70c296db922d358d', //아빠
       });
       updateMapMarkers();
     }
@@ -92,9 +94,12 @@ const MapComponent: React.FC = () => {
   }
 
   return (
-    <APIProvider apiKey={'AIzaSyDfXQ99l7TWfyfvujf8d52Ug1EDl5ok20M'}>
-      <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
-    </APIProvider>
+    <>
+      {/*<APIProvider apiKey={'AIzaSyDfXQ99l7TWfyfvujf8d52Ug1EDl5ok20M'}>*/}
+      <APIProvider apiKey={'AIzaSyCfTicyWufxJ5OqE32Yn4t4fJo0vI72gUc'}>
+        <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+      </APIProvider>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
 import { Coordinate, IGate } from '@typings/db';
-import useCustomGates from '@hooks/useCustomGates';
 
 // 두 좌표 간 거리 계산 함수 (피타고라스 정리 사용)
 export function calculateDistance(coord1: Coordinate, coord2: Coordinate) {
@@ -9,8 +8,8 @@ export function calculateDistance(coord1: Coordinate, coord2: Coordinate) {
 }
 
 // `selectedTime`에 맞는 `selectedPoint`를 계산하는 함수
-export function transformTimeToPoint(selectedTime: string) {
-  const { forwardGateWithTime, backwardGateWithTime } = FindForwardAndBackwardGateWithTime(selectedTime);
+export function transformTimeToPoint(gatesState: IGate[], selectedTime: string) {
+  const { forwardGateWithTime, backwardGateWithTime } = findForwardAndBackwardGateWithTime(gatesState, selectedTime);
   if (forwardGateWithTime === null || backwardGateWithTime === null) {
     return null;
   }
@@ -20,13 +19,13 @@ export function transformTimeToPoint(selectedTime: string) {
     selectedTime,
   );
   const { forwardGateWithTraveledDistance, backwardGateWithTraveledDistance } =
-    FindForwardAndBackwardGateWithTraveledDistance(selectedTraveledDistance);
+    findForwardAndBackwardGateWithTraveledDistance(gatesState, selectedTraveledDistance);
 
   if (forwardGateWithTraveledDistance === null || backwardGateWithTraveledDistance === null) {
     return null;
   }
 
-  const selectedCoordinate = FindTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance(
+  const selectedCoordinate = findTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance(
     forwardGateWithTraveledDistance,
     backwardGateWithTraveledDistance,
     selectedTraveledDistance,
@@ -42,13 +41,13 @@ export function transformTimeToPoint(selectedTime: string) {
 }
 
 // `selectedPoint`에 맞는 `selectedTime`을 계산하는 함수
-export function transformPointToTime(selectedPoint: IGate | null) {
+export function transformPointToTime(gatesState: IGate[], selectedPoint: IGate | null) {
   if (selectedPoint == null) {
     return '';
   }
   const selectedTraveledDistance = selectedPoint.traveledDistance;
   const { timeExistedForwardGateWithTraveledDistance, timeExistedBackwardGateWithTraveledDistance } =
-    FindTimeExistedForwardAndBackwardGateWithTraveledDistance(selectedTraveledDistance);
+    findTimeExistedForwardAndBackwardGateWithTraveledDistance(gatesState, selectedTraveledDistance);
 
   if (timeExistedForwardGateWithTraveledDistance === null || timeExistedBackwardGateWithTraveledDistance === null) {
     return '';
@@ -60,12 +59,10 @@ export function transformPointToTime(selectedPoint: IGate | null) {
   );
 }
 
-// `selectedTime`에 근접한 forward/backward 게이트 찾기
-export function FindForwardAndBackwardGateWithTime(selectedTime: string) {
+// `selectedTime`에 근접한 (time 존재) forward/backward 게이트 찾기
+export function findForwardAndBackwardGateWithTime(gatesState: IGate[], selectedTime: string) {
   let forwardGate = null;
   let backwardGate: IGate | null = null;
-
-  const { gatesState } = useCustomGates();
 
   gatesState.forEach((gate) => {
     if (new Date(gate.time) <= new Date(selectedTime)) {
@@ -78,7 +75,7 @@ export function FindForwardAndBackwardGateWithTime(selectedTime: string) {
   return { forwardGateWithTime: forwardGate, backwardGateWithTime: backwardGate };
 }
 
-// forward/backward 게이트와 `selectedTime`을 이용해 거리 계산
+// 중간 `time` -> 중간 'traveledDistance'
 export function findTraveledDistanceWithForwardAndBackwardGateAndTime(
   forwardGate: IGate,
   backwardGate: IGate,
@@ -89,26 +86,29 @@ export function findTraveledDistanceWithForwardAndBackwardGateAndTime(
   return forwardGate.traveledDistance + timeRatio * (backwardGate.traveledDistance - forwardGate.traveledDistance);
 }
 
-// `selectedTraveledDistance`에 근접한 forward/backward 게이트 찾기
-export function FindForwardAndBackwardGateWithTraveledDistance(selectedTraveledDistance: number) {
-  let forwardGate = null;
+// `traveledDistance`에 근접한 (time 무시) forward/backward 게이트 찾기
+export function findForwardAndBackwardGateWithTraveledDistance(
+  gatesState: IGate[],
+  selectedTraveledDistance: number | null,
+): { forwardGateWithTraveledDistance: IGate | null; backwardGateWithTraveledDistance: IGate | null } {
+  let forwardGate: IGate | null = null;
   let backwardGate: IGate | null = null;
 
-  const { gatesState } = useCustomGates();
-
-  gatesState.forEach((gate) => {
-    if (gate.traveledDistance <= selectedTraveledDistance) {
-      forwardGate = gate;
-    } else if (!backwardGate) {
-      backwardGate = gate;
-    }
-  });
+  if (selectedTraveledDistance != null) {
+    gatesState.forEach((gate) => {
+      if (gate.traveledDistance <= selectedTraveledDistance) {
+        forwardGate = gate;
+      } else if (!backwardGate) {
+        backwardGate = gate;
+      }
+    });
+  }
 
   return { forwardGateWithTraveledDistance: forwardGate, backwardGateWithTraveledDistance: backwardGate };
 }
 
-// 두 좌표 사이의 중간 좌표를 찾는 함수
-export function FindTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance(
+// 중간 `traveledDistance` ->  중간 'coordinate'
+export function findTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance(
   forwardGate: IGate,
   backwardGate: IGate,
   selectedTraveledDistance: number,
@@ -126,12 +126,13 @@ export function FindTraveledCoordinateWithForwardAndBackwardGateAndTraveledDista
   return { latitude, longitude };
 }
 
-// 주어진 traveledDistance로 time을 찾는 함수
-export function FindTimeExistedForwardAndBackwardGateWithTraveledDistance(selectedTraveledDistance: number) {
+// 'traveledDistance' 에 근접한 (time 존재) forward/backward 게이트 찾기
+export function findTimeExistedForwardAndBackwardGateWithTraveledDistance(
+  gatesState: IGate[],
+  selectedTraveledDistance: number,
+) {
   let forwardGate: IGate | null = null;
   let backwardGate: IGate | null = null;
-
-  const { gatesState } = useCustomGates();
 
   gatesState.forEach((gate) => {
     if (gate.traveledDistance <= selectedTraveledDistance) {
@@ -161,4 +162,19 @@ export function findTimeWithForwardAndBackwardGateAndTime(
   const selectedTime = new Date(forwardTime + distanceRatio * (backwardTime - forwardTime));
 
   return selectedTime.toISOString();
+}
+
+// (time 존재) 가장 마지막 게이트 찾기
+export function findLatestGate(gatesState: IGate[] | null): IGate | null {
+  let latestGate: IGate | null = null;
+
+  if (gatesState) {
+    gatesState.forEach((gate) => {
+      if (gate.time !== null) {
+        latestGate = gate;
+      }
+    });
+  }
+
+  return latestGate;
 }

@@ -40,6 +40,9 @@ code {
 .width50px{
   width: 50px;
 }
+.width50pxImp{
+  width: 50px !important;
+}
 .width60px{
   width: 60px;
 }
@@ -80,4 +83,29 @@ code {
 .sortable-ghost {
   opacity: 0.5; /* 드래그 중인 요소의 투명도를 낮춤 */
   background-color: #f0f0f0; /* 배경색 변경 */
+}
+
+.dimmed {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.whiteFont {
+  text-decoration-color: white;
+}
+
+.margin0 {
+  margin: 0 !important;
+}
+
+.padding0 {
+  padding: 0 !important;
+}
+
+.left0 {
+  left: 0;
+}
+
+.op1 {
+  opacity: 1;
 }

@@ -28,9 +28,14 @@ import useCustomMember from '@hooks/useCustomMember';
 import { postCreateWorkspace } from '@api/workspaceApi';
 import Playbar from '@components/Playbar';
 import { IWorkspace } from '@typings/db';
+import { ContentLineText, ContentRow, RightContent } from '@components/Playbar/styles';
+import useCustomPlaybar from '@hooks/useCustomPlaybar';
+import { InfoDiv } from '@components/Map/styles';
 
 const BasicLayout = () => {
   const { isLogin, memberState } = useCustomMember();
+  const { playbarState } = useCustomPlaybar();
+  const { currentTime, selectedTime, selectedPoint } = playbarState;
   const { doLogout, moveToPath } = useCustomMember();
 
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
@@ -89,6 +94,55 @@ const BasicLayout = () => {
   }
   return (
     <div>
+      <InfoDiv>
+        <ContentRow>
+          <RightContent className={'whiteFont margin0 padding0'}>
+            <ContentLineText className={'whiteFont margin0 padding0'}>currentTime : [{currentTime}]</ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>selectedTime : [{selectedTime}]</ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              selectedTraveledDistance : [{selectedPoint?.traveledDistance}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              selectedLatitude : [{selectedPoint?.coordinate?.latitude}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              selectedLongitude : [{selectedPoint?.coordinate?.longitude}]
+            </ContentLineText>
+          </RightContent>
+          <RightContent className={'whiteFont margin0 padding0'}>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              firstGate : [{playbarState?.firstGate && playbarState.firstGate.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              lastGate : [{playbarState?.lastGate && playbarState.lastGate.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              previousGateBasedOnSelected : [
+              {playbarState?.previousGateBasedOnSelected && playbarState.previousGateBasedOnSelected.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              latestGateBasedOnSelected : [
+              {playbarState?.latestGateBasedOnSelected && playbarState.latestGateBasedOnSelected.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              nextGateBasedOnSelected : [
+              {playbarState?.nextGateBasedOnSelected && playbarState.nextGateBasedOnSelected.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              previousGateBasedOnCurrent : [
+              {playbarState?.previousGateBasedOnCurrent && playbarState.previousGateBasedOnCurrent.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              latestGateBasedOnCurrent : [
+              {playbarState?.latestGateBasedOnCurrent && playbarState.latestGateBasedOnCurrent.sequence}]
+            </ContentLineText>
+            <ContentLineText className={'whiteFont margin0 padding0'}>
+              nextGateBasedOnCurrent : [
+              {playbarState?.nextGateBasedOnCurrent && playbarState.nextGateBasedOnCurrent.sequence}]
+            </ContentLineText>
+          </RightContent>
+        </ContentRow>
+      </InfoDiv>
       <Header>
         {isLogin && memberState && (
           <RightMenu>

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const PlaybarContainer = styled.div`
   width: 100%;
-  height: 120px;
+  height: 180px;
 `;
 
 export const Content = styled.div`
@@ -145,6 +145,11 @@ export const RightContentIcon = styled.i`
   font-size: 24px;
   cursor: pointer;
   transition: color 0.3s ease, transform 0.3s ease;
+
+  &.dimmed {
+    color: #aaa; // 어두운 색상으로 변경
+    cursor: not-allowed; // 클릭 비활성화 느낌
+  }
 
   &:active {
     color: #000;

@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react';
 import { calculateDistance } from '@utils/physicsUtil';
 
 function UseCustomGates() {
-  const dispatch: AppDispatch = useDispatch();
   const gatesState = useSelector((state: RootState) => state.gatesSlice);
+  const dispatch: AppDispatch = useDispatch();
   const { url } = useParams<{ url: string }>();
   const [isDistanceCalculated, setIsDistanceCalculated] = useState(false);
+  // const { updateSelectedTimeHook, updateSelectedPointHook } = useCustomPlaybar();
 
   // traveledDistance를 채워 넣는 useEffect
   useEffect(() => {
@@ -56,6 +57,7 @@ function UseCustomGates() {
   function updateGatesHook(url: string, updateGates: IGate[]) {
     dispatch(updateGatesAsync({ url, gates: updateGates }));
   }
+
   return { gatesState, updateGatesWithIndex, updateGatesHook };
 }
 
