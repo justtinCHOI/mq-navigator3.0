@@ -9,12 +9,14 @@ import {
   ProgressContainer,
   ContentLineText,
   RightContent,
+  GateMarker,
 } from '@components/Playbar/styles';
 import {
   transformTimeToPoint,
   transformPointToTime,
   findForwardAndBackwardGateWithTraveledDistance,
   findLatestGate,
+  findTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance,
 } from '@utils/physicsUtil';
 import { IGate } from '@typings/db';
 import useCustomPlaybar from '@hooks/useCustomPlaybar';
@@ -39,6 +41,7 @@ const Playbar = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playSpeed, setPlaySpeed] = useState(1);
   const [totalDistance, setTotalDistance] = useState(0);
+  const [progressBarWidth, setProgressBarWidth] = useState<number>(0);
   const { selectedTime, selectedPoint } = playbarState;
   const dispatch: AppDispatch = useDispatch();
 
@@ -134,10 +137,28 @@ const Playbar = () => {
     const progressBar = e.currentTarget;
     const clickPosition = e.nativeEvent.offsetX;
     const progressBarWidth = progressBar.clientWidth;
+    setProgressBarWidth(progressBarWidth);
+    console.log('setProgressBarWidth : ', progressBarWidth);
     const clickRatio = clickPosition / progressBarWidth;
     const newTraveledDistance = totalDistance * clickRatio;
-    const newGate = gatesState.find((gate) => gate.traveledDistance >= newTraveledDistance);
-    if (newGate) {
+    // `traveledDistance`에 근접한 (time 무시) forward/backward 게이트 찾기
+    const { forwardGateWithTraveledDistance, backwardGateWithTraveledDistance } =
+      findForwardAndBackwardGateWithTraveledDistance(gatesState, newTraveledDistance);
+    if (forwardGateWithTraveledDistance != null && backwardGateWithTraveledDistance != null) {
+      // 중간 `traveledDistance` ->  중간 'coordinate'
+      const newCoordinate = findTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance(
+        forwardGateWithTraveledDistance,
+        backwardGateWithTraveledDistance,
+        newTraveledDistance,
+      );
+      const newGate = {
+        id: 0,
+        sequence: 0,
+        time: selectedTime,
+        coordinate: newCoordinate,
+        traveledDistance: newTraveledDistance,
+      };
+
       changeSelectedPoint(newGate);
     }
   };
@@ -190,24 +211,24 @@ const Playbar = () => {
         </SelectOption>
       </ContentLine>
       <RightContent>
-        <ContentLine>
-          <ContentLineDiv className="flex ">
-            <ProgressContainer>
-              <ProgressBar
-                type="range"
-                value={selectedPoint?.traveledDistance ? (selectedPoint.traveledDistance / totalDistance) * 100 : 0}
-                max="100"
-                onClick={handleProgressBarClick}
-              />
-            </ProgressContainer>
+        <ContentLine className={'jcCenter'}>
+          <ContentLineDiv className={'flex width100 relative shortenHeight'}>
+            <ProgressBar
+              type="range"
+              value={selectedPoint?.traveledDistance ? (selectedPoint.traveledDistance / totalDistance) * 100 : 0}
+              max="100"
+              onClick={handleProgressBarClick}
+            />
           </ContentLineDiv>
         </ContentLine>
-        <ContentLine className="flex">
-          {/*{gatesState.map((gate) => (*/}
-          {/*  <GateMarker key={gate.sequence} style={{ left: `${(gate.traveledDistance / totalDistance) * 100}%` }}>*/}
-          {/*    {gate.sequence}*/}
-          {/*  </GateMarker>*/}
-          {/*))}*/}
+        <ContentLine className={'jcCenter'}>
+          <ContentLineDiv style={{ width: `${progressBarWidth}px` }} className={'flex relative shortenHeight'}>
+            {gatesState.map((gate) => (
+              <GateMarker key={gate.sequence} style={{ left: `${(gate.traveledDistance / totalDistance) * 100}%` }}>
+                {gate.sequence}
+              </GateMarker>
+            ))}
+          </ContentLineDiv>
         </ContentLine>
       </RightContent>
     </PlaybarContainer>

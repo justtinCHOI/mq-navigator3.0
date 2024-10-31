@@ -70,6 +70,10 @@ code {
 .width300px{
   width: 300px;
 }
+
+.height20px {
+  height: 20px;
+}
 .spaceAround {
   justify-content: space-around;
 }
@@ -108,4 +112,22 @@ code {
 
 .op1 {
   opacity: 1;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.jcCenter {
+  justify-content: center;
+}
+
+.shortenHeight {
+  margin : 0 15px 0 15px !important;
+  padding: 10px  0 !important;
+  height: 30px !important;
 }

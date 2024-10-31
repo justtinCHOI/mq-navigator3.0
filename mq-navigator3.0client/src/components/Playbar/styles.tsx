@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const PlaybarContainer = styled.div`
   width: 100%;
-  height: 180px;
+  height: 120px;
 `;
 
 export const Content = styled.div`
@@ -140,7 +140,7 @@ export const CustomTextButton = styled.button`
 
 export const RightContentIcon = styled.i`
   flex: 1;
-  margin: auto;
+  margin: 10px;
   padding: 5px;
   font-size: 24px;
   cursor: pointer;
@@ -167,12 +167,14 @@ export const ProgressContainer = styled.div`
 `;
 
 export const ProgressBar = styled.input`
-  width: 100%;
+  width: calc(100%);
   height: 10px;
   appearance: none;
   background-color: #ccc;
   cursor: pointer;
-  margin-right: 20px;
+  //margin: 0 10px 0 10px;
+  margin: 0;
+  position: absolute;
 
   &::-webkit-slider-thumb {
     appearance: none;
@@ -187,6 +189,20 @@ export const ProgressBar = styled.input`
   &:active::-webkit-slider-thumb {
     background-color: #333;
   }
+`;
+
+// Styled component for GateMarker
+export const GateMarker = styled.div`
+  position: absolute;
+  border-radius: 4px;
+  top: 0;
+  width: 15px;
+  height: 20px;
+  background-color: white;
+  transform: translateX(-50%); // 정 중앙 위치
+  font-size: 14px;
+  color: black;
+  text-align: center;
 `;
 
 export const DistanceDisplay = styled.div`
