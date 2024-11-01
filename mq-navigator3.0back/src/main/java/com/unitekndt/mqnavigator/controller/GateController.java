@@ -17,12 +17,6 @@ public class GateController {
     @Autowired
     private GateService gateService;
 
-//    @GetMapping("/{workspaceUrl}")
-//    public List<IGate> getGates(@RequestHeader("Authorization") String authHeader, @PathVariable String workspaceUrl) {
-//        String token = authHeader.substring(7); // "Bearer " 제거
-//        return gateService.getGatesByWorkspaceUrl(token, workspaceUrl);
-//    }
-
     // 특정 workspace의 gate 목록 조회
     @GetMapping("/{workspaceUrl}")
     public ResponseEntity<List<IGate>> getGates(@RequestHeader("Authorization") String authHeader, @PathVariable String workspaceUrl) {

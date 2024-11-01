@@ -1,5 +1,5 @@
 // 초기 상태 정의
-import { IGate } from '@typings/db';
+import {IGate, NullableIGate} from '@typings/db';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getGates, updateGates } from '@api/gatesApi';
 
@@ -12,7 +12,7 @@ export const getGatesAsync = createAsyncThunk('getGatesAsync', async (url: strin
 
 interface UpdateGatesPayload {
   url: string;
-  gates: IGate[];
+  gates: NullableIGate[];
 }
 
 export const updateGatesAsync = createAsyncThunk('updateGatesAsync', async ({ url, gates }: UpdateGatesPayload) => {

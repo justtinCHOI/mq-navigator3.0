@@ -11,13 +11,13 @@ import {
   SelectOption,
 } from '@components/Playbar/styles';
 import '../../../index.css';
-import { IGate } from '@typings/db';
+import { NullableIGate } from '@typings/db';
 import { useParams } from 'react-router';
 import useCustomGates from '@hooks/useCustomGates';
 
 const GateList = () => {
   const { gatesState, updateGatesHook } = useCustomGates();
-  const [updateGatesState, setUpdateGatesState] = useState<IGate[]>([]);
+  const [updateGatesState, setUpdateGatesState] = useState<NullableIGate[]>([]);
   const [isModify, setIsModify] = useState<boolean>(false);
   const { url } = useParams<{ url: string }>();
 
@@ -34,7 +34,7 @@ const GateList = () => {
     setIsModify(false); // 수정 불가 상태로 변경
   }
 
-  const handleGateChange = (index: number, updatedGate: IGate) => {
+  const handleGateChange = (index: number, updatedGate: NullableIGate) => {
     setUpdateGatesState((prev) => prev.map((gate, i) => (i === index ? updatedGate : gate)));
   };
 

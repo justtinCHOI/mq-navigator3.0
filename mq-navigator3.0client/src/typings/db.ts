@@ -137,6 +137,11 @@ export interface NullableIGate {
   id: number;
   sequence: number;
   time: string | null; //ISO String
-  coordinate: Coordinate | null;
+  coordinate: NullableCoordinate | null;
   traveledDistance: number | null;
+}
+
+export interface NullableCoordinate {
+  latitude: number | null;
+  longitude: number | null;
 }

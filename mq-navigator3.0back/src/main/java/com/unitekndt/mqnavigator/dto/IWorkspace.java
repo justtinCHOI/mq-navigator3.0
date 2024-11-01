@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-//@JsonInclude(JsonInclude.Include.NON_NULL)  // null 값은 직렬화하지 않음
+@JsonInclude(JsonInclude.Include.NON_NULL)  // null 값은 직렬화하지 않음
 public class IWorkspace {
     private Long id;
     private String name;

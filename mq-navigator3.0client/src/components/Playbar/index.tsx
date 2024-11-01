@@ -72,10 +72,6 @@ const Playbar = () => {
       if (latestGate?.traveledDistance) {
         setTotalDistance(latestGate?.traveledDistance);
       }
-    } else {
-      console.warn('gatesState가 비어 있습니다. 기본 시간을 설정합니다.');
-      const defaultTime = new Date().toISOString();
-      changeSelectedTime(defaultTime);
     }
   }, [
     gatesState,
@@ -143,7 +139,7 @@ const Playbar = () => {
       console.log('Playbar changeSelectedTime point : ', point);
       updateSelectedPointHook(point);
     },
-    [updateSelectedPointHook, updateSelectedTimeHook],
+    [gatesState, updateSelectedPointHook, updateSelectedTimeHook],
   );
 
   // ProgressBar 클릭 핸들러

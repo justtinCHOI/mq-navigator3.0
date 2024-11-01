@@ -6,14 +6,19 @@ import com.unitekndt.mqnavigator.entity.Member;
 import com.unitekndt.mqnavigator.entity.Workspace;
 import com.unitekndt.mqnavigator.repository.GateRepository;
 import com.unitekndt.mqnavigator.repository.WorkspaceRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class GateService {
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private GateRepository gateRepository;
@@ -32,21 +37,34 @@ public class GateService {
         return gateRepository.findByWorkspaceUrl(workspaceUrl).stream().map(this::toIGateDto).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<IGate> updateGatesByWorkspaceUrl(String token, String workspaceUrl, List<IGate> gates) {
         Workspace workspace = workspaceRepository.findByUrl(workspaceUrl);
         if (workspace == null) {
             throw new RuntimeException("Workspace not found with URL: " + workspaceUrl);
         }
-        Member member = tokenService.getUserFromToken(token);
+
         List<Gate> updatedGates = gates.stream()
                 .map(this::toGateEntity)
                 .collect(Collectors.toList());
 
-        updatedGates = updatedGates.stream().peek(gate -> {
-            gate.setWorkspace(workspace);  // workspace 설정 추가
-        }).collect(Collectors.toList());
+        // 자식 엔티티를 수정할 떄 부모 엔티티의 자식 필드를 지우고 생성해야한다.
+        workspace.getGates().clear();
 
+//        updatedGates.forEach(gate -> gate.setWorkspace(workspace));  // 워크스페이스 설정
+        // 새 게이트 엔티티 설정 및 추가
+        updatedGates.forEach(gate -> {
+            gate.setWorkspace(workspace);  // 워크스페이스 설정
+            workspace.getGates().add(gate);  // 워크스페이스 게이트 컬렉션에 추가
+        });
+
+//        workspace.setGates(updatedGates);  // 워크스페이스의 게이트 업데이트
+
+        // 게이트 리스트 저장 (새로운 엔티티는 생성되고, 기존 엔티티는 업데이트)
         gateRepository.saveAll(updatedGates);
+
+        workspaceRepository.save(workspace);  // 워크스페이스 업데이트
+
         return updatedGates.stream().map(this::toIGateDto).collect(Collectors.toList());
     }
 

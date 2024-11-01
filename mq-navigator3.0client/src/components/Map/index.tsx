@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import useCustomGates from '@hooks/useCustomGates';
-import {InfoDiv} from "@components/Map/styles";
 
 // type latLngCoordinates = { lat: number; lng: number };
 
 const MapComponent: React.FC = () => {
+  const { gatesState, updateGatesWithIndex } = useCustomGates();
   const containerRef = useRef<HTMLDivElement | null>(null); // HTMLDivElement 참조
   const mapRef = useRef<google.maps.Map | null>(null); // google.maps.Map 참조
   const [markers, setMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [path, setPath] = useState<google.maps.LatLngLiteral[] | null>([]);
   const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
   const initialLocation = { lat: 37.5665, lng: 126.978 };
-  const { gatesState, updateGatesWithIndex } = useCustomGates();
 
   useEffect(() => {
     if (containerRef.current && !mapRef.current) {

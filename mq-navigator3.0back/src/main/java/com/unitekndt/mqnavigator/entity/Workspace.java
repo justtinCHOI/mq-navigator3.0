@@ -45,6 +45,7 @@ public class Workspace extends Copyright{
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> routes = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "workspace", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Gate> gates = new ArrayList<>();
 

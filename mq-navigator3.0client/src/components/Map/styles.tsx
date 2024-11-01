@@ -8,10 +8,10 @@ export const MapContainer = styled.div`
 
 export const InfoDiv = styled.div`
   z-index: 100;
-  width: 60vw;
+  width: 50vw;
   height: 350px;
-  top: 10px;
-  left: 10px;
+  bottom: 10px;
+  right: 10px;
   position: absolute;
   background: #f0f0f0;
   opacity: 0.6;

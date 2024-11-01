@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { updateGatesAsync } from '@slices/gatesSlice';
-import { Coordinate, IGate } from '@typings/db';
+import { Coordinate, NullableIGate } from '@typings/db';
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { calculateCoordinate } from '@utils/physicsUtil';
@@ -54,7 +54,7 @@ function UseCustomGates() {
     }
   }
 
-  function updateGatesHook(url: string, updateGates: IGate[]) {
+  function updateGatesHook(url: string, updateGates: NullableIGate[]) {
     dispatch(updateGatesAsync({ url, gates: updateGates }));
   }
 
