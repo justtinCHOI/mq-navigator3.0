@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IGate, PlaybarState } from '@typings/db';
+import { IGate, PlaybarState, NullableIGate } from '@typings/db';
 
 const initialState: PlaybarState = {
   currentTime: new Date().toISOString(),
   isLive: false,
-  selectedTime: '',
+  selectedTime: null,
   selectedPoint: null,
   firstGate: null,
   lastGate: null,
@@ -32,7 +32,7 @@ const playbarSlice = createSlice({
     updateSelectedTime: (state, action: PayloadAction<string>) => {
       state.selectedTime = action.payload;
     },
-    updateSelectedPoint: (state, action: PayloadAction<IGate | null>) => {
+    updateSelectedPoint: (state, action: PayloadAction<NullableIGate | null>) => {
       state.selectedPoint = action.payload;
     },
     updateFirstGate: (state, action: PayloadAction<IGate | null>) => {

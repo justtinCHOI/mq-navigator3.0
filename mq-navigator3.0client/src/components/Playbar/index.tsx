@@ -6,7 +6,6 @@ import {
   RightContentIcon,
   SelectOption,
   ProgressBar,
-  ProgressContainer,
   ContentLineText,
   RightContent,
   GateMarker,
@@ -18,7 +17,7 @@ import {
   findLatestGate,
   findTraveledCoordinateWithForwardAndBackwardGateAndTraveledDistance,
 } from '@utils/physicsUtil';
-import { IGate } from '@typings/db';
+import { IGate, NullableIGate } from '@typings/db';
 import useCustomPlaybar from '@hooks/useCustomPlaybar';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
@@ -50,9 +49,9 @@ const Playbar = () => {
   // gatesState 가 변경하는 것 들 :  changeSelectedPoint [selectedPoint, selectedTime,  ~~GateBasedOnSelected, ...],
   //                               changeCurrent [~~BasedOnCurrent, ..., firstGate, lastGate]
 
-  // selectedTime 초기 상태
+  // 초기 상태
   useEffect(() => {
-    if (gatesState && gatesState.length > 0 && gatesState[0].time) {
+    if (gatesState && gatesState.length > 0) {
       const newGate = gatesState[0];
       changeSelectedPoint(newGate);
       updateFirstGateHook(gatesState[0]);
@@ -78,11 +77,18 @@ const Playbar = () => {
       const defaultTime = new Date().toISOString();
       changeSelectedTime(defaultTime);
     }
-  }, [gatesState]);
+  }, [
+    gatesState,
+    updateFirstGateHook,
+    updateLastGateHook,
+    updateLatestGateBasedOnCurrentHook,
+    updateNextGateBasedOnCurrentHook,
+    updatePreviousGateBasedOnCurrentHook,
+  ]);
 
   // selectedTime 매초 번경
   useEffect(() => {
-    if (selectedTime != '' && isPlaying) {
+    if (selectedTime && isPlaying) {
       const interval = setInterval(() => {
         // const newTime = new Date(new Date(playbarState.selectedTime).getTime() + 1000).toISOString();
         const newTime = calculateNewTime(selectedTime, playSpeed); // 시간을 playSpeed만큼 증가
@@ -101,24 +107,32 @@ const Playbar = () => {
 
   // selectedGate -> selectedTime ~~GateBasedOnSelected, ... 변경,
   const changeSelectedPoint = useCallback(
-    (newPoint: IGate | null) => {
+    (newPoint: NullableIGate | null) => {
       updateSelectedPointHook(newPoint);
-      const newTime = transformPointToTime(gatesState, newPoint);
-      updateSelectedTimeHook(newTime);
-      const { forwardGateWithTraveledDistance, backwardGateWithTraveledDistance } =
-        findForwardAndBackwardGateWithTraveledDistance(
-          gatesState,
-          selectedPoint ? selectedPoint.traveledDistance : null,
-        );
-      let previousGate: IGate | null = null;
-      if (forwardGateWithTraveledDistance != null && forwardGateWithTraveledDistance.sequence > 0) {
-        previousGate = gatesState[forwardGateWithTraveledDistance.sequence - 1];
+      if (newPoint?.traveledDistance != null) {
+        const newTime = transformPointToTime(gatesState, newPoint);
+        if (newTime) {
+          updateSelectedTimeHook(newTime);
+        }
+        const { forwardGateWithTraveledDistance, backwardGateWithTraveledDistance } =
+          findForwardAndBackwardGateWithTraveledDistance(gatesState, newPoint.traveledDistance);
+        let previousGate: IGate | null = null;
+        if (forwardGateWithTraveledDistance != null && forwardGateWithTraveledDistance.sequence > 0) {
+          previousGate = gatesState[forwardGateWithTraveledDistance.sequence - 1];
+        }
+        updatePreviousGateBasedOnSelectedHook(previousGate);
+        updateLatestGateBasedOnSelectedHook(forwardGateWithTraveledDistance);
+        updateNextGateBasedOnSelectedHook(backwardGateWithTraveledDistance);
       }
-      updatePreviousGateBasedOnSelectedHook(previousGate);
-      updateLatestGateBasedOnSelectedHook(forwardGateWithTraveledDistance);
-      updateNextGateBasedOnSelectedHook(backwardGateWithTraveledDistance);
     },
-    [updateSelectedPointHook, updateSelectedTimeHook],
+    [
+      gatesState,
+      updateLatestGateBasedOnSelectedHook,
+      updateNextGateBasedOnSelectedHook,
+      updatePreviousGateBasedOnSelectedHook,
+      updateSelectedPointHook,
+      updateSelectedTimeHook,
+    ],
   );
 
   // selectedTime -> selectedPoint 도 변경

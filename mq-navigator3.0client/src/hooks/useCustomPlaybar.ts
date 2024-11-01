@@ -14,7 +14,7 @@ import {
   updateLatestGateBasedOnCurrent,
   updateNextGateBasedOnCurrent,
 } from '@slices/playbarSlice';
-import { IGate } from '@typings/db';
+import { IGate, NullableIGate } from '@typings/db';
 import { useEffect } from 'react';
 
 const useCustomPlaybar = () => {
@@ -35,7 +35,7 @@ const useCustomPlaybar = () => {
     dispatch(updateSelectedTime(selectedTime));
   }
 
-  function updateSelectedPointHook(selectedPoint: IGate | null) {
+  function updateSelectedPointHook(selectedPoint: NullableIGate | null) {
     dispatch(updateSelectedPoint(selectedPoint));
   }
 

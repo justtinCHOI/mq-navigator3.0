@@ -116,8 +116,8 @@ export enum SectionData {
 export interface PlaybarState {
   currentTime: string;
   isLive: boolean; // isLive 상태 추가
-  selectedTime: string;
-  selectedPoint: IGate | null;
+  selectedTime: string | null;
+  selectedPoint: NullableIGate | null;
   firstGate: IGate | null;
   lastGate: IGate | null;
   previousGateBasedOnSelected: IGate | null;
@@ -131,4 +131,12 @@ export interface PlaybarState {
 export interface MarkerPosition {
   lat: number;
   lng: number;
+}
+
+export interface NullableIGate {
+  id: number;
+  sequence: number;
+  time: string | null; //ISO String
+  coordinate: Coordinate | null;
+  traveledDistance: number | null;
 }

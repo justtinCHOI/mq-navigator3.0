@@ -4,7 +4,7 @@ import { updateGatesAsync } from '@slices/gatesSlice';
 import { Coordinate, IGate } from '@typings/db';
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
-import { calculateDistance } from '@utils/physicsUtil';
+import { calculateCoordinate } from '@utils/physicsUtil';
 
 function UseCustomGates() {
   const gatesState = useSelector((state: RootState) => state.gatesSlice);
@@ -27,7 +27,7 @@ function UseCustomGates() {
         return { ...gate, traveledDistance: 0 };
       } else {
         const prevGate = gatesState[index - 1];
-        const distance = calculateDistance(prevGate.coordinate, gate.coordinate);
+        const distance = calculateCoordinate(prevGate.coordinate, gate.coordinate);
         accumulatedDistance += distance;
         console.log('updateTravledDistance', index, accumulatedDistance);
         return { ...gate, traveledDistance: accumulatedDistance };

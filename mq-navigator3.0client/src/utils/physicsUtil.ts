@@ -1,7 +1,7 @@
-import { Coordinate, IGate } from '@typings/db';
+import { Coordinate, IGate, NullableIGate } from '@typings/db';
 
 // 두 좌표 간 거리 계산 함수 (피타고라스 정리 사용)
-export function calculateDistance(coord1: Coordinate, coord2: Coordinate) {
+export function calculateCoordinate(coord1: Coordinate, coord2: Coordinate) {
   const xDiff = coord2.latitude - coord1.latitude;
   const yDiff = coord2.longitude - coord1.longitude;
   return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
@@ -41,11 +41,14 @@ export function transformTimeToPoint(gatesState: IGate[], selectedTime: string) 
 }
 
 // `selectedPoint`에 맞는 `selectedTime`을 계산하는 함수
-export function transformPointToTime(gatesState: IGate[], selectedPoint: IGate | null) {
+export function transformPointToTime(gatesState: IGate[], selectedPoint: NullableIGate | null) {
   if (selectedPoint == null) {
-    return '';
+    return null;
   }
   const selectedTraveledDistance = selectedPoint.traveledDistance;
+  if (selectedTraveledDistance == null) {
+    return null;
+  }
   const { timeExistedForwardGateWithTraveledDistance, timeExistedBackwardGateWithTraveledDistance } =
     findTimeExistedForwardAndBackwardGateWithTraveledDistance(gatesState, selectedTraveledDistance);
 

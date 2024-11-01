@@ -4,13 +4,16 @@ import { ScrollZone } from '@pages/workspace/Analyze/styles';
 import '../../../index.css';
 import { Content, ContentLine, ContentLineText } from '@components/Playbar/styles';
 import EachDisplay from '@components/Analyze/EachDisplay/EachDisplay';
+import useCustomSetting from '@hooks/useCustomSetting';
 const DisplayList = () => {
+  const { settingState } = useCustomSetting();
+  const { displaySections, sectionDatas, speedPredictionInterval } = settingState;
 
   return (
     <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '60px' }}>
         <ContentLine>
-          <ContentLineText className="width100px">Gate Range</ContentLineText>
+          <ContentLineText className="width300px">Gate Range</ContentLineText>
           <ContentLineText className="flex">
             Time
             <br />
@@ -35,12 +38,15 @@ const DisplayList = () => {
       </Content>
       <ScrollZone style={{ height: 'calc((100vh - 126px) / 2) - 60px' }}>
         <Scrollbars>
-          {Array.from({ length: 10 }, (_, index) => (
-            <EachDisplay key={index + 1} />
+          {displaySections.map((displaySection, index) => (
+            <EachDisplay
+              key={index + 1}
+              start={displaySection.start}
+              end={displaySection.end}
+              sectionDatas={sectionDatas}
+              speedPredictionInterval={speedPredictionInterval}
+            />
           ))}
-          {/*{gatesState.map((gateState, index) => (*/}
-          {/*  <EachDisplay key={index + 1} gateState={gateState} />*/}
-          {/*))}*/}
         </Scrollbars>
       </ScrollZone>
     </Content>
