@@ -11,14 +11,15 @@ import {
   SelectOption,
 } from '@components/Playbar/styles';
 import '../../../index.css';
-import { Location, NullableIGate } from '@typings/db';
+import { NullableIGate } from '@typings/db';
 import { useParams } from 'react-router';
 import useCustomGates from '@hooks/useCustomGates';
 import useCustomWorkspace from '@hooks/useCustomWorkspace';
+import workspace from '@pages/workspace';
 
 const GateList = () => {
   const { gatesState, updateGatesHook } = useCustomGates();
-  const { workspaceState } = useCustomWorkspace();
+  const { workspaceState, postRouteAsyncHook } = useCustomWorkspace();
   const { routes, route } = workspaceState;
   const [updateGatesState, setUpdateGatesState] = useState<NullableIGate[]>([]);
   const [isModify, setIsModify] = useState<boolean>(false);
@@ -28,7 +29,17 @@ const GateList = () => {
     setUpdateGatesState(gatesState); // 초기 상태 설정
   }, [gatesState]);
 
-  const onChangeToModify = () => setIsModify(true);
+  // routes 배열에 첫 번째 route를 초기값으로 설정 (필요시)
+  useEffect(() => {
+    if (!workspaceState.route && routes.length > 0) {
+      postRouteAsyncHook(routes[0]);
+    }
+  }, [workspaceState.route, routes, postRouteAsyncHook]);
+
+  const onChangeToModify = () => {
+    setIsModify(true);
+    console.log('workspaceState.route : ', workspaceState.route);
+  };
 
   function onSaveGateList() {
     if (url) {
@@ -41,19 +52,26 @@ const GateList = () => {
     setUpdateGatesState((prev) => prev.map((gate, i) => (i === index ? updatedGate : gate)));
   };
 
-  const changeRoutes = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    handleSettingChange(e.target.value as Location);
+  const changeRoute = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const routeId = e.target.value;
+
+    const selectedRoute = routes.find((route) => route.id.toString() === routeId);
+
+    if (selectedRoute) {
+      postRouteAsyncHook(selectedRoute);
+    }
   };
 
   return (
     <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '120px' }}>
         <ContentLine style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <SelectOption style={{ margin: '0 auto' }} value={'Route011'} onChange={changeRoutes} disabled={!isModify}>
-            <option value="Route011">Route011</option>
-            <option value="Route012">Route012</option>
-            <option value="Route013">Route013</option>
-            <option value="Route014">Route014</option>
+          <SelectOption
+            style={{ margin: '0 auto' }}
+            value={workspaceState.route?.id || ''}
+            onChange={changeRoute}
+            disabled={!isModify}
+          >
             {routes.map((route, index) => (
               <option key={index} value={route.id}>
                 {route.name}

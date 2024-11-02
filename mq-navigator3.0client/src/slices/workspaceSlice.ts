@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getWorkspace, postAddWorkspaceMember, postCreateWorkspace, updateWorkspace } from '@api/workspaceApi';
+import {
+  getWorkspace,
+  postAddWorkspaceMember,
+  postCreateWorkspace,
+  postRoute,
+  updateWorkspace,
+} from '@api/workspaceApi';
 import { updateMemberWorkspaces } from '@slices/memberSlice';
 import { IRoute, IWorkspace } from '@typings/db';
 
@@ -50,6 +56,14 @@ export const postAddWorkspaceMemberAsync = createAsyncThunk(
   },
 );
 
+// 작업이 완료된 후 상태를 업데이트
+export const postRouteAsync = createAsyncThunk(
+  'postRouteAsync',
+  async ({ workspaceUrl, route }: { workspaceUrl: string; route: IRoute }) => {
+    return postRoute(workspaceUrl, route);
+  },
+);
+
 // 워크스페이스 Slice 정의
 const workspaceSlice = createSlice({
   name: 'workspaceSlice',
@@ -58,6 +72,9 @@ const workspaceSlice = createSlice({
     // routes 업데이트 액션
     updateRoutes: (state, action: PayloadAction<IRoute[]>) => {
       state.routes = action.payload;
+    },
+    updateRoute: (state, action: PayloadAction<IRoute>) => {
+      state.route = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -83,6 +100,10 @@ const workspaceSlice = createSlice({
         console.log('postAddWorkspaceMemberAsync.fulfilled');
         return action.payload; // 업데이트된 워크스페이스 상태로 덮어쓰기
       })
+      .addCase(postRouteAsync.fulfilled, (state, action: PayloadAction<IRoute>) => {
+        console.log('postRouteAsync.fulfilled');
+        state.route = action.payload;
+      })
       .addCase(updateWorkspaceStateAsync.rejected, () => {
         console.log('updateWorkspaceStateAsync.rejected');
       })
@@ -97,5 +118,7 @@ const workspaceSlice = createSlice({
       });
   },
 });
+
+export const { updateRoutes, updateRoute } = workspaceSlice.actions;
 
 export default workspaceSlice.reducer;

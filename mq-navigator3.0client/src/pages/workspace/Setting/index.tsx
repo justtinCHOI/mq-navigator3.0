@@ -19,7 +19,7 @@ const Setting = () => {
   const [isModifiable, setIsModifiable] = useState<boolean>(false);
   const [updateSettingState, setUpdateSettingState] = useState<ISetting>(settingState);
   const { url } = useParams<{ url: string }>();
-  const { workspaceState, updateWorkspaceHook } = useCustomWorkspace();
+  const { workspaceState, updateWorkspaceAsyncHook } = useCustomWorkspace();
   const [updateRoutesState, setUpdateRoutesState] = useState<IRoute[]>(workspaceState.routes);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Setting = () => {
     if (url && updateSettingState) {
       updateSettingHook(url, updateSettingState); // 수정된 상태 전송 및 리덕스 업데이트
       const newWorkspace: IWorkspace = { ...workspaceState, routes: updateRoutesState };
-      updateWorkspaceHook(newWorkspace);
+      updateWorkspaceAsyncHook(newWorkspace);
     }
     setIsModifiable(false); // 수정 불가 상태로 변경
   };

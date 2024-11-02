@@ -1,6 +1,6 @@
 import { API_SERVER_HOST } from '@api/memberApi';
 import jwtAxios from '@utils/jwtUtil';
-import { IWorkspace } from '@typings/db';
+import { IRoute, IWorkspace } from '@typings/db';
 
 const host = `${API_SERVER_HOST}/api/workspace`;
 
@@ -24,6 +24,12 @@ export const postCreateWorkspace = async (workspaceCreateParam: { name: string; 
 
 export const postAddWorkspaceMember = async (workspaceUrl: string, memberAddParam: string) => {
   const res = await jwtAxios.post(`${host}/${workspaceUrl}/members`, memberAddParam);
+
+  return res.data;
+};
+
+export const postRoute = async (workspaceUrl: string, route: IRoute) => {
+  const res = await jwtAxios.post(`${host}/${workspaceUrl}/route`, route);
 
   return res.data;
 };

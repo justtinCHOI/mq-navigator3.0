@@ -1,6 +1,9 @@
 import {
   postAddWorkspaceMemberAsync,
   postCreateWorkspaceAsync,
+  postRouteAsync,
+  updateRoute,
+  updateRoutes,
   updateWorkspaceAsync,
   updateWorkspaceStateAsync,
 } from '@slices/workspaceSlice';
@@ -8,11 +11,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
-import { IWorkspace } from '@typings/db';
+import { IRoute, IWorkspace } from '@typings/db';
 
 const useCustomWorkspace = () => {
   // 이하 redux
-  const workspaces = useSelector((state: RootState) => state.workspaceSlice);
   const dispatch: AppDispatch = useDispatch();
   const { url } = useParams<{ url: string }>(); // URL에서 워크스페이스의 URL 추출
   const memberState = useSelector((state: RootState) => state.memberSlice); // memberSlice에서 상태 가져오기
@@ -36,16 +38,33 @@ const useCustomWorkspace = () => {
     }
   }, [url, memberState?.workspaces, dispatch]);
 
-  const updateWorkspaceHook = (newWorkspace: IWorkspace) => {
+  const updateWorkspaceAsyncHook = (newWorkspace: IWorkspace) => {
     dispatch(updateWorkspaceAsync(newWorkspace));
   };
 
+  function postRouteAsyncHook(route: IRoute) {
+    const workspaceUrl = url;
+    if (workspaceUrl) {
+      dispatch(postRouteAsync({ workspaceUrl, route }));
+    }
+  }
+
+  function updateRoutesHook(route: IRoute[]) {
+    dispatch(updateRoutes(route));
+  }
+
+  function updateRouteHook(route: IRoute) {
+    dispatch(updateRoute(route));
+  }
+
   return {
     workspaceState,
-    workspaces,
     postCreateWorkspace,
     postAddWorkspaceMember,
-    updateWorkspaceHook,
+    updateWorkspaceAsyncHook,
+    postRouteAsyncHook,
+    updateRoutesHook,
+    updateRouteHook,
   };
 };
 export default useCustomWorkspace;

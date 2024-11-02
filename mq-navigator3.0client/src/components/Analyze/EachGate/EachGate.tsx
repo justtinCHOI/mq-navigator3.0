@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Content,
   ContentLine,
@@ -122,16 +122,11 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
     <Content>
       <ContentLine>
         <ContentLineText className="width70px">{keyValue}</ContentLineText>
-        <ContentLineInput
-          className="width120px"
-          value={time || 'null'}
-          onChange={handleTimeChange}
-          disabled={!isModify}
-        />
+        <ContentLineInput className="width120px" value={time || ''} onChange={handleTimeChange} disabled={!isModify} />
         {/* Latitude Direction */}
         <SelectOption
           className="width50px"
-          value={latitude !== null ? Math.abs(latitude) : ''}
+          value={longDirection || ''}
           onChange={handleLatDirectionChange}
           disabled={!isModify}
         >
@@ -142,7 +137,7 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
         {/* Latitude */}
         <ContentLineInput
           className="flex"
-          value={longitude !== null ? Math.abs(longitude) : ''}
+          value={latitude !== null ? Math.abs(latitude) : ''}
           onChange={handleLatitudeChange}
           disabled={!isModify}
         />
@@ -150,7 +145,7 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
         {/* Longitude Direction */}
         <SelectOption
           className="width50px"
-          defaultValue={longDirection || 'null'}
+          value={longDirection || ''}
           onChange={handleLongDirectionChange}
           disabled={!isModify}
         >
@@ -161,7 +156,7 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
         {/* Longitude */}
         <ContentLineInput
           className="flex"
-          defaultValue={longitude ? Math.abs(longitude) : 'null'}
+          value={longitude !== null ? Math.abs(longitude) : ''}
           onChange={handleLongitudeChange}
           disabled={!isModify}
         />
