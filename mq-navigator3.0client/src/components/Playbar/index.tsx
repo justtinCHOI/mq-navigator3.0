@@ -42,9 +42,9 @@ const Playbar = () => {
   const [playSpeed, setPlaySpeed] = useState<number>(1);
   const [totalDistance, setTotalDistance] = useState(0);
   const [progressBarWidth, setProgressBarWidth] = useState<number>(0);
+  const [progressBarValue, setProgressBarValue] = useState<number>(0);
 
   // initial 값은 selectedPoint, firstGate, lastGate  가 있어야 한다.
-  // selectedPoint 가 변경하는 것들 : selectedTime ~~GateBasedOnSelected, ...
   // gatesState 가 변경하는 것 들 :  changeSelectedPoint() [selectedPoint, selectedTime,  ~~GateBasedOnSelected, ...],
   //                               changeGatesBasedOnCurrent() [firstGate, lastGate, ~~BasedOnCurrent, ... ]
 
@@ -56,6 +56,14 @@ const Playbar = () => {
       changeGatesBasedOnCurrent();
     }
   }, [gatesState]);
+
+  // progressBar 값  업데이트
+  useEffect(() => {
+    if (playbarState.selectedPoint?.traveledDistance != null && totalDistance > 0) {
+      const newValue = (playbarState.selectedPoint.traveledDistance / totalDistance) * 100;
+      setProgressBarValue(newValue);
+    }
+  }, [playbarState.selectedPoint?.traveledDistance, totalDistance]);
 
   // 재생시 1초마다 selectedTime 변경
   useEffect(() => {
@@ -250,11 +258,12 @@ const Playbar = () => {
           <ContentLineDiv className={'flex width100 relative shortenHeight'}>
             <ProgressBar
               type="range"
-              defaultValue={
-                playbarState.selectedPoint?.traveledDistance
-                  ? (playbarState.selectedPoint.traveledDistance / totalDistance) * 100
-                  : 0
-              }
+              // defaultValue={
+              //   playbarState.selectedPoint?.traveledDistance
+              //     ? (playbarState.selectedPoint.traveledDistance / totalDistance) * 100
+              //     : 0
+              // }
+              value={progressBarValue} // progressBar 값 설정
               max="100"
               onClick={handleProgressBarClick}
             />

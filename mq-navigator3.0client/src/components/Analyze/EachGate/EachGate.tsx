@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Content,
   ContentLine,
@@ -32,6 +32,19 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
   const [longDirection, setLongDirection] = useState<string | null>(
     gateState.coordinate?.longitude ? (gateState.coordinate.longitude >= 0 ? 'east' : 'west') : null,
   );
+
+  useEffect(() => {
+    setTime(gateState.time ? dateToString(new Date(gateState.time)) : null);
+    setLatitude(gateState.coordinate ? gateState.coordinate.latitude : null);
+    setLongitude(gateState.coordinate ? gateState.coordinate.longitude : null);
+    if (gateState.coordinate?.latitude !== null && gateState.coordinate?.latitude !== undefined) {
+      setLatDirection(gateState.coordinate.latitude >= 0 ? 'north' : 'south');
+    }
+
+    if (gateState.coordinate?.longitude !== null && gateState.coordinate?.longitude !== undefined) {
+      setLongDirection(gateState.coordinate.longitude >= 0 ? 'east' : 'west');
+    }
+  }, [gateState]);
 
   const handleLatitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newLatitude = Number(e.target.value);
@@ -111,14 +124,14 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
         <ContentLineText className="width70px">{keyValue}</ContentLineText>
         <ContentLineInput
           className="width120px"
-          defaultValue={time || 'null'}
+          value={time || 'null'}
           onChange={handleTimeChange}
           disabled={!isModify}
         />
         {/* Latitude Direction */}
         <SelectOption
           className="width50px"
-          defaultValue={latDirection || 'null'}
+          value={latitude !== null ? Math.abs(latitude) : ''}
           onChange={handleLatDirectionChange}
           disabled={!isModify}
         >
@@ -129,7 +142,7 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
         {/* Latitude */}
         <ContentLineInput
           className="flex"
-          defaultValue={latitude ? Math.abs(latitude) : 'null'}
+          value={longitude !== null ? Math.abs(longitude) : ''}
           onChange={handleLatitudeChange}
           disabled={!isModify}
         />

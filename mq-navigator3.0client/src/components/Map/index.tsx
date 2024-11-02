@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import useCustomGates from '@hooks/useCustomGates';
-import { MarkerPosition } from '@typings/db';
+import { MarkerPosition, NullableCoordinate } from '@typings/db';
 import useCustomPlaybar from '@hooks/useCustomPlaybar';
 
 // type latLngCoordinates = { lat: number; lng: number };
@@ -16,6 +16,8 @@ const MapComponent: React.FC = () => {
   const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
   const [initialLocation, setInitialLocation] = useState<MarkerPosition>({ lat: 37.5665, lng: 126.978 });
   const [selectedMarker, setSelectedMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+  const { selectedPoint } = playbarState;
+  const [selectedCoordinate, setSelectedCoordinate] = useState<NullableCoordinate | null>(null);
 
   // 선행조건 :
   //      gatesMarkers 는 전역 gatesState 가 없데이트가 되어있어야 가능하다.
@@ -23,8 +25,14 @@ const MapComponent: React.FC = () => {
   //      selectedPointMarker 는 selectedPoint 가 업데이트가 되어있어야 가능하다.
 
   useEffect(() => {
+    if (selectedPoint) {
+      setSelectedCoordinate(selectedPoint.coordinate);
+    }
+  }, [selectedPoint]);
+
+  useEffect(() => {
     executeAllSequentially().then();
-  }, [gatesState, playbarState.selectedPoint, mapRef]);
+  }, [gatesState, selectedCoordinate, mapRef]);
 
   const executeAllSequentially = useCallback(async () => {
     if (containerRef.current) {
@@ -33,7 +41,7 @@ const MapComponent: React.FC = () => {
       await updatePolyline();
       await updateSelectedPointMarker();
     }
-  }, [gatesState, playbarState.selectedPoint, mapRef]);
+  }, [gatesState, selectedCoordinate, mapRef]);
 
   const rerenderMap = useCallback(async () => {
     if (containerRef.current) {
@@ -47,7 +55,7 @@ const MapComponent: React.FC = () => {
         mapId: '70c296db922d358d',
       });
     }
-  }, [initialLocation, mapRef]);
+  }, [initialLocation]);
 
   const updateGatesMarkers = useCallback(async () => {
     if (!mapRef.current) return;
@@ -82,9 +90,6 @@ const MapComponent: React.FC = () => {
             const updatedPath = path ? [...path] : [];
             updatedPath[index] = newPosition;
             setPath(updatedPath); // 상태 업데이트
-            //
-            // updatePolyline 호출하여 새로운 경로로 polyline 업데이트
-            // updatePolyline();
           }
         });
 
@@ -116,8 +121,9 @@ const MapComponent: React.FC = () => {
 
   const updateSelectedPointMarker = useCallback(async () => {
     let newSelectedMarker: google.maps.marker.AdvancedMarkerElement | null = null;
-    if (playbarState.selectedPoint?.coordinate) {
-      const { latitude: lat, longitude: lng } = playbarState.selectedPoint.coordinate;
+    if (selectedCoordinate) {
+      console.log('updateSelectedPointMarker updated selectedCoordinate : ', selectedCoordinate);
+      const { latitude: lat, longitude: lng } = selectedCoordinate;
       if (lat && lng) {
         const markerPosition: google.maps.LatLngLiteral = createPosition(lat, lng);
 
@@ -134,7 +140,7 @@ const MapComponent: React.FC = () => {
       }
     }
     setSelectedMarker(newSelectedMarker);
-  }, [playbarState.selectedPoint, mapRef]);
+  }, [selectedCoordinate, mapRef]);
 
   function createCoordinate(latitude: number, longitude: number) {
     return { latitude: latitude, longitude: longitude };

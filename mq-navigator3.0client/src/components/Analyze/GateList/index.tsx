@@ -11,12 +11,15 @@ import {
   SelectOption,
 } from '@components/Playbar/styles';
 import '../../../index.css';
-import { NullableIGate } from '@typings/db';
+import { Location, NullableIGate } from '@typings/db';
 import { useParams } from 'react-router';
 import useCustomGates from '@hooks/useCustomGates';
+import useCustomWorkspace from '@hooks/useCustomWorkspace';
 
 const GateList = () => {
   const { gatesState, updateGatesHook } = useCustomGates();
+  const { workspaceState } = useCustomWorkspace();
+  const { routes, route } = workspaceState;
   const [updateGatesState, setUpdateGatesState] = useState<NullableIGate[]>([]);
   const [isModify, setIsModify] = useState<boolean>(false);
   const { url } = useParams<{ url: string }>();
@@ -38,23 +41,24 @@ const GateList = () => {
     setUpdateGatesState((prev) => prev.map((gate, i) => (i === index ? updatedGate : gate)));
   };
 
+  const changeRoutes = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleSettingChange(e.target.value as Location);
+  };
+
   return (
     <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '120px' }}>
         <ContentLine style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <SelectOption style={{ margin: '0 auto' }} defaultValue={'Route011'}>
-            <option value="Route011">
-              Route011
-            </option>
-            <option value="Route012">
-              Route012
-            </option>
-            <option value="Route013">
-              Route013
-            </option>
-            <option value="Route014">
-              Route014
-            </option>
+          <SelectOption style={{ margin: '0 auto' }} value={'Route011'} onChange={changeRoutes} disabled={!isModify}>
+            <option value="Route011">Route011</option>
+            <option value="Route012">Route012</option>
+            <option value="Route013">Route013</option>
+            <option value="Route014">Route014</option>
+            {routes.map((route, index) => (
+              <option key={index} value={route.id}>
+                {route.name}
+              </option>
+            ))}
           </SelectOption>
           <div style={{ display: 'inline-flex', gap: '10px' }}>
             {isModify ? (
