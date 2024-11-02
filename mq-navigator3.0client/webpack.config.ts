@@ -15,7 +15,8 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const config: Configuration = {
   name: 'mq-navigator3.0client',
   mode: isDevelopment ? 'development' : 'production',
-  devtool: !isDevelopment ? 'hidden-source-GoogleMap' : 'eval',
+  // devtool: !isDevelopment ? 'hidden-source-GoogleMap' : 'eval',
+  devtool: isDevelopment ? 'eval-source-map' : 'source-map',
   resolve: {
     alias: {
       '@api': path.resolve(__dirname, 'src/api'),

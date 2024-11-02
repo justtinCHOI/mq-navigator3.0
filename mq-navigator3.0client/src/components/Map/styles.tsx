@@ -16,3 +16,14 @@ export const InfoDiv = styled.div`
   background: #f0f0f0;
   opacity: 0.6;
 `;
+
+export const ResetButton = styled.button`
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  background: #f0f0f0;
+  opacity: 0.6;
+`;

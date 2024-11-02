@@ -42,17 +42,17 @@ const GateList = () => {
     <Content style={{ height: 'calc((100vh - 126px) / 2)' }}>
       <Content style={{ height: '120px' }}>
         <ContentLine style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <SelectOption style={{ margin: '0 auto' }}>
-            <option value="Route011" selected>
+          <SelectOption style={{ margin: '0 auto' }} defaultValue={'Route011'}>
+            <option value="Route011">
               Route011
             </option>
-            <option value="Route012" selected>
+            <option value="Route012">
               Route012
             </option>
-            <option value="Route013" selected>
+            <option value="Route013">
               Route013
             </option>
-            <option value="Route014" selected>
+            <option value="Route014">
               Route014
             </option>
           </SelectOption>

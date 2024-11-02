@@ -30,6 +30,7 @@ const playbarSlice = createSlice({
       state.currentTime = new Date().toISOString(); // 매 시간마다 업데이트
     },
     updateSelectedTime: (state, action: PayloadAction<string>) => {
+      console.log('slice selectedTime :  ', action.payload);
       state.selectedTime = action.payload;
     },
     updateSelectedPoint: (state, action: PayloadAction<NullableIGate | null>) => {

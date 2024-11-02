@@ -131,3 +131,27 @@ code {
   padding: 10px  0 !important;
   height: 30px !important;
 }
+
+.gate-tag {
+  font-size: 16px;
+  color: black;
+  padding: 5px;
+  background-color: papayawhip; /* Optional: background color for better readability */
+  border: 1px solid #ccc; /* Optional: border for the text */
+  border-radius: 4px; /* Optional: rounded corners */
+  position: absolute; /* Make the label position absolute */
+  transform: translate(-50%, -250%); /* Adjusts the position above the marker */
+  white-space: nowrap; /* Prevents text wrapping */
+}
+
+.point-tag {
+  font-size: 16px;
+  color: black;
+  padding: 5px;
+  background-color: skyblue; /* Optional: background color for better readability */
+  border: 1px solid #ccc; /* Optional: border for the text */
+  border-radius: 4px; /* Optional: rounded corners */
+  position: absolute; /* Make the label position absolute */
+  transform: translate(-50%, -150%); /* Adjusts the position above the marker */
+  white-space: nowrap; /* Prevents text wrapping */
+}

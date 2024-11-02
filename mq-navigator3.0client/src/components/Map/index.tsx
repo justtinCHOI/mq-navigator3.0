@@ -1,73 +1,103 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import useCustomGates from '@hooks/useCustomGates';
+import { MarkerPosition } from '@typings/db';
+import useCustomPlaybar from '@hooks/useCustomPlaybar';
 
 // type latLngCoordinates = { lat: number; lng: number };
 
 const MapComponent: React.FC = () => {
   const { gatesState, updateGatesWithIndex } = useCustomGates();
+  const { playbarState } = useCustomPlaybar();
   const containerRef = useRef<HTMLDivElement | null>(null); // HTMLDivElement 참조
   const mapRef = useRef<google.maps.Map | null>(null); // google.maps.Map 참조
-  const [markers, setMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const [markers, setMarkers] = useState<google.maps.marker.AdvancedMarkerElement[] | null>([]);
   const [path, setPath] = useState<google.maps.LatLngLiteral[] | null>([]);
   const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
-  const initialLocation = { lat: 37.5665, lng: 126.978 };
+  const [initialLocation, setInitialLocation] = useState<MarkerPosition>({ lat: 37.5665, lng: 126.978 });
+  const [selectedMarker, setSelectedMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+
+  // 선행조건 :
+  //      gatesMarkers 는 전역 gatesState 가 없데이트가 되어있어야 가능하다.
+  //      polyline 은 전역 path 값이 업데이트가 되어있어야 가능하다. 선행조건 : updateGatesMarkers -> path 설정
+  //      selectedPointMarker 는 selectedPoint 가 업데이트가 되어있어야 가능하다.
 
   useEffect(() => {
-    if (containerRef.current && !mapRef.current) {
-      // div 요소에 Google Map 초기화
+    executeAllSequentially().then();
+  }, [gatesState, playbarState.selectedPoint, mapRef]);
+
+  const executeAllSequentially = useCallback(async () => {
+    if (containerRef.current) {
+      await rerenderMap();
+      await updateGatesMarkers();
+      await updatePolyline();
+      await updateSelectedPointMarker();
+    }
+  }, [gatesState, playbarState.selectedPoint, mapRef]);
+
+  const rerenderMap = useCallback(async () => {
+    if (containerRef.current) {
+      setMarkers([]);
+      setPath([]);
+      setSelectedMarker(null);
       mapRef.current = new google.maps.Map(containerRef.current, {
         center: initialLocation,
-        zoom: 10,
+        zoom: 7,
         // mapId: 'd7a1d96b7d5ef0af', //나
-        mapId: '70c296db922d358d', //아빠
+        mapId: '70c296db922d358d',
       });
-      updateMapMarkers();
     }
-  }, [initialLocation]);
+  }, [initialLocation, mapRef]);
 
-  useEffect(() => {
-    if (gatesState.length && mapRef.current) {
-      updateMapMarkers();
-    }
-  }, [gatesState]);
-
-  const updateMapMarkers = useCallback(() => {
+  const updateGatesMarkers = useCallback(async () => {
     if (!mapRef.current) return;
-    setMarkers([]);
-    setPath([]);
+    let newMarkers: google.maps.marker.AdvancedMarkerElement[] = []; // 빈 배열로 초기화
+    let newPath: google.maps.LatLngLiteral[] = []; // 빈 배열로 초기화
 
     gatesState.forEach((gate, index) => {
       const { latitude: lat, longitude: lng } = gate.coordinate;
 
+      const gateTag = document.createElement('div');
+      gateTag.className = 'gate-tag';
+      gateTag.textContent = 'Gate ' + (index + 1);
+
       if (lat && lng) {
         const markerPosition: google.maps.LatLngLiteral = createPosition(lat, lng);
-        const marker = new google.maps.marker.AdvancedMarkerElement({
+        const newMarker = new google.maps.marker.AdvancedMarkerElement({
           position: markerPosition,
           map: mapRef.current,
+          content: gateTag,
           gmpDraggable: true,
-          title: `Point ${index + 1}`,
         });
 
-        marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
+        newMarker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
           const latLng = event.latLng;
           if (latLng) {
-            const newPosition = createCoordinate(latLng.lat(), latLng.lng());
-            updateGatesWithIndex(index, newPosition);
+            const newCoordinate = createCoordinate(latLng.lat(), latLng.lng());
+            updateGatesWithIndex(index, newCoordinate);
+            const newPosition = createPosition(latLng.lat(), latLng.lng());
+            setInitialLocation(newPosition);
+
+            // path 배열의 해당 마커 위치를 새로운 위치로 업데이트
+            const updatedPath = path ? [...path] : [];
+            updatedPath[index] = newPosition;
+            setPath(updatedPath); // 상태 업데이트
+            //
+            // updatePolyline 호출하여 새로운 경로로 polyline 업데이트
+            // updatePolyline();
           }
         });
 
-        markers.push(marker);
-        path?.push(markerPosition);
+        newMarkers.push(newMarker);
+        newPath.push(markerPosition);
       }
     });
 
-    if (path) {
-      updatePolyline(path);
-    }
-  }, [gatesState, markers, updateGatesWithIndex]);
+    setMarkers(newMarkers);
+    setPath(newPath);
+  }, [gatesState, path, updateGatesWithIndex, mapRef]);
 
-  const updatePolyline = (path: google.maps.LatLngLiteral[]) => {
+  const updatePolyline = useCallback(async () => {
     if (polyline) {
       polyline.setMap(null);
     }
@@ -82,7 +112,29 @@ const MapComponent: React.FC = () => {
 
     newPolyline.setMap(mapRef.current);
     setPolyline(newPolyline);
-  };
+  }, [polyline, path, mapRef]);
+
+  const updateSelectedPointMarker = useCallback(async () => {
+    let newSelectedMarker: google.maps.marker.AdvancedMarkerElement | null = null;
+    if (playbarState.selectedPoint?.coordinate) {
+      const { latitude: lat, longitude: lng } = playbarState.selectedPoint.coordinate;
+      if (lat && lng) {
+        const markerPosition: google.maps.LatLngLiteral = createPosition(lat, lng);
+
+        const pointTag = document.createElement('div');
+        pointTag.className = 'point-tag';
+        pointTag.textContent = 'Selected ';
+
+        newSelectedMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: markerPosition,
+          map: mapRef.current,
+          content: pointTag,
+          gmpDraggable: true,
+        });
+      }
+    }
+    setSelectedMarker(newSelectedMarker);
+  }, [playbarState.selectedPoint, mapRef]);
 
   function createCoordinate(latitude: number, longitude: number) {
     return { latitude: latitude, longitude: longitude };

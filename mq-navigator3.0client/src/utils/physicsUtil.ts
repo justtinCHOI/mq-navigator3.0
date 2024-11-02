@@ -53,7 +53,7 @@ export function transformPointToTime(gatesState: IGate[], selectedPoint: Nullabl
     findTimeExistedForwardAndBackwardGateWithTraveledDistance(gatesState, selectedTraveledDistance);
 
   if (timeExistedForwardGateWithTraveledDistance === null || timeExistedBackwardGateWithTraveledDistance === null) {
-    return '';
+    return null;
   }
   return findTimeWithForwardAndBackwardGateAndTime(
     timeExistedForwardGateWithTraveledDistance,

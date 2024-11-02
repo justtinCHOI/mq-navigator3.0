@@ -13,7 +13,7 @@ const UseSelectOptionGate: React.FC<UseSelectOptionGateProps> = ({ selectedLocat
   };
 
   return (
-    <SelectOption className="width300px" value={selectedLocation} onChange={changeLocation}>
+    <SelectOption className="width300px" defaultValue={selectedLocation} onChange={changeLocation}>
       <option value={Location.FIRST_GATE}>first gate</option>
       <option value={Location.LAST_GATE}>last gate</option>
       <option value={Location.PREVIOUS_GATE_BASED_ON_SELECTED}>previous gate based on selected</option>
