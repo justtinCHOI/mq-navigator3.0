@@ -1,4 +1,4 @@
-import { IGate, Location, NullableIGate, PlaybarState } from '@typings/db';
+import { Color, IGate, Location, NullableIGate, PlaybarState, ToleranceRange } from '@typings/db';
 
 export function getGateByLocation(playbarState: PlaybarState, location: Location): IGate | null {
   switch (location) {
@@ -70,4 +70,32 @@ export function calculateSpeed(startGate: NullableIGate | null, endGate: Nullabl
 
 export function formatToTwoDecimalPlaces(value: number | null): string {
   return value !== null ? value.toFixed(2) : 'null';
+}
+
+export function convertEnumColorToString(enumColor: Color): string {
+  switch (enumColor) {
+    case Color.SKY_BLUE:
+      return '#87CEEB';
+    case Color.PURPLE:
+      return '#800080';
+    case Color.LIGHT_GREEN:
+      return '#90EE90';
+    case Color.YELLOW:
+      return '#FFFF00';
+    default:
+      return '#999977'; // 기본 색상
+  }
+}
+
+export function convertEnumToleranceRangeToNumber(enumToleranceRange: ToleranceRange): number {
+  switch (enumToleranceRange) {
+    case ToleranceRange.FIVE:
+      return 5;
+    case ToleranceRange.TEN:
+      return 10;
+    case ToleranceRange.TWENTY:
+      return 20;
+    default:
+      return 5; // 기본값
+  }
 }

@@ -3,6 +3,8 @@ import { APIProvider } from '@vis.gl/react-google-maps';
 import useCustomGates from '@hooks/useCustomGates';
 import { MarkerPosition, NullableCoordinate } from '@typings/db';
 import useCustomPlaybar from '@hooks/useCustomPlaybar';
+import useCustomSetting from '@hooks/useCustomSetting';
+import { calculateSpeed, convertEnumColorToString, convertEnumToleranceRangeToNumber } from '@utils/displayUtil';
 
 // type latLngCoordinates = { lat: number; lng: number };
 
@@ -14,10 +16,13 @@ const MapComponent: React.FC = () => {
   const [markers, setMarkers] = useState<google.maps.marker.AdvancedMarkerElement[] | null>([]);
   const [path, setPath] = useState<google.maps.LatLngLiteral[] | null>([]);
   const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
+  const [polylines, setPolylines] = useState<google.maps.Polyline[] | null>(null);
   const [initialLocation, setInitialLocation] = useState<MarkerPosition>({ lat: 37.5665, lng: 126.978 });
   const [selectedMarker, setSelectedMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null);
   const { selectedPoint } = playbarState;
   const [selectedCoordinate, setSelectedCoordinate] = useState<NullableCoordinate | null>(null);
+  const { settingState } = useCustomSetting();
+  const { colorSetting, toleranceRange } = settingState;
 
   // 선행조건 :
   //      gatesMarkers 는 전역 gatesState 가 없데이트가 되어있어야 가능하다.
@@ -28,20 +33,21 @@ const MapComponent: React.FC = () => {
     if (selectedPoint) {
       setSelectedCoordinate(selectedPoint.coordinate);
     }
-  }, [selectedPoint]);
+  }, [selectedPoint, selectedCoordinate]);
 
   useEffect(() => {
     executeAllSequentially().then();
-  }, [gatesState, selectedCoordinate, mapRef]);
+  }, [gatesState, selectedCoordinate, mapRef, settingState]);
 
   const executeAllSequentially = useCallback(async () => {
     if (containerRef.current) {
       await rerenderMap();
       await updateGatesMarkers();
-      await updatePolyline();
+      // await updatePolyline();
+      await updatePolylineWithColor();
       await updateSelectedPointMarker();
     }
-  }, [gatesState, selectedCoordinate, mapRef]);
+  }, [gatesState, selectedCoordinate, mapRef, settingState]);
 
   const rerenderMap = useCallback(async () => {
     if (containerRef.current) {
@@ -119,10 +125,67 @@ const MapComponent: React.FC = () => {
     setPolyline(newPolyline);
   }, [polyline, path, mapRef]);
 
+  const updatePolylineWithColor = useCallback(async () => {
+    const newPolylines: google.maps.Polyline[] | null = [];
+
+    gatesState.forEach((gate, index) => {
+      if (index < gatesState.length - 1) {
+        const newPath = [
+          createPosition(gatesState[index].coordinate.latitude, gatesState[index].coordinate.longitude),
+          createPosition(gatesState[index + 1].coordinate.latitude, gatesState[index + 1].coordinate.longitude),
+        ];
+
+        let strokeColor = '#999977'; // 기본 색상
+
+        if (
+          gatesState[index].time !== null &&
+          gatesState[index + 1].time !== null &&
+          gatesState[index].traveledDistance !== null &&
+          gatesState[index + 1].traveledDistance !== null
+        ) {
+          const currentSegmentSpeed = calculateSpeed(gatesState[index], gatesState[index + 1]) as number;
+
+          if (index === 0 || !gatesState[index - 1].time === null || !gatesState[index - 1].traveledDistance === null) {
+            strokeColor = convertEnumColorToString(colorSetting.initialColor);
+          } else {
+            const previousSegmentSpeed: number = calculateSpeed(gatesState[index - 1], gatesState[index]) as number;
+            if (
+              Math.abs(currentSegmentSpeed - previousSegmentSpeed) <
+              (convertEnumToleranceRangeToNumber(toleranceRange) / 100) * currentSegmentSpeed
+            ) {
+              strokeColor = convertEnumColorToString(colorSetting.constantSpeedColor);
+            } else if (currentSegmentSpeed < previousSegmentSpeed) {
+              strokeColor = convertEnumColorToString(colorSetting.decelerationColor);
+            } else {
+              strokeColor = convertEnumColorToString(colorSetting.accelerationColor);
+            }
+          }
+        }
+
+        const polyline = new google.maps.Polyline({
+          path: newPath,
+          geodesic: true,
+          strokeColor: strokeColor,
+          strokeOpacity: 1.0,
+          strokeWeight: 5,
+        });
+
+        polyline.setMap(mapRef.current);
+        newPolylines.push(polyline);
+      }
+    });
+
+    setPolylines(newPolylines);
+  }, [settingState, gatesState, toleranceRange]);
+
+  // colorSetting.accelerationColor,
+  //   colorSetting.constantSpeedColor,
+  //   colorSetting.decelerationColor,
+  //   colorSetting.initialColor,
+
   const updateSelectedPointMarker = useCallback(async () => {
     let newSelectedMarker: google.maps.marker.AdvancedMarkerElement | null = null;
     if (selectedCoordinate) {
-      console.log('updateSelectedPointMarker updated selectedCoordinate : ', selectedCoordinate);
       const { latitude: lat, longitude: lng } = selectedCoordinate;
       if (lat && lng) {
         const markerPosition: google.maps.LatLngLiteral = createPosition(lat, lng);

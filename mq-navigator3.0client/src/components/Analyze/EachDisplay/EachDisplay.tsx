@@ -9,7 +9,7 @@ import {
   calculateSpeed,
   calculateTime,
   formatToTwoDecimalPlaces,
-  getGateByLocation
+  getGateByLocation,
 } from '@utils/displayUtil';
 
 interface EachDisplayDataProps {

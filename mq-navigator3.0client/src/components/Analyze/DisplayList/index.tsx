@@ -15,24 +15,29 @@ const DisplayList = () => {
         <ContentLine>
           <ContentLineText className="width300px">Gate Range</ContentLineText>
           <ContentLineText className="flex">
-            Time
+            Distance
             <br />
             (m)
           </ContentLineText>
           <ContentLineText className="flex">
             Elasped Time
             <br />
-            hhmmss
+            (hhmmss)
           </ContentLineText>
           <ContentLineText className="flex">
             Estimated Time
             <br />
-            hhmmss
+            (hhmmss)
           </ContentLineText>
           <ContentLineText className="flex">
-            Speed
+            Elasped Speed
             <br />
-            km/h
+            (km/h)
+          </ContentLineText>
+          <ContentLineText className="flex">
+            Estimated Speed
+            <br />
+            (km/h)
           </ContentLineText>
         </ContentLine>
       </Content>
