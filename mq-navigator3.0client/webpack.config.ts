@@ -93,10 +93,10 @@ const config: Configuration = {
     proxy: [
       {
         context: ['/api'],
-        target: 'http://localhost:8080',
+        // target: 'http://localhost:8080',
         // target: 'http://백엔드_IP:8080',
         // target: 'https://백엔드_IP:8080',
-        // target: process.env.REACT_APP_API_SERVER || 'http://localhost:8080',
+        target: process.env.REACT_APP_API_SERVER || 'http://localhost:8080',
         changeOrigin: true,
       },
     ],
