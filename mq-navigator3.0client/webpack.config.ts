@@ -65,6 +65,10 @@ const config: Configuration = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.REACT_APP_API_SERVER': JSON.stringify(process.env.REACT_APP_API_SERVER),
+    }),
     new ForkTsCheckerWebpackPlugin({
       async: false,
       // eslint: {
@@ -87,8 +91,10 @@ const config: Configuration = {
       {
         context: ['/api'],
         target: 'http://localhost:8080',
+        // target: 'http://백엔드_IP:8080',
+        // target: 'https://백엔드_IP:8080',
+        // target: process.env.REACT_APP_API_SERVER || 'http://localhost:8080',
         changeOrigin: true,
-        // ws: true,
       },
     ],
   },
