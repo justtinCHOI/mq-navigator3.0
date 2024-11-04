@@ -1,14 +1,16 @@
 import path from 'path';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
+import dotenv from 'dotenv';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
+
+dotenv.config(); // dotenv 설정 적용
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -75,7 +77,8 @@ const config: Configuration = {
       //   files: "./src/**/*",
       // },
     }),
-    new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
+    // new webpack.EnvironmentPlugin({ NODE_ENV: isDevelopment ? 'development' : 'production' }),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
   ],
   output: {
     path: path.join(__dirname, 'public/dist'), // public 폴더 내에 dist 폴더 생성
