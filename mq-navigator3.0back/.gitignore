@@ -1,10 +1,10 @@
 HELP.md
 .gradle
 build/
+!/build/libs/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-!/build/libs/mqnavigator-0.0.1-SNAPSHOT.jar
 
 ### STS ###
 .apt_generated
