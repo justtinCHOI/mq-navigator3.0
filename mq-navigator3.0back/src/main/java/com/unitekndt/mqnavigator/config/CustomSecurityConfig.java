@@ -73,7 +73,8 @@ public class CustomSecurityConfig {
 //        configuration.setAllowedOrigins(List.of("https://localhost:3090"));
 //        configuration.setAllowedOriginPatterns(List.of("*")); // 모든 출처 허용
 //        configuration.setAllowedOriginPatterns(List.of("http://프론트엔드_IP:포트")); // http 프론트엔드 주소만 허용
-        configuration.setAllowedOriginPatterns(List.of("https://158.247.209.136")); // https 프론트엔드 주소만 허용
+//        configuration.setAllowedOriginPatterns(List.of("https://158.247.209.136")); // https 프론트엔드 주소만 허용
+        configuration.setAllowedOriginPatterns(List.of("https://www.mq-navigator.store"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
