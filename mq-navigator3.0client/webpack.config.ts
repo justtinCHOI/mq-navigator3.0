@@ -96,7 +96,7 @@ const config: Configuration = {
         // target: 'http://localhost:8080',
         // target: 'http://백엔드_IP:8080',
         // target: 'https://백엔드_IP:8080',
-        target: process.env.REACT_APP_API_SERVER || 'https://localhost:8080',
+        target: process.env.REACT_APP_API_SERVER || 'http://localhost:8080',
         changeOrigin: true,
         secure: true, // HTTPS 보안을 위해 true로 설정
       },
