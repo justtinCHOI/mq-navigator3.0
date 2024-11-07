@@ -1,8 +1,7 @@
 import axios from 'axios';
 import jwtAxios from '@utils/jwtUtil';
 
-// export const API_SERVER_HOST = 'http://localhost:8080';
-export const API_SERVER_HOST = process.env.REACT_APP_API_SERVER || 'http://localhost:8080';
+export const API_SERVER_HOST = process.env.REACT_APP_API_SERVER_PROD || process.env.REACT_APP_API_SERVER_DEV;
 
 const host = `${API_SERVER_HOST}/api/member`;
 

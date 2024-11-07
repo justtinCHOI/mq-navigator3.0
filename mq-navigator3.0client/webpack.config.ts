@@ -68,8 +68,9 @@ const config: Configuration = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.REACT_APP_API_SERVER': JSON.stringify(process.env.REACT_APP_API_SERVER),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || (isDevelopment ? 'development' : 'production')),
+      'process.env.REACT_APP_API_SERVER_DEV': JSON.stringify(process.env.REACT_APP_API_SERVER_DEV),
+      'process.env.REACT_APP_API_SERVER_PROD': JSON.stringify(process.env.REACT_APP_API_SERVER_PROD),
     }),
     new ForkTsCheckerWebpackPlugin({
       async: false,
@@ -93,12 +94,13 @@ const config: Configuration = {
     proxy: [
       {
         context: ['/api'],
-        // target: 'http://localhost:8080',
-        // target: 'http://백엔드_IP:8080',
-        // target: 'https://백엔드_IP:8080',
-        target: process.env.REACT_APP_API_SERVER || 'http://localhost:8080',
+        target:
+          process.env.NODE_ENV === 'production'
+            ? process.env.REACT_APP_API_SERVER_PROD
+            : process.env.REACT_APP_API_SERVER_DEV,
         changeOrigin: true,
-        secure: true, // HTTPS 보안을 위해 true로 설정
+        secure: !isDevelopment,
+        ...(isDevelopment ? {} : { router: { '/api': 'http://158.247.239.88:8080' } }),
       },
     ],
   },

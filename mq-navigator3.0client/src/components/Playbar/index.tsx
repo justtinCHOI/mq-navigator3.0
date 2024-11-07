@@ -243,12 +243,10 @@ const Playbar = () => {
             playSpeed {playSpeed ? playSpeed : 'null'}
           </ContentLineText>
         </ContentLine>
-        <SelectOption onChange={handleSpeedChange}>
+        <SelectOption onChange={handleSpeedChange} defaultValue="1">
           <option value="0.25">X 0.25</option>
           <option value="0.5">X 0.5</option>
-          <option value="1" selected>
-            X 1.0
-          </option>
+          <option value="1">X 1.0</option>
           <option value="2">X 2.0</option>
           <option value="4">X 4.0</option>
         </SelectOption>
