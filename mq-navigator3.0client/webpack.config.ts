@@ -100,6 +100,7 @@ const config: Configuration = {
             : process.env.REACT_APP_API_SERVER_DEV,
         changeOrigin: true,
         secure: !isDevelopment,
+        ws: true,
         ...(isDevelopment ? {} : { router: { '/api': 'http://158.247.239.88:8080' } }),
       },
     ],

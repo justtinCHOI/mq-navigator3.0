@@ -1,12 +1,14 @@
 import axios from 'axios';
 import jwtAxios from '@utils/jwtUtil';
 
-export const API_SERVER_HOST = process.env.REACT_APP_API_SERVER_PROD || process.env.REACT_APP_API_SERVER_DEV;
+export const API_SERVER_HOST =
+  process.env.NODE_ENV !== 'production' ? process.env.REACT_APP_API_SERVER_DEV : process.env.REACT_APP_API_SERVER_PROD;
 
 const host = `${API_SERVER_HOST}/api/member`;
 
 export const loginPost = async (loginParam: { email: string; password: string }) => {
   console.log(' loginPost loginParam : ', loginParam);
+  console.log('   process.env.NODE_ENV : ', process.env.NODE_ENV);
 
   const header = { headers: { 'Content-Type': 'x-www-form-urlencoded' } };
 

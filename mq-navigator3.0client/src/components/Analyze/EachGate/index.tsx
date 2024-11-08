@@ -14,11 +14,11 @@ import { dateToString, stringToDate } from '@utils/dateUtil';
 interface EachGateProps {
   gateState: NullableIGate;
   keyValue: number;
-  isModify: boolean; // 수정 가능 상태를 외부로부터 전달받음
+  isModify: boolean;
   onGateChange: (updatedGate: NullableIGate) => void;
 }
 
-const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGateChange }) => {
+const Index: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGateChange }) => {
   // const [id, setId] = useState(gateState.id);
   // const [sequence, setSequence] = useState(gateState.sequence);
   const [time, setTime] = useState<string | null>(gateState.time ? dateToString(new Date(gateState.time)) : null);
@@ -40,11 +40,10 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
     if (gateState.coordinate?.latitude !== null && gateState.coordinate?.latitude !== undefined) {
       setLatDirection(gateState.coordinate.latitude >= 0 ? 'north' : 'south');
     }
-
     if (gateState.coordinate?.longitude !== null && gateState.coordinate?.longitude !== undefined) {
       setLongDirection(gateState.coordinate.longitude >= 0 ? 'east' : 'west');
     }
-  }, [gateState]);
+  }, [gateState.coordinate, gateState.time]);
 
   const handleLatitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newLatitude = Number(e.target.value);
@@ -79,37 +78,41 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
   };
 
   const handleLatDirectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLatDirection(e.target.value);
-    let newLatitude = latitude;
-    if (longDirection == 'south' && newLatitude) {
-      newLatitude = -1 * Math.abs(newLatitude);
+    const newDirection = e.target.value;
+    setLatDirection(newDirection); // 상태 업데이트
+
+    if (latitude !== null) {
+      const updatedLatitude = newDirection === 'south' ? -Math.abs(latitude) : Math.abs(latitude);
+      setLatitude(updatedLatitude);
+      console.log('latitude : ', updatedLatitude);
+      onGateChange({
+        ...gateState,
+        coordinate: {
+          ...gateState.coordinate,
+          latitude: updatedLatitude,
+          longitude: gateState.coordinate?.longitude ?? null,
+        },
+      });
     }
-    setLatitude(newLatitude);
-    onGateChange({
-      ...gateState,
-      coordinate: {
-        ...gateState.coordinate,
-        latitude: newLatitude,
-        longitude: gateState.coordinate?.longitude ?? null,
-      },
-    });
   };
 
   const handleLongDirectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLongDirection(e.target.value);
-    let newLongitude = longitude;
-    if (longDirection == 'south' && newLongitude) {
-      newLongitude = -1 * Math.abs(newLongitude);
+    const newDirection = e.target.value;
+    setLongDirection(newDirection);
+
+    if (longitude !== null) {
+      const updatedLongitude = newDirection === 'west' ? -Math.abs(longitude) : Math.abs(longitude);
+      setLongitude(updatedLongitude);
+      console.log('longitude : ', updatedLongitude);
+      onGateChange({
+        ...gateState,
+        coordinate: {
+          ...gateState.coordinate,
+          latitude: gateState.coordinate?.latitude ?? null,
+          longitude: updatedLongitude,
+        },
+      });
     }
-    setLatitude(newLongitude);
-    onGateChange({
-      ...gateState,
-      coordinate: {
-        ...gateState.coordinate,
-        longitude: newLongitude,
-        latitude: gateState.coordinate?.latitude ?? null,
-      },
-    });
   };
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,10 +126,11 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
       <ContentLine>
         <ContentLineText className="width70px">{keyValue}</ContentLineText>
         <ContentLineInput className="width120px" value={time || ''} onChange={handleTimeChange} disabled={!isModify} />
+
         {/* Latitude Direction */}
         <SelectOption
           className="width50px"
-          value={longDirection || ''}
+          value={latDirection || ''}
           onChange={handleLatDirectionChange}
           disabled={!isModify}
         >
@@ -168,4 +172,4 @@ const EachGate: React.FC<EachGateProps> = ({ gateState, keyValue, isModify, onGa
   );
 };
 
-export default EachGate;
+export default Index;

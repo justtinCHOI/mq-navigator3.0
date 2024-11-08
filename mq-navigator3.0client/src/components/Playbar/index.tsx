@@ -212,15 +212,15 @@ const Playbar = () => {
     return newTime.toISOString();
   }, []);
 
-  const handleResetSelectedTime = useCallback(() => {
-    const newTime = new Date().toISOString();
-    updateSelectedTimeHook(newTime);
-    console.log('resetButton newTime : ', newTime);
-  }, [updateSelectedTimeHook]);
+  // const handleResetSelectedTime = useCallback(() => {
+  //   const newTime = new Date().toISOString();
+  //   updateSelectedTimeHook(newTime);
+  //   console.log('resetButton newTime : ', newTime);
+  // }, [updateSelectedTimeHook]);
 
   return (
     <PlaybarContainer>
-      <ResetButton onClick={handleResetSelectedTime}></ResetButton>
+      {/*<ResetButton onClick={handleResetSelectedTime}></ResetButton>*/}
       <ContentLine>
         <RightContentIcon className="fa-solid fa-backward"></RightContentIcon>
         {isPlaying ? (
@@ -235,14 +235,14 @@ const Playbar = () => {
           </>
         )}
         <RightContentIcon className="fa-solid fa-forward"></RightContentIcon>
-        <ContentLine>
-          <ContentLineText className={'whiteFont margin0 padding0'}>
-            isPlaying {isPlaying ? 'true' : 'false'}
-          </ContentLineText>
-          <ContentLineText className={'whiteFont margin0 padding0'}>
-            playSpeed {playSpeed ? playSpeed : 'null'}
-          </ContentLineText>
-        </ContentLine>
+        {/*<ContentLine>*/}
+        {/*  <ContentLineText className={'whiteFont margin0 padding0'}>*/}
+        {/*    isPlaying {isPlaying ? 'true' : 'false'}*/}
+        {/*  </ContentLineText>*/}
+        {/*  <ContentLineText className={'whiteFont margin0 padding0'}>*/}
+        {/*    playSpeed {playSpeed ? playSpeed : 'null'}*/}
+        {/*  </ContentLineText>*/}
+        {/*</ContentLine>*/}
         <SelectOption onChange={handleSpeedChange} defaultValue="1">
           <option value="0.25">X 0.25</option>
           <option value="0.5">X 0.5</option>
@@ -256,11 +256,6 @@ const Playbar = () => {
           <ContentLineDiv className={'flex width100 relative shortenHeight'}>
             <ProgressBar
               type="range"
-              // defaultValue={
-              //   playbarState.selectedPoint?.traveledDistance
-              //     ? (playbarState.selectedPoint.traveledDistance / totalDistance) * 100
-              //     : 0
-              // }
               value={progressBarValue} // progressBar 값 설정
               max="100"
               onClick={handleProgressBarClick}

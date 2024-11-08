@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { ScrollZone } from '@pages/workspace/Analyze/styles';
-import EachGate from '@components/Analyze/EachGate/EachGate';
+import Index from '@components/Analyze/EachGate';
 import {
   Content,
   ContentLine,
@@ -106,7 +106,7 @@ const GateList = () => {
       <ScrollZone style={{ height: 'calc((100vh - 126px) / 2) - 120px' }}>
         <Scrollbars>
           {gatesState.map((gateState, index) => (
-            <EachGate
+            <Index
               key={index + 1}
               keyValue={index + 1}
               gateState={gateState}

@@ -54,6 +54,16 @@ const MapComponent: React.FC = () => {
       setMarkers([]);
       setPath([]);
       setSelectedMarker(null);
+      // gatesState 배열이 비어 있는지 확인
+      if (gatesState && gatesState[0] && gatesState[0].coordinate) {
+        const { latitude, longitude } = gatesState[0].coordinate;
+
+        // latitude와 longitude 값이 존재할 때만 newInitialLocation을 설정
+        if (latitude && longitude) {
+          const newInitialLocation = createPosition(latitude, longitude);
+          setInitialLocation(newInitialLocation);
+        }
+      }
       mapRef.current = new google.maps.Map(containerRef.current, {
         center: initialLocation,
         zoom: 7,
@@ -61,7 +71,7 @@ const MapComponent: React.FC = () => {
         mapId: '70c296db922d358d',
       });
     }
-  }, [initialLocation]);
+  }, [initialLocation, gatesState]);
 
   const updateGatesMarkers = useCallback(async () => {
     if (!mapRef.current) return;
@@ -177,11 +187,6 @@ const MapComponent: React.FC = () => {
 
     setPolylines(newPolylines);
   }, [settingState, gatesState, toleranceRange]);
-
-  // colorSetting.accelerationColor,
-  //   colorSetting.constantSpeedColor,
-  //   colorSetting.decelerationColor,
-  //   colorSetting.initialColor,
 
   const updateSelectedPointMarker = useCallback(async () => {
     let newSelectedMarker: google.maps.marker.AdvancedMarkerElement | null = null;
