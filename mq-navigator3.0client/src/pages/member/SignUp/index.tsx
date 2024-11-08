@@ -3,16 +3,11 @@ import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } fro
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useCustomMember from '@hooks/useCustomMember';
-import { signup } from '@api/memberApi';
-import { useDispatch } from 'react-redux';
-import { loginStateAsync } from '@slices/memberSlice';
-import { memberSliceState } from '@typings/db';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const { memberState } = useCustomMember();
+  const { doLogin, memberState, doSignup } = useCustomMember();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/workspace/mqnavigator' } };
   const { updateUrlAfterLogin } = useCustomMember();
@@ -52,20 +47,9 @@ const SignUp = () => {
         setSignUpError(false);
         setSignUpSuccess(false);
         const singupParam = { email: email, nickname: nickname, password: password };
-        signup(singupParam)
-          .then((memberState) => {
-            console.log('signup memberState : ', memberState);
-            // login이 성공한 후에 updateSlicesAfterLogin 실행
-            const member = memberState as memberSliceState;
-            // @ts-ignore
-            dispatch(loginStateAsync(member))
-              .then((result: memberSliceState) => {
-                console.log('Login succeeded', result);
-                updateUrlAfterLogin().then();
-              })
-              .catch((error: any) => {
-                console.log('Login failed', error);
-              });
+        doSignup(singupParam)
+          .then(() => {
+            updateUrlAfterLogin().then();
           })
           .catch((error) => {
             console.log(error.response?.data);
@@ -73,7 +57,7 @@ const SignUp = () => {
           });
       }
     },
-    [dispatch, email, mismatchError, nickname, password, updateUrlAfterLogin],
+    [doLogin, email, mismatchError, nickname, password, updateUrlAfterLogin],
   );
 
   useEffect(() => {

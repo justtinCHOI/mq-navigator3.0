@@ -25,57 +25,76 @@ import {
   WorkspaceWrapper,
 } from './styles';
 import useCustomMember from '@hooks/useCustomMember';
-import { postCreateWorkspace } from '@api/workspaceApi';
 import Playbar from '@components/Playbar';
 import { IWorkspace } from '@typings/db';
 import { ContentLineText, ContentRow, RightContent } from '@components/Playbar/styles';
 import useCustomPlaybar from '@hooks/useCustomPlaybar';
 import { InfoDiv } from '@components/Map/styles';
+import { AxiosError } from 'axios';
+import useCustomWorkspace from '@hooks/useCustomWorkspace';
 
 const BasicLayout = () => {
-  const { isLogin, memberState } = useCustomMember();
+  const { isLogin, memberState, doLogout, deleteSlices, moveToPath } = useCustomMember();
   const { playbarState } = useCustomPlaybar();
   const { currentTime, selectedTime, selectedPoint } = playbarState;
-  const { doLogout, moveToPath } = useCustomMember();
+  const { postCreateWorkspaceAsyncHook } = useCustomWorkspace();
 
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+  const [nameConflict, setNameConflict] = useState(false);
+  const [urlConflict, setUrlConflict] = useState(false);
 
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
 
   const onCreateWorkspace = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!newWorkspace || !newWorkspace.trim()) {
-        return;
-      }
-      if (!newUrl || !newUrl.trim()) {
-        return;
-      }
-      const workspaceCreateParam = {
-        name: newWorkspace,
-        url: newUrl,
-      };
-      postCreateWorkspace(workspaceCreateParam)
-        .then(() => {
-          setShowCreateWorkspaceModal(false);
-          setNewWorkspace('');
-          setNewUrl('');
-        })
-        .catch((error) => {
-          console.dir(error);
-          toast.error(error.response?.data, { position: 'bottom-center' });
+      if (!newWorkspace || !newWorkspace.trim()) return;
+      if (!newUrl || !newUrl.trim()) return;
+
+      try {
+        const response = await postCreateWorkspaceAsyncHook({ name: newWorkspace, url: newUrl });
+        setShowCreateWorkspaceModal(false);
+        setNewWorkspace('');
+        setNewUrl('');
+        setNameConflict(false);
+        setUrlConflict(false);
+        toast.success('Workspace created successfully', {
+          closeOnClick: true,
+          onClose: () => moveToPath(`/${response.url}`),
         });
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 409) {
+          const errorMessage = axiosError.response?.data as string;
+          if (errorMessage.includes('name')) {
+            setNameConflict(true);
+          } else if (errorMessage.includes('url')) {
+            setUrlConflict(true);
+          }
+          toast.error('Workspace name or URL already exists. Please choose a different one.');
+        } else {
+          toast.error('Failed to create workspace');
+        }
+      }
     },
-    [newWorkspace, newUrl, setNewWorkspace, setNewUrl],
+    [moveToPath, newUrl, newWorkspace, postCreateWorkspaceAsyncHook, setNewUrl, setNewWorkspace],
   );
 
-  const handleClickLogout = () => {
-    doLogout();
-    alert('로그아웃되었습니다.');
-    moveToPath('/');
-  };
+  const handleClickLogout = useCallback(async () => {
+    try {
+      await doLogout();
+      await deleteSlices();
+      toast.success('Logged out successfully', {
+        closeOnClick: true,
+      });
+      setShowUserMenu((prev) => !prev);
+      moveToPath('/');
+    } catch (error) {
+      toast.error('Failed to log out', { position: 'bottom-center' });
+    }
+  }, [doLogout, deleteSlices, moveToPath]);
 
   const onClickCreateWorkspace = useCallback(() => {
     setShowCreateWorkspaceModal(true);
@@ -173,8 +192,7 @@ const BasicLayout = () => {
               </Link>
             );
           })}
-          {/*</Link>*/}
-          <AddButton onClick={onClickCreateWorkspace}>+</AddButton>
+          {isLogin && <AddButton onClick={onClickCreateWorkspace}>+</AddButton>}
         </Workspaces>
         <CenterDiv>
           <Map />
@@ -188,11 +206,27 @@ const BasicLayout = () => {
         <form onSubmit={onCreateWorkspace}>
           <Label id="workspace-label">
             <span>워크스페이스 이름</span>
-            <Input id="workspace" value={newWorkspace} onChange={onChangeNewWorkspace} />
+            <Input
+              id="workspace"
+              value={newWorkspace}
+              onChange={(e) => {
+                onChangeNewWorkspace(e);
+                setNameConflict(false);
+              }}
+              style={{ borderColor: nameConflict ? 'red' : 'initial' }}
+            />
           </Label>
           <Label id="workspace-url-label">
             <span>워크스페이스 url</span>
-            <Input id="workspace-url" value={newUrl} onChange={onChangeNewUrl} />
+            <Input
+              id="workspace-url"
+              value={newUrl}
+              onChange={(e) => {
+                onChangeNewUrl(e);
+                setUrlConflict(false);
+              }}
+              style={{ borderColor: urlConflict ? 'red' : 'initial' }}
+            />
           </Label>
           <Button type="submit">생성하기</Button>
         </form>

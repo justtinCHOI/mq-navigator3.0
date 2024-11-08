@@ -53,7 +53,9 @@ export const updateSettingAsync = createAsyncThunk(
 const settingSlice = createSlice({
   name: 'settingSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    deleteSettingState: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getSettingAsync.fulfilled, (state, action: PayloadAction<ISetting>) => {
@@ -72,5 +74,7 @@ const settingSlice = createSlice({
       });
   },
 });
+
+export const { deleteSettingState } = settingSlice.actions;
 
 export default settingSlice.reducer;

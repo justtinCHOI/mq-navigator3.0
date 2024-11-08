@@ -59,6 +59,7 @@ const playbarSlice = createSlice({
     updateNextGateBasedOnCurrent: (state, action: PayloadAction<IGate | null>) => {
       state.nextGateBasedOnCurrent = action.payload;
     },
+    deletePlaybarState: () => initialState, // 초기 상태로 되돌리는 deleteState 리듀서 추가
   },
 });
 
@@ -76,5 +77,6 @@ export const {
   updatePreviousGateBasedOnSelected,
   updateLastGate,
   updateFirstGate,
+  deletePlaybarState,
 } = playbarSlice.actions;
 export default playbarSlice.reducer;

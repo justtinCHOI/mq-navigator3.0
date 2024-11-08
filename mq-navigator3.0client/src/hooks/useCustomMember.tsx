@@ -1,12 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router';
-import { getWorkspacesAsync, loginPostAsync, logout } from '@slices/memberSlice';
+import {
+  deleteMemberState,
+  getWorkspacesAsync,
+  loginPostAsync,
+  logoutPostAsync,
+  signupPostAsync,
+} from '@slices/memberSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-import { updateWorkspaceStateAsync } from '@slices/workspaceSlice';
+import { deleteWorkspaceState, updateWorkspaceStateAsync } from '@slices/workspaceSlice';
 import { IMember } from '@typings/db';
-import { getSettingAsync } from '@slices/settingSlice';
-import { getGatesAsync} from "@slices/gatesSlice";
+import { deleteSettingState, getSettingAsync } from '@slices/settingSlice';
+import { deleteGatesState, getGatesAsync } from '@slices/gatesSlice';
+import { deletePlaybarState } from '@slices/playbarSlice';
 
 const useCustomMember = () => {
   const navigate = useNavigate();
@@ -15,18 +22,31 @@ const useCustomMember = () => {
   const memberState = useSelector((state: RootState) => state.memberSlice);
   const isLogin = !!memberState.email; //----------로그인 여부
 
-  const doLogin = async (loginParam: { email: string; password: string }) => {
-    const action = await dispatch(loginPostAsync(loginParam));
+  const doSignup = async (singupParam: { email: string; nickname: string; password: string }) => {
+    const action = await dispatch(signupPostAsync(singupParam));
     const payload = action.payload as IMember;
-    // 워크스페이스 업데이트 액션 호출
     if (payload && payload.workspaces && payload.workspaces.length > 0) {
       const workspaceToUpdate = payload.workspaces[0];
       dispatch(updateWorkspaceStateAsync(workspaceToUpdate));
     }
     return payload;
   };
-  const doLogout = () => {
-    dispatch(logout());
+
+  const doLogin = async (loginParam: { email: string; password: string }) => {
+    const action = await dispatch(loginPostAsync(loginParam));
+    const payload = action.payload as IMember;
+    if (payload && payload.workspaces && payload.workspaces.length > 0) {
+      const workspaceToUpdate = payload.workspaces[0];
+      dispatch(updateWorkspaceStateAsync(workspaceToUpdate));
+    }
+    return payload;
+  };
+  const doLogout = async () => {
+    try {
+      await dispatch(logoutPostAsync()).unwrap();
+    } catch (error) {
+      throw new Error('로그아웃 요청에 실패했습니다.');
+    }
   };
 
   const moveToPath = (path: string) => {
@@ -52,8 +72,7 @@ const useCustomMember = () => {
         const setting = settingAction.payload;
 
         if (setting) {
-          const gatesAction = await dispatch(getGatesAsync(url));
-          const gate = gatesAction.payload;
+          await dispatch(getGatesAsync(url));
         }
       } else {
         console.error('No workspaces found or workspaces length is less than 1');
@@ -79,9 +98,18 @@ const useCustomMember = () => {
     }
   };
 
+  const deleteSlices = async () => {
+    dispatch(deleteMemberState());
+    dispatch(deletePlaybarState());
+    dispatch(deleteWorkspaceState());
+    dispatch(deleteGatesState());
+    dispatch(deleteSettingState());
+  };
+
   return {
     memberState,
     isLogin,
+    doSignup,
     doLogin,
     doLogout,
     moveToPath,
@@ -89,6 +117,7 @@ const useCustomMember = () => {
     moveToLoginReturn,
     updateSlices,
     updateUrlAfterLogin,
+    deleteSlices,
   };
 };
 

@@ -30,7 +30,6 @@ const LogIn = () => {
 
   useEffect(() => {
     if (isLogin) {
-      // navigate(from.pathname, { replace: true });
       updateUrlAfterLogin().then();
     }
   }, [isLogin, updateUrlAfterLogin]);

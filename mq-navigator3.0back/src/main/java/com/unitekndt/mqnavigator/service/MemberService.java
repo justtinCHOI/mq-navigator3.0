@@ -3,11 +3,11 @@ package com.unitekndt.mqnavigator.service;
 import com.unitekndt.mqnavigator.dto.IWorkspace;
 import com.unitekndt.mqnavigator.dto.MemberDTO;
 import com.unitekndt.mqnavigator.dto.UserRegistrationRequest;
-import com.unitekndt.mqnavigator.entity.Member;
+import com.unitekndt.mqnavigator.entity.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -17,10 +17,7 @@ public interface MemberService {
 
   List<IWorkspace> getWorkspacesByEmail(String email);
 
-  Optional<Member> getMemberById(Long id);
-
-//  Optional<Member> getMemberByEmail(String email);
-Member getMemberByEmail(String email);
+  ResponseEntity<String> logout(Member member);
 
   default MemberDTO entityToDTO(Member member) {
       return new MemberDTO(

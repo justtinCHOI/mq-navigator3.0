@@ -34,6 +34,7 @@ const gatesSlice = createSlice({
     updateAllGates: (state, action: PayloadAction<IGate[]>) => {
       return action.payload;
     },
+    deleteGatesState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -54,5 +55,5 @@ const gatesSlice = createSlice({
   },
 });
 
-export const { updateGate, updateAllGates } = gatesSlice.actions;
+export const { updateGate, updateAllGates, deleteGatesState } = gatesSlice.actions;
 export default gatesSlice.reducer;

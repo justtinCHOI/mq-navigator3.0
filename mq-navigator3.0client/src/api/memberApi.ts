@@ -21,15 +21,25 @@ export const loginPost = async (loginParam: { email: string; password: string })
   return res.data;
 };
 
-export const signup = async (singupParam: { email: string; nickname: string; password: string }) => {
-  const res = await axios.post(`${API_SERVER_HOST}/api/member/singup`, singupParam);
+export const signupPost = async (singupParam: { email: string; nickname: string; password: string }) => {
+  const res = await axios.post(`${host}/singup`, singupParam);
 
   return res.data;
 };
 
+export const logoutPost = async () => {
+  try {
+    const response = await jwtAxios.post(`${host}/logout`);
+    return response.data;
+  } catch (error) {
+    console.error('로그아웃 API 요청 실패:', error);
+    throw error;
+  }
+};
+
 export const getWorkspaces = async () => {
   try {
-    const res = await jwtAxios.get(`${API_SERVER_HOST}/api/member/workspaces`);
+    const res = await jwtAxios.get(`${host}/workspaces`);
     console.log('memberApi getWorkspaces data ', res.data);
     return res.data;
   } catch (error: any) {

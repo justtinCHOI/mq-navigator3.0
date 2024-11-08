@@ -1,19 +1,18 @@
 package com.unitekndt.mqnavigator.service;
 
-import com.unitekndt.mqnavigator.dto.IRoute;
 import com.unitekndt.mqnavigator.dto.IWorkspace;
 import com.unitekndt.mqnavigator.dto.MemberDTO;
 import com.unitekndt.mqnavigator.dto.UserRegistrationRequest;
 import com.unitekndt.mqnavigator.entity.*;
 import com.unitekndt.mqnavigator.repository.MemberRepository;
 import com.unitekndt.mqnavigator.repository.WorkspaceRepository;
+import com.unitekndt.mqnavigator.util.WorkspaceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -23,7 +22,10 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final WorkspaceRepository workspaceRepository;
-    private final PasswordEncoder passwordEncoder;  // PasswordEncoder 주입
+    private final PasswordEncoder passwordEncoder;
+    private final WorkspaceUtil workspaceUtil;
+    private final WorkspaceService workspaceService;
+
 
     @Override
     public MemberDTO registerMember(UserRegistrationRequest request) {
@@ -40,26 +42,24 @@ public class MemberServiceImpl implements MemberService {
         // 먼저 newMember를 데이터베이스에 저장해서 ID를 생성
         memberRepository.save(newMember);
 
+        Map<String, String> unique =  createUnique();
+
         // 워크스페이스 생성
-        Workspace workspace = createWorkspace(newMember);
+        Workspace workspace = workspaceUtil.createDefaultWorkspace(newMember, unique.get("uniqueName"), unique.get("uniqueUrl"));
 
         // 라우트 생성 및 좌표 설정
-        Route route = createRoute(newMember, workspace);
-
-        // 워크스페이스에 라우트 추가
+        Route route = workspaceUtil.createDefaultRoute(newMember, workspace);
         workspace.getRoutes().add(route);
         workspace.setRoute(route);
 
         // 게이트 생성 및 설정
-        List<Gate> gates = createGates(workspace, route.getCoordinates());
-
-        // 워크스페이스에 게이트 추가
+        List<Gate> gates = workspaceUtil.createDefaultGates(workspace, route.getCoordinates());
         workspace.setGates(gates);
 
-        // 워크스페이스에 라우트 추가
+        // 워크스페이스에 멤버 추가
         workspace.getMembers().add(newMember);
 
-        // 워크스페이스를 회원의 ownedWorkspaces와 workspaces에 추가
+        // 워크스페이스를 회원 소유 워크스페이스 리스트에 추가
         newMember.getOwnedWorkspaces().add(workspace);
         newMember.getWorkspaces().add(workspace);
 
@@ -69,26 +69,7 @@ public class MemberServiceImpl implements MemberService {
         return entityToDTO(newMember);
     }
 
-    private Workspace createWorkspace(Member newMember) {
-
-        Map<String, String> unique =  createUnique();
-
-        return Workspace.builder()
-                .name(unique.get("uniqueName"))
-                .url(unique.get("uniqueUrl"))
-                .owner(newMember)
-                .copyrightHolderId(newMember.getId())
-                .isPublic(true)
-                .useAmount(0L)
-                .members(new ArrayList<>()) // members 리스트 초기화
-                .route(new Route()) // members 리스트 초기화
-                .routes(new ArrayList<>()) // routes 초기화
-                .gates(new ArrayList<>())  // gates 초기화
-                .setting(createSetting())
-                .build();
-    }
-
-    private Map<String, String> createUnique(){
+    public Map<String, String> createUnique(){
         // 자동으로 고유한 이름을 생성하는 로직
         String baseName = "workspace";
         String baseUrl = "mqnavigator";
@@ -111,85 +92,6 @@ public class MemberServiceImpl implements MemberService {
         return unique;
     }
 
-    // 기본 Setting 생성
-    private Setting createSetting() {
-        return Setting.builder()
-                .colorSetting(createDefaultColorSetting()) // ColorSetting 기본 값 설정
-                .refreshInterval(RefreshInterval.ONE)      // 기본 값 설정
-                .toleranceRange(ToleranceRange.FIVE)       // 기본 값 설정
-                .speedPredictionInterval(SpeedPredictionInterval.FIRST) // 기본 값 설정
-                .displaySections(createDefaultDisplaySections())  // DisplaySection 리스트 초기화 및 값 설정
-                .sectionDatas(createDefaultSectionDatas())   // SectionData 리스트 초기화 및 값 설정
-                .build();
-    }
-
-    // 기본 DisplaySection 설정
-    private List<DisplaySection> createDefaultDisplaySections() {
-        List<DisplaySection> displaySections = new ArrayList<>();
-        displaySections.add(new DisplaySection(Location.FIRST_GATE, Location.LAST_GATE));
-        displaySections.add(new DisplaySection(Location.PREVIOUS_GATE_BASED_ON_SELECTED, Location.NEXT_GATE_BASED_ON_SELECTED));
-        displaySections.add(new DisplaySection(Location.PREVIOUS_GATE_BASED_ON_CURRENT, Location.NEXT_GATE_BASED_ON_CURRENT));
-        return displaySections;
-    }
-
-    // 기본 SectionData 설정
-    private List<SectionData> createDefaultSectionDatas() {
-        List<SectionData> sectionDatas = new ArrayList<>();
-        sectionDatas.add(SectionData.DISTANCE);
-        sectionDatas.add(SectionData.ELAPSED_TIME);
-        sectionDatas.add(SectionData.ESTIMATED_TIME);
-        sectionDatas.add(SectionData.ELAPSED_SPEED);
-        sectionDatas.add(SectionData.ESTIMATED_SPEED);
-        return sectionDatas;
-    }
-
-    // 기본 ColorSetting 생성 메서드
-    private ColorSetting createDefaultColorSetting() {
-        ColorSetting colorSetting = new ColorSetting();
-        colorSetting.setInitialColor(Color.SKY_BLUE); // 기본 값 설정
-        colorSetting.setDecelerationColor(Color.PURPLE);
-        colorSetting.setConstantSpeedColor(Color.LIGHT_GREEN);
-        colorSetting.setAccelerationColor(Color.YELLOW);
-        return colorSetting;
-    }
-
-    private Route createRoute(Member newMember, Workspace workspace) {
-        return Route.builder()
-                .name("Seoul Route")
-                .coordinates(createCoordinates())
-                .workspace(workspace)
-                .copyrightHolderId(newMember.getId()) // 소유자의 ID를 저작권자로 설정
-                .isPublic(true)  // true로 설정
-                .useAmount(0L)   // 0L로 설정
-                .build();
-    }
-
-    private List<Coordinate> createCoordinates() {
-        List<Coordinate> coordinates = new ArrayList<>();
-        coordinates.add(new Coordinate(37.5665, 126.9780)); // 서울 좌표
-        coordinates.add(new Coordinate(37.5705, 126.9810));
-        coordinates.add(new Coordinate(37.5735, 126.9840));
-        // 나머지 좌표들도 추가 가능 (총 10개)
-        return coordinates;
-    }
-
-    private List<Gate> createGates(Workspace workspace, List<Coordinate> coordinates) {
-        List<Gate> gates = new ArrayList<>();
-        LocalDateTime time = LocalDateTime.now();
-
-        for (int i = 0; i < coordinates.size(); i++) {
-            gates.add(Gate.builder()
-                    .sequence((long) i)
-                    .coordinate(coordinates.get(i))
-                    .time(time.plusMinutes(i * 10L))  // 시간은 10분씩 증가
-                    .traveledDistance((long) (i * 100L))  // traveledDistance 예시
-                    .workspace(workspace)
-                    .build());
-        }
-
-        return gates;
-    }
-
     private Member makeMember(UserRegistrationRequest request) {
         Member member =  Member.builder()
                 .email(request.getEmail())
@@ -208,37 +110,22 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<IWorkspace> getWorkspacesByEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
+        log.info("member with email : {} ", member);
 
         if (member.isPresent()) {
             List<IWorkspace> workspaceDTOs = new ArrayList<>();
+            List<Workspace> workspaces = member.get().getWorkspaces();
+            log.info("workspaces with member : {} ", workspaces);
+
             // 해당 회원의 워크스페이스 목록 가져오기
-            for (Workspace workspace : member.get().getWorkspaces()) {
+            for (Workspace workspace : workspaces) {
                 Route workspaceRoute = workspace.getRoute();
                 if (workspaceRoute != null) {
-                    // Workspace를 IWorkspace DTO로 변환
-                    IWorkspace workspaceDTO = IWorkspace.builder()
-                            .id(workspace.getId())
-                            .name(workspace.getName())
-                            .url(workspace.getUrl())
-                            .ownerId(workspace.getOwner().getId())
-                            .members(workspace.getMembers().stream().map(Member::getId).toList())  // members의 id만 추출
-                            .routes(workspace.getRoutes().stream()
-                                    .map(route -> IRoute.builder()
-                                            .id(route.getId())
-                                            .name(route.getName())
-                                            .coordinates(route.getCoordinates())
-                                            .build())
-                                    .toList())
-                            .route(IRoute.builder()
-                                    .id(workspace.getRoute().getId())
-                                    .name(workspace.getRoute().getName())
-                                    .coordinates(workspace.getRoute().getCoordinates())
-                                    .build())
-                            .build();
-
+                    IWorkspace workspaceDTO = workspaceService.entityToDto(workspace);
                     workspaceDTOs.add(workspaceDTO);
                 }
             }
+            log.info("workspaceDTOs with member : {} ", workspaceDTOs);
             return workspaceDTOs;
         } else {
             return new ArrayList<>(); // 회원이 없는 경우 빈 리스트 반환
@@ -246,13 +133,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
+    public ResponseEntity<String> logout(Member member) {
+        // 필요한 경우 세션 무효화, 토큰 삭제 등 처리
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
-    @Override
-    public Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Not Found"));
-    }
 
 }

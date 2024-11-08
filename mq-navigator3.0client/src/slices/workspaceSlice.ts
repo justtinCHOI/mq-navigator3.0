@@ -6,11 +6,10 @@ import {
   postRoute,
   updateWorkspace,
 } from '@api/workspaceApi';
-import { updateMemberWorkspaces } from '@slices/memberSlice';
 import { IRoute, IWorkspace } from '@typings/db';
 
 // 초기 상태: 단일 Workspace 객체
-const initState: IWorkspace = {
+const initialState: IWorkspace = {
   id: 0,
   name: '',
   url: '',
@@ -41,10 +40,9 @@ export const updateWorkspaceAsync = createAsyncThunk('updateWorkspaceAsync', asy
 // 워크스페이스 생성 비동기 액션
 export const postCreateWorkspaceAsync = createAsyncThunk(
   'postCreateWorkspaceAsync',
-  async (workspaceCreateParam: { name: string; url: string }, { dispatch }) => {
-    const updatedWorkspaces: IWorkspace[] = await postCreateWorkspace(workspaceCreateParam);
-    dispatch(updateMemberWorkspaces(updatedWorkspaces)); // 워크스페이스 업데이트 액션 호출
-    return;
+  async (workspaceCreateParam: { name: string; url: string }) => {
+    const updatedWorkspace: IWorkspace = await postCreateWorkspace(workspaceCreateParam);
+    return updatedWorkspace;
   },
 );
 
@@ -67,7 +65,7 @@ export const postRouteAsync = createAsyncThunk(
 // 워크스페이스 Slice 정의
 const workspaceSlice = createSlice({
   name: 'workspaceSlice',
-  initialState: initState, // 단일 워크스페이스로 초기화
+  initialState: initialState, // 단일 워크스페이스로 초기화
   reducers: {
     // routes 업데이트 액션
     updateRoutes: (state, action: PayloadAction<IRoute[]>) => {
@@ -76,6 +74,7 @@ const workspaceSlice = createSlice({
     updateRoute: (state, action: PayloadAction<IRoute>) => {
       state.route = action.payload;
     },
+    deleteWorkspaceState: () => initialState, // 초기 상태로 되돌리는 deleteState 리듀서 추가
   },
   extraReducers: (builder) => {
     builder
@@ -92,8 +91,9 @@ const workspaceSlice = createSlice({
         return action.payload;
       })
       // 워크스페이스 생성 성공 시
-      .addCase(postCreateWorkspaceAsync.fulfilled, () => {
+      .addCase(postCreateWorkspaceAsync.fulfilled, (state, action: PayloadAction<IWorkspace>) => {
         console.log('postCreateWorkspaceAsync.fulfilled');
+        return action.payload;
       })
       // 멤버 추가 성공 시
       .addCase(postAddWorkspaceMemberAsync.fulfilled, (state, action: PayloadAction<IWorkspace>) => {
@@ -119,6 +119,6 @@ const workspaceSlice = createSlice({
   },
 });
 
-export const { updateRoutes, updateRoute } = workspaceSlice.actions;
+export const { updateRoutes, updateRoute, deleteWorkspaceState } = workspaceSlice.actions;
 
 export default workspaceSlice.reducer;

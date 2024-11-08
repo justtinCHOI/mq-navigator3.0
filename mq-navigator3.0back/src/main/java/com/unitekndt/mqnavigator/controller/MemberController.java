@@ -9,14 +9,15 @@ import com.unitekndt.mqnavigator.service.TokenService;
 import com.unitekndt.mqnavigator.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
 import java.util.Map;
-
-@RestController
 @Log4j2
+@RestController
+@RequestMapping("/api/member")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -24,7 +25,7 @@ public class MemberController {
   private final TokenService tokenService;
 
   // 사용자 회원가입
-  @PostMapping("/api/member/singup")
+  @PostMapping("/singup")
   public Map<String, Object> singUp(@RequestBody UserRegistrationRequest request) {
     MemberDTO memberDTO = memberService.registerMember(request);
 
@@ -39,7 +40,7 @@ public class MemberController {
     return claims;
   }
 
-  @GetMapping("/api/member/workspaces")
+  @GetMapping("/workspaces")
   public List<IWorkspace> getWorkspaces(@RequestHeader("Authorization") String authHeader) {
     // "Bearer "를 제거한 JWT 토큰을 추출
     String token = authHeader.substring(7);
@@ -49,5 +50,13 @@ public class MemberController {
 
     // 사용자 이메일을 기반으로 작업 공간 조회
     return memberService.getWorkspacesByEmail(member.getEmail());
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.substring(7); // 토큰에서 Bearer 제거
+    Member member = tokenService.getUserFromToken(token); // 토큰에서 사용자 정보 추출
+
+    return memberService.logout(member); // 로그아웃 서비스 호출
   }
 }

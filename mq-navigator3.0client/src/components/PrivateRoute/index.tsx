@@ -16,7 +16,6 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   useEffect(() => {
     if (isLogin && url && (!memberState.workspaces || settingState.id == 0 || gatesState.length == 0)) {
       setIsLoading(true);
-      console.log('useEffect updateSlices');
       updateSlices(url).finally(() => setIsLoading(false));
     }
   }, [gatesState, isLogin, memberState.workspaces, settingState, updateSlices, url]);

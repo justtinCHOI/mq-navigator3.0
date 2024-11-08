@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -26,8 +26,7 @@ public class WorkspaceController {
     public ResponseEntity<IWorkspace> getWorkspace(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable String workspaceUrl) {
-        String token = authHeader.substring(7);
-        Member member = tokenService.getUserFromToken(token);
+        Member member = tokenService.getUserFromToken(authHeader.substring(7));
 
         IWorkspace workspace = workspaceService.getWorkspaceByUrlAndMember(workspaceUrl, member);
         return workspace != null
@@ -35,12 +34,11 @@ public class WorkspaceController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PostMapping("/")
+    @PutMapping("/")
     public ResponseEntity<IWorkspace> updateWorkspace(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody IWorkspace workspace) {
-        String token = authHeader.substring(7);
-        Member member = tokenService.getUserFromToken(token);
+        Member member = tokenService.getUserFromToken(authHeader.substring(7));
 
         IWorkspace updatedWorkspace = workspaceService.updateWorkspace(workspace, member);
         return updatedWorkspace != null
@@ -48,15 +46,22 @@ public class WorkspaceController {
                 : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<IWorkspace> createWorkspace(
+    @PostMapping("/")
+    public ResponseEntity<Object> createWorkspace(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody IWorkspace newWorkspace) {
-        String token = authHeader.substring(7);
-        Member member = tokenService.getUserFromToken(token);
+            @RequestBody Map<String, String> workspaceData) {
+        Member member = tokenService.getUserFromToken(authHeader.substring(7));
 
-        IWorkspace createdWorkspace = workspaceService.createWorkspace(newWorkspace, member);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkspace);
+        String name = workspaceData.get("name");
+        String url = workspaceData.get("url");
+
+        try {
+            IWorkspace createdWorkspace = workspaceService.createWorkspace(member, name, url);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkspace);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @PostMapping("/{workspaceUrl}/route")
@@ -64,8 +69,7 @@ public class WorkspaceController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable String workspaceUrl,
             @RequestBody IRoute route) {
-        String token = authHeader.substring(7);
-        Member member = tokenService.getUserFromToken(token);
+        Member member = tokenService.getUserFromToken(authHeader.substring(7));
 
         IRoute newRoute = workspaceService.addRouteToWorkspace(workspaceUrl, route, member);
         return newRoute != null

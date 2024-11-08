@@ -186,7 +186,7 @@ export const AddButton = styled.button`
   display: inline-block;
   width: 40px;
   height: 40px;
-  background: rgba(30, 10, 120);
+  background: rgba(20, 10, 110);
   border: none;
   cursor: pointer;
 `;
