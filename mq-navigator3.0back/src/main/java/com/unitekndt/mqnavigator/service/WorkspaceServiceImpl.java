@@ -45,13 +45,13 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public IWorkspace createWorkspace(Member member, String name, String url) {
 
-        if (workspaceRepository.existsByName(name)) {
-            log.info("workspaceRepository.existsByName(name) : {} {} ", name, workspaceRepository.existsByName(name));
-            throw new IllegalArgumentException("Workspace name already exists.");
-        } else if (workspaceRepository.existsByUrl(url)) {
-            log.info("workspaceRepository.existsByUrl(url) : {} {} ", url, workspaceRepository.existsByUrl(url));
-            throw new IllegalArgumentException("Workspace URL already exists.");
-        } else {
+//        if (workspaceRepository.existsByName(name)) {
+//            log.info("workspaceRepository.existsByName(name) : {} {} ", name, workspaceRepository.existsByName(name));
+//            throw new IllegalArgumentException("Workspace name already exists.");
+//        } else if (workspaceRepository.existsByUrl(url)) {
+//            log.info("workspaceRepository.existsByUrl(url) : {} {} ", url, workspaceRepository.existsByUrl(url));
+//            throw new IllegalArgumentException("Workspace URL already exists.");
+//        } else {
             // 새로운 워크스페이스 생성
             Workspace workspace = workspaceUtil.createDefaultWorkspace(member, name, url);
 
@@ -77,7 +77,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             log.info("new workspace : {}", workspace);
 
             return entityToDto(workspace);
-        }
+//        }
     }
 
     @Override
